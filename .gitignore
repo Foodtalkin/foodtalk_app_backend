@@ -1,0 +1,5 @@
+config*/*
+data*/*
+test*
+runtime*/*
+.htaccess*
