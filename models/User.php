@@ -382,7 +382,8 @@ class User extends FoodTalkActiveRecord
 //         (4,5,11,12,210)
         if(!empty($searchText))
             $sql .= " AND (u.userName LIKE '%$searchText%' OR u.fullName LIKE '%$searchText%')";
-        
+        else 
+        	$sql .= " AND u.id != 1428 ";
         $sql .= ' ORDER BY u.fullName';
         $users = Yii::app()->db->createCommand($sql)->queryAll(true);
         return $users;
