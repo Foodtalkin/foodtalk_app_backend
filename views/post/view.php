@@ -78,10 +78,13 @@ foreach ($rating as $value){
 <tr>
 <tr class="odd"><th>Checkedin</th>
 <td>
-<input type="checkbox" >
+<input  id="checkedin" name="checkedin" type="checkbox" <?php 
+if($model->checkedInRestaurantId > 0 )
+echo 'checked';
+?> >
 </td>
 </tr>
-<tr class="odd"><th>Checked InRestaurant</th><td>
+<tr id="restaurant" class="odd"><th>Checked InRestaurant</th><td>
 
 		<?php  
 // 		CHtml::dropDownList('post', $select, $data)
@@ -113,6 +116,25 @@ foreach ($rating as $value){
 
 	$('.selectize-control').width('300px');
 	$('.selectize-control').css( "float", "left" );
+
+	$('#checkedin').change( function() {
+
+		if(document.getElementById('checkedin').checked) {
+		    $("#restaurant").show();
+		} else {
+		    $("#restaurant").hide();
+// 		    $('#checkedInRestaurantId').val('');
+		}
+
+	});
+<?php
+if(!$model->checkedInRestaurantId){
+	?>
+    $("#restaurant").hide();
+	<?php
+}
+?>
+	
 	
 </script>
 </td></tr>

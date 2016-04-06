@@ -30,11 +30,25 @@ class PostController extends SiteBaseController
 			}
 			$post->isDisabled = $_POST['isDisabled'];
 			
-			if($post->checkedInRestaurantId != $_POST['checkedInRestaurantId'] && !$checkinAction){
-				$checkinAction = 'changerestaurant';
-			}
-			$post->checkedInRestaurantId = $_POST['checkedInRestaurantId'];
 			
+			
+			
+			if(isset($_POST['checkedin']) && $_POST['checkedin'] == 'on'){
+				
+				if($post->checkedInRestaurantId != $_POST['checkedInRestaurantId'] && !$checkinAction){
+					$checkinAction = 'changerestaurant';
+				}
+				$post->checkedInRestaurantId = $_POST['checkedInRestaurantId'];
+				
+			}else{
+				$post->checkedInRestaurantId = null;
+				$post->checkinId = null;
+			}
+			
+
+			
+			
+
 			
 // 			echo $checkinAction;
 // 			$checkin = Checkins::model()->findByAttributes(array('userId'=>$post->userId,'restaurantId'=>$_POST['checkedInRestaurantId']), "DATE_FORMAT(createDate,'%m-%d-%Y') = DATE_FORMAT('".$post->createDate."','%m-%d-%Y')");
