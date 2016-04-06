@@ -74,6 +74,13 @@ foreach ($rating as $value){
 ?>
 	</select>
 </td></tr>
+
+<tr>
+<tr class="odd"><th>Checkedin</th>
+<td>
+<input type="checkbox" >
+</td>
+</tr>
 <tr class="odd"><th>Checked InRestaurant</th><td>
 
 		<?php  
@@ -94,6 +101,8 @@ foreach ($rating as $value){
 
 
 ?>
+<a target="_blank" href="#" >Open this Resturant</a>
+
 <script>
 	$('#checkedInRestaurantId').selectize({
 		allowEmptyOption: true
@@ -103,6 +112,7 @@ foreach ($rating as $value){
 	});
 
 	$('.selectize-control').width('300px');
+	$('.selectize-control').css( "float", "left" );
 	
 </script>
 </td></tr>

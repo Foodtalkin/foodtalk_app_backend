@@ -54,6 +54,9 @@ class Event extends FoodTalkActiveRecord
 
     public function getEventsType($type='public')
     {
+    	
+//     	$eclass =EventClass::model()->findByAttributes(array('tagName'=>$hashtag));
+    	 
     	$events = array();
 
     	$publicEvent = array(
@@ -96,6 +99,7 @@ class Event extends FoodTalkActiveRecord
         // class name for the relations automatically generated below.
         return array(
             'raiser' => array(self::BELONGS_TO, 'User', 'raiserId'),
+        	'appClass' => array(self::BELONGS_TO, 'eventClass', 'eventType'),
             'relatedUser' => array(self::BELONGS_TO, 'User', 'relatedUserId'),
             'notifications' => array(self::HAS_MANY, 'Notification', 'eventId'),
         );
@@ -203,7 +207,14 @@ class Event extends FoodTalkActiveRecord
         $sql .= ',e.elementId';
         $sql .= ',e.eventDate';
         $sql .= ',e.isNotified';
+        $sql .= ',e.channel';
+        
+        $sql .= ',c.eventGroup';
+        $sql .= ',c.defaultMessage';
+        $sql .= ',c.className';
+        
         $sql .= ' FROM `event` e';
+        $sql .= ' INNER JOIN `eventClass` c ON e.eventType=c.id and c.isDisabled = 0 ';
         $sql .= ' LEFT JOIN `user` u1 ON e.raiserId=u1.id';
         $sql .= ' LEFT JOIN `user` u2 ON e.relatedUserId=u2.id';
         return $sql;

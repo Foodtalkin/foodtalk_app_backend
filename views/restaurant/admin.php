@@ -11,7 +11,7 @@ $this->menu=array(
 // 	array('label'=>'Dashboard', 'url'=>array('site')),
 	array('label'=>'Manage', 'url'=>array('restaurant/admin')),
 	array('label'=>'Create Restaurant', 'url'=>array('create')),
-	array('label'=>'New Restaurant Suggestion', 'url'=>array('restaurant/suggestion')),
+// 	array('label'=>'New Restaurant Suggestion', 'url'=>array('restaurant/suggestion')),
 	array('label'=>'Restaurant Reported', 'url'=>array('restaurant/reported')),
 // 	array('label'=>'Disabled Restaurant', 'url'=>array('restaurant/disabled')),
 );

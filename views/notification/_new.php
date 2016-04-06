@@ -21,7 +21,12 @@
 	
 	<div class="row">
 		<?php echo $form->labelEx($model,'Target Screen *'); ?>
-		<?php echo $form->dropDownList($model, 'eventType', CHtml::listData($eventTypes, 'value', 'name'),  array('empty'=>'Select a Target Screen','required'=>true)); ?>
+		<?php echo $form->dropDownList($model, 'eventType', CHtml::listData(
+				EventClass::model()->findAll(
+						array("condition"=>"eventGroup = 3 and isDisabled = 0 ", "select"=>"id, title" )
+						)
+				, 'id', 'title'
+				),  array('empty'=>'Select a Target Screen','required'=>true)); ?>
 		<?php echo $form->error($model,'eventType'); ?>
 	</div>
 <div>
@@ -31,7 +36,8 @@ echo CHtml::dropDownList(
 		'',
 		CHtml::listData(
 				Restaurant::model()->findAll(
-						array("condition"=>"isActivated = 1 and isDisabled = 0 ",'order'=>'restaurantName', "select"=>"id, CONCAT(restaurantName, ' (', IFNULL(area, IFNULL(address, '') )  , ')', IF(isDisabled = 1, '-DISABLE RESTAURANT', IF(isActivated = 0, '-INACTIVE RESTAURANT', ''))) as restaurantName")),
+						array("condition"=>"isActivated = 1 and isDisabled = 0 ",'order'=>'restaurantName', "select"=>"id, CONCAT(restaurantName, ' (', IFNULL(area, IFNULL(address, '') )  , ')', IF(isDisabled = 1, '-DISABLE RESTAURANT', IF(isActivated = 0, '-INACTIVE RESTAURANT', ''))) as restaurantName")
+						),
 				'id',
 				'restaurantName'
 		),
@@ -49,6 +55,12 @@ echo CHtml::dropDownList(
 		<?php echo $form->labelEx($model,'Notify Message *'); ?>
 		<?php echo $form->textArea($model,'message',array('required'=>true, 'size'=>80,'maxlength'=>200, 'style'=>'width: 400px;')); ?>
 		<?php echo $form->error($model,'message'); ?>
+	</div>
+
+	<div class="row">
+		<?php echo $form->labelEx($model,'Notify Channel *'); ?>
+		<?php echo $form->radioButtonList($model,'channel',array( 'Tester'=>'Tester', 'FoodTalk'=>'FoodTalk')); ?>
+		<?php echo $form->error($model,'channel'); ?>
 	</div>
 
 	<div id="datetimepicker2" class="row input-append date">
@@ -83,7 +95,7 @@ function validateForm(form){
 		
 		$("#post-form").submit(function(event){
 
-			alert($('#Event_elementId').val());
+// 			alert($('#Event_elementId').val());
 		    if($("#Event_eventType").val() == 53){
 				if($('#Event_elementId').val() < 1 ){
 					event.preventDefault();

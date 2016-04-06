@@ -25,7 +25,12 @@ $disabled = true;
 <tr class="even">
 
 <th><?php echo $form->labelEx($model,'Target Screen'); ?></th><td>
-<?php echo $form->dropDownList($model, 'eventType', CHtml::listData($eventTypes, 'value', 'name'),  array('empty'=>'Select a Target Screen','required'=>true, 'disabled'=>$disabled )); ?>
+<?php echo $form->dropDownList($model, 'eventType', CHtml::listData(
+						EventClass::model()->findAll(
+							array("condition"=>"eventGroup = 3 and isDisabled = 0 ", "select"=>"id, title" )
+						)
+						, 'id', 'title')
+					, array('empty'=>'Select a Target Screen','required'=>true, 'disabled'=>$disabled )); ?>
 <?php echo $form->error($model,'eventType'); ?>
 </td></tr>
 
@@ -33,9 +38,13 @@ $disabled = true;
 <?php echo $form->textArea($model,'message',array('required'=>true, 'size'=>80,'maxlength'=>200, 'style'=>'width: 400px;','disabled'=>$disabled  )); ?>
 <?php echo $form->error($model,'message'); ?>
 </td></tr>
+<th><?php echo $form->labelEx($model,'Notify Channel *'); ?></th><td>
+		
+		<?php echo $form->radioButtonList($model,'channel',array( 'Tester'=>'Tester', 'FoodTalk'=>'FoodTalk'), array('required'=>true, 'disabled'=>$disabled  )); ?>
+		<?php echo $form->error($model,'channel'); ?>
+</td></tr>
 
-
-<tr class="even"><th>
+<tr class="odd"><th>
 
 <?php echo $form->labelEx($model,'Notify Time *'); ?>
 </th><td id="datetimepicker2" class="input-append date">
@@ -47,7 +56,7 @@ $disabled = true;
     </span>
 </td></tr>
 
-<tr class="odd"><th>
+<tr class="even"><th>
 </th><td>
 		<?php if(!$disabled) echo CHtml::submitButton($model->isNewRecord ? 'Add' : 'Save'); ?>
 </td></tr>

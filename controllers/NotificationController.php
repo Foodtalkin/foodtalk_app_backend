@@ -71,6 +71,8 @@ class NotificationController extends SiteBaseController
 // 	        $model->raiserId = $raiserId;
 	        $model->message = $_POST['Event']['message'];
 	        $model->eventDate = $_POST['Event']['eventDate'];
+	        $model->channel = $_POST['Event']['channel'];
+	        
 	        $model->save();
         
 // 	        $model->hasErrors(); 
