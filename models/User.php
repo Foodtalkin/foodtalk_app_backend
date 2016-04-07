@@ -258,7 +258,7 @@ class User extends FoodTalkActiveRecord
     {
         $sql = 'SELECT u.id';
         $sql .= ',IFNULL(u.userName, "") as userName';
-        $sql .= ',IFNULL(u.role, "") as role';
+        $sql .= ',IF(u.role="manager" ,"Tester,FoodTalk", "FoodTalk") as role';
         $sql .= ',IFNULL(u.fullName, "") as fullName';
         $sql .= ',IFNULL(CONCAT("' . imagePath('user') . '", u.image, "?type=large"), "") as image';
         $sql .= ',IFNULL(CONCAT("' . thumbPath('user') . '", u.image, "?type=small"), "") as thumb';
