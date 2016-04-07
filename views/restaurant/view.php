@@ -109,10 +109,10 @@ else
 <input type="submit" value="Update">
 &nbsp;&nbsp;
 <button><a href="update/<?php echo $model->id; ?>">Edit</a></button>
-</form>
 </span>
 </div>
 
+</form>
 <script type="text/javascript">
 
 $( document ).ready(function() {

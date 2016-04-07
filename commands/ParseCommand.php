@@ -42,6 +42,20 @@ class ParseCommand extends CConsoleCommand
 			}
 		}
 	}
+
+	public function actionClass() {
+	
+		while (1){
+			try {
+				$this->sendPushNotification();
+				sleep(5);
+			} catch (Exception $e) {
+				echo 'Caught Notificatin exception: [[ START ]] '."\n".  $e->getMessage(). "\n ON ";
+				echo date('His')." [[ END ]] \n";
+			}
+		}
+	}
+	
 	
 	public function actionTest(){
 		
