@@ -154,6 +154,18 @@ class SiteBaseController extends Controller
         	'notification.delete',
         		
         		
+        		'activityPoints.index',
+        		'activityPoints.create',
+        		'activityPoints.view',
+        		'activityPoints.admin',
+        		'activityPoints.update',
+//         		'activityPoints.notified',
+        		'activityPoints.delete',
+        		
+        		'activityScore.view',
+        		'activityScore.admin',
+        		
+        		
             'city.admin',
             'city.create',
             'city.update',
