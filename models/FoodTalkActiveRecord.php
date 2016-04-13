@@ -9,22 +9,28 @@ abstract class FoodTalkActiveRecord extends CActiveRecord
         else
             $id=0;
         
-        if($this->isNewRecord){
+        if($this->isNewRecord && !$this->createId )
+        	$this->createId = $id;
         	
-        	$this->logActivity();
-        	
-        	if(!$this->createId)
-            $this->createId = $id;
-        	
-        }elseif($this->isDisabled==1) {
-        	$this->logActivity('delete');        	
-        }
         
         $this->updateId = $id;
         $this->convertFieldsToLower();        
         
         return parent::beforeSave();
     }
+    
+    protected function afterSave()
+    {
+    	
+    	if($this->isNewRecord)
+    		$this->logActivity();
+    	
+    	elseif($this->isDisabled==1)
+    		$this->logActivity('delete');    	
+    	
+    	return parent::afterSave();
+    }
+    
     
     
     protected function beforeDelete(){
@@ -36,14 +42,12 @@ abstract class FoodTalkActiveRecord extends CActiveRecord
     
     protected function logActivity($type='add'){
     	
-
     	$jsonInput = file_get_contents("php://input");
     	$_JSON = json_decode($jsonInput, true);
     	
     	if(!$_JSON){
     		return true;
     	}
-    	
     	$activity = ActivityPoints::model()->findByAttributes(
     			array(
     					'platform'=>'app',
@@ -54,58 +58,10 @@ abstract class FoodTalkActiveRecord extends CActiveRecord
     	
     	if($activity && $this->manageActivity($activity)){
     		
-    		
     		$session = Session::model()->findByAttributes(array('sessionId'=>$_JSON['sessionId']));
-    		
     		$UserfacebookId = $session->user->facebookId;
     		
-    		$model = new ActivityLog;
-    		$criteria= new CDbCriteria;
-    		$criteria->select='id, facebookId, activityType, elementId, points, isPenalized, max(createDate) createDate';
-    		$criteria->condition = "facebookId = '$UserfacebookId' and isPenalized = 0 and activityType = ". $activity->id;
-    		$lastActivity = $model->model('ActivityLog')->find($criteria);
-    		    		
-    		$activity_log = new ActivityLog('create_api');
-    		$activity_log->activityType = $activity->id;
-    		$activity_log->elementId = $this->id;
-    		$activity_log->facebookId = $UserfacebookId;
-    		
-    		if($type=='delete'){
-//   to	penalise    			
-    			$activity_log->points = $activity->penality;
-    			$activity_log->isPenalized = '1';
-    			
-    		}else{
-    			
-//   to	rationalize points as per time factor and activity
-
-    			$date1 = strtotime($lastActivity->createDate);    			
-    			$date2 = time();
-    			$subTime =  $date2 - $date1;
-    			
-				$m = $subTime/60;
-
-    			
-    			
-
-	    		$points = $activity->points * ( $m/$activity->timefactor );
-    			
-    			if($points < $activity->minimum)
-    				$points = $activity->minimum;
-    			
-    			if($points > $activity->maximum)
-					$points = $activity->maximum;
-    			
-	 			$activity_log->points = $points;
-    		}
-
-    		
-    		
-    		$activity_log->save();
-    		
-				if ($activity_log->hasErrors())
-    				throw new Exception(print_r($activity_log->getErrors(), true), WS_ERR_UNKNOWN);
-    		
+    		return ActivityLog::model()->log($UserfacebookId, $activity, $this->id, $type);    		
     	}
     	
     	return true;

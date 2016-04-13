@@ -116,6 +116,62 @@ class ActivityLog extends FoodTalkActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+	
+	
+	public function log($UserfacebookId, $activity, $elementId=null, $type='add'){
+		
+		if($activity instanceof ActivityPoints){
+		
+			$model = new self;
+		
+    		$criteria= new CDbCriteria;
+    		$criteria->select='id, facebookId, activityType, elementId, points, isPenalized, max(createDate) createDate';
+    		$criteria->condition = "facebookId = '$UserfacebookId' and isPenalized = 0 and activityType = ". $activity->id;
+    		$lastActivity = $model->model('ActivityLog')->find($criteria);
+    		    		
+    		$activity_log = new self('create_api');
+    		$activity_log->activityType = $activity->id;
+    		
+    		if($elementId)
+	    		$activity_log->elementId = $elementId;
+    		
+    		$activity_log->facebookId = $UserfacebookId;
+    		
+    		if($type=='delete'){
+//   to	penalise    			
+    			$activity_log->points = $activity->penality;
+    			$activity_log->isPenalized = '1';
+    			
+    		}else{
+    			
+//   to	rationalize points as per time factor and activity
+
+    			$date1 = strtotime($lastActivity->createDate);    			
+    			$date2 = time();
+    			$subTime =  $date2 - $date1;    			
+				$m = $subTime/60;
+    			
+				if($activity->timefactor > 0)
+		    		$points = $activity->points * ( $m/$activity->timefactor );
+				else 
+					$points = $activity->points;
+    			
+    			if($points < $activity->minimum)
+    				$points = $activity->minimum;
+    			
+    			if($points > $activity->maximum)
+					$points = $activity->maximum;
+    			
+	 			$activity_log->points = $points;
+    		}
+
+    		$activity_log->save();
+    		
+			if ($activity_log->hasErrors())
+    			throw new Exception(print_r($activity_log->getErrors(), true), WS_ERR_UNKNOWN);
+		}
+		return true;
+	}
 
 	/**
 	 * Returns the static model of the specified AR class.
