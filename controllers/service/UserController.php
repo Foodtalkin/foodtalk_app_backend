@@ -121,7 +121,7 @@ class UserController extends ServiceBaseController
     					$latitude = 0;
     					$longitude = 0;    
     
-    					$imagePosts = Post::getImagePostsByUserId($userId, $selectedUserId, 0, '', 1, $latitude, $longitude);
+    					$imagePosts = Post::getImagePostsByUserId($userId, $selectedUserId, 15, '', 1, $latitude, $longitude);
     					//                         $checkInPosts = Post::getUniqueCheckInPostsByUserId($userId, $selectedUserId, 15);
     					$favourites = Favourite::getFavouriteRestaurants($selectedUserId);
     
@@ -208,6 +208,70 @@ class UserController extends ServiceBaseController
         }
         $this->sendResponse(json_encode($result, JSON_UNESCAPED_UNICODE));
     }
+
+    
+    
+    /**
+     * Get image post by user id
+     */
+    public function actionGetImagePosts()
+    {
+    	$apiName = 'user/ImagePosts';
+    	$sessionId = null;
+    
+    	$_JSON = $this->getJsonInput();
+    
+    	try
+    	{
+    		if(!isset($_JSON) || empty($_JSON))
+    			$result = $this->error($apiName, WS_ERR_POST_PARAM_MISSED, 'No input received.');
+    		else if(!isset($_JSON['userName']) || empty($_JSON['userName']))
+    			$result = $this->error($apiName, WS_ERR_POST_PARAM_MISSED, 'Please enter userName.');
+    		else
+    		{
+    			$user = User::model()->findByAttributes(array('userName'=>$_JSON['userName']));
+    			
+    			
+    			
+    			if (is_null($user))
+    				$result = $this->error($apiName, WS_ERR_WONG_USER, 'Please login before using this service.');
+    			else
+    			{
+    				$selectedUserId = $user->id; //filter_var($_JSON['selectedUserId'], FILTER_SANITIZE_NUMBER_INT);
+    				$userId = $user->id;
+    
+    				if(is_null($user))
+    					$result = $this->error($apiName, WS_ERR_WONG_VALUE, 'Selected user does not exist.');
+    				else
+    				{
+    					$page =1;
+    					$exceptions = '';   //list of post ids that are not to be included in the list
+    
+    					if(isset($_JSON['exceptions']) && $_JSON['exceptions'])
+    						$exceptions = filter_var($_JSON['exceptions'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
+    
+    					if(isset($_JSON['page']) && $_JSON['page'])
+    						$page = filter_var($_JSON['page'], FILTER_SANITIZE_NUMBER_INT);
+    
+    					$imagePosts = Post::getImagePostsByUserId($userId, $selectedUserId, 15, $exceptions, $page);
+    
+    					$result = array(
+    							'api' => $apiName,
+    							'apiMessage' => 'Records fetched successfully',
+    							'status' => 'OK',
+    							'imagePosts' => $imagePosts
+    					);
+    				}
+    			}
+    		}
+    	}
+    	catch (Exception $e)
+    	{
+    		$result = $this->error($apiName, $e->getCode(), Yii::t('app', $e->getMessage()));
+    	}
+    	$this->sendResponse(json_encode($result, JSON_UNESCAPED_UNICODE));
+    }
+    
     
     /**
      * Get image post by user id
