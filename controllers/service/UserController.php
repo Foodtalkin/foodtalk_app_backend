@@ -214,7 +214,7 @@ class UserController extends ServiceBaseController
     /**
      * Get image post by user id
      */
-    public function actionGetImagePosts()
+    public function actionImagePosts()
     {
     	$apiName = 'user/ImagePosts';
     	$sessionId = null;
