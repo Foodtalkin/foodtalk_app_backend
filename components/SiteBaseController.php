@@ -165,6 +165,8 @@ class SiteBaseController extends Controller
         		'activityScore.view',
         		'activityScore.admin',
         		
+        		'region.index',
+        		'region.view',
         		
             'city.admin',
             'city.create',

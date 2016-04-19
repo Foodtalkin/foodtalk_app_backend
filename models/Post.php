@@ -179,6 +179,8 @@ class Post extends FoodTalkActiveRecord
 				
 				
 			if($type=='reviews'){
+				$criteria->with[]='checkedInRestaurant';
+				
 				$criteria->addCondition("t.image IS NULL");
 				$criteria->addCondition("checkedInRestaurantId IS not NULL");
 				// 		        $criteria->addCondition("image IS NOT NULL");
@@ -190,13 +192,20 @@ class Post extends FoodTalkActiveRecord
 				$criteria->addCondition("checkedInRestaurantId IS not NULL");				
 				$criteria->addCondition("checkedInRestaurant.isActivated = 0");
 				$criteria->addCondition("checkedInRestaurant.isDisabled = 0");
-
+				
+				if(isset($_SESSION['region']))
+					$criteria->addCondition("checkedInRestaurant.region = '".$_SESSION['region']."'");
+				
 			}
 			
 			
 	        if($type=='checkin'){   	
+	        	$criteria->with[]='checkedInRestaurant';	        	
 		        $criteria->addCondition("checkedInRestaurantId IS not NULL");
 		        $criteria->addCondition("t.image IS NOT NULL");
+		        
+		        if(isset($_SESSION['region']))
+		        	$criteria->addCondition("checkedInRestaurant.region = '".$_SESSION['region']."'");
 	        }
 	        
 	        if($type=='post'){
@@ -293,7 +302,7 @@ class Post extends FoodTalkActiveRecord
             $sql .= ',(SELECT COUNT(*) FROM `bookmark` b1 WHERE b1.postId=p.id AND b1.isDisabled=0 AND b1.userId='.$userId.') as iBookark';
         }
         
-        $sql .= ' FROM post p JOIN user u ON p.userId = u.id';
+        $sql .= ' FROM post p JOIN user u ON p.userId = u.id AND u.isDisabled=0 ';
         
         $sql .= ' LEFT JOIN dishReview dr ON p.id = dr.postId';
         $sql .= ' LEFT JOIN dish d ON d.id = dr.dishId';
@@ -328,7 +337,7 @@ class Post extends FoodTalkActiveRecord
     			', IFNULL(CONCAT("' . thumbPath('user') . '", u.image), "") as userThumb, IFNULL(r.restaurantName, "") as restaurantName'
     			.' , IFNULL(r.isActivated, 0) as restaurantIsActive '    					
 			.', (select count(1) from comment where comment.postId = p.id and comment.isDisabled = 0) as comment_count , (select count(1) from `like` where `like`.isDisabled= 0 and `like`.`postId` = p.`id`) as like_count '
-			.' FROM `post` p INNER JOIN user u on p.userId = u.id LEFT JOIN restaurant r on p.checkedInRestaurantId = r.id 
+			.' FROM `post` p INNER JOIN user u on p.userId = u.id AND u.isDisabled=0 LEFT JOIN restaurant r on p.checkedInRestaurantId = r.id 
 					INNER JOIN dishReview dr on p.id = dr.postId INNER JOIN dish d on d.id = dr.dishId and d.isDisabled = 0
 					WHERE p.isDisabled = 0 ';
      	if($postId)

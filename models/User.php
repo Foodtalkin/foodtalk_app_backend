@@ -317,6 +317,7 @@ class User extends FoodTalkActiveRecord
     {
         $sql = self::getQuery($userId, false, false, true);
         $sql .= ' WHERE u.id=' .$profileUserId;
+        $sql .= ' AND u.isDisabled=0 ';
         //LogInFile($sql);
         $profile = Yii::app()->db->createCommand($sql)->queryRow(true);
         return $profile;
@@ -329,6 +330,7 @@ class User extends FoodTalkActiveRecord
     {
         $sql = self::getQuery($userId, false, false, true);
         $sql .= ' WHERE u.facebookId in (' . $facebookIds . ')';
+        $sql .= ' AND u.isDisabled=0 ';
         $users = Yii::app()->db->createCommand($sql)->queryAll(true);
         return $users;
     }
@@ -379,7 +381,7 @@ class User extends FoodTalkActiveRecord
         $sql .= ',IFNULL(CONCAT("' . imagePath('user') . '", u.image), "") as image';
         $sql .= ',IFNULL(CONCAT("' . thumbPath('user') . '", u.image), "") as thumb';
         $sql .= ' FROM user u';
-        $sql .= ' WHERE u.isDisabled = 0 ';
+        $sql .= ' WHERE u.isDisabled = 0 and u.userName != "guest" ';
 //         (4,5,11,12,210)
         if(!empty($searchText))
             $sql .= " AND (u.userName LIKE '%$searchText%' OR u.fullName LIKE '%$searchText%')";

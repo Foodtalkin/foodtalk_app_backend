@@ -14,6 +14,7 @@
  * @property string $state
  * @property string $city
  * @property string $area
+ * @property string $region
  * @property string $address
  * @property string $postcode
  * @property double $latitude
@@ -89,7 +90,7 @@ class Restaurant extends FoodTalkActiveRecord
             array('restaurantName, email, contactName, area, address, image, disableReason, timing', 'length', 'max'=>128),
             array('password', 'length', 'max'=>40),
             array('country, state, city, priceRange', 'length', 'max'=>50),
-            array('postcode, phone1, phone2', 'length', 'max'=>20),
+            array('region, postcode, phone1, phone2', 'length', 'max'=>20),
             array('highlights', 'length', 'max'=>500),
             array('facebookId, facebookLink', 'length', 'max'=>32),
             array('twitterId, googleId, linkedinId, twitterLink, googleLink, linkedinLink', 'length', 'max'=>255),
@@ -138,6 +139,7 @@ class Restaurant extends FoodTalkActiveRecord
             'state' => 'State',
             'city' => 'City',
             'area' => 'Area',
+        	'region' => 'Region',
             'address' => 'Address',
             'postcode' => 'Postcode',
             'latitude' => 'Latitude',
@@ -214,6 +216,7 @@ class Restaurant extends FoodTalkActiveRecord
         $criteria->compare('state',$this->state,true);
         $criteria->compare('city',$this->city,true);
         $criteria->compare('area',$this->area,true);
+        $criteria->compare('region',$this->region,true);
         $criteria->compare('address',$this->address,true);
         $criteria->compare('postcode',$this->postcode,true);
         $criteria->compare('latitude',$this->latitude);
@@ -265,6 +268,11 @@ class Restaurant extends FoodTalkActiveRecord
 //         'restaurant.unverified',
 //         'restaurant.inactive',
 //         'restaurant.disabled',
+
+        
+        if(isset($_SESSION['region']))
+        	$criteria->addCondition("t.region = '".$_SESSION['region']."'");        
+        
         
         switch (Yii::app()->controller->action->id){
         	case 'disabled':
