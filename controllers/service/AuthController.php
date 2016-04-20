@@ -107,7 +107,6 @@ class AuthController extends ServiceBaseController
 		if(!isset($_JSON) || empty($_JSON))
 			$result = $this->error($apiName, WS_ERR_POST_PARAM_MISSED, 'No input received.');
 		
-		
 		sleep(5);
 		
 		$result = $_JSON; 
