@@ -11,10 +11,12 @@
  * @property string $password
  * @property string $fullName
  * @property string $gender
+ * @property string $birthday
  * @property integer $age
  * @property string $country
  * @property string $state
  * @property string $city
+ * @property string $region
  * @property string $address
  * @property string $postcode
  * @property double $latitude
@@ -82,12 +84,12 @@ class User extends FoodTalkActiveRecord
             array('password', 'length', 'max'=>40),
             array('gender, activationCode, createId, updateId', 'length', 'max'=>10),
             array('country, state, city', 'length', 'max'=>50),
-            array('postcode, phone', 'length', 'max'=>20),
+            array('region, postcode, phone', 'length', 'max'=>20),
             array('aboutMe', 'length', 'max'=>500),
             array('facebookId, facebookLink', 'length', 'max'=>32),
             array('twitterId, googleId, linkedinId, twitterLink, googleLink, linkedinLink', 'length', 'max'=>255),
-            array('webAddress', 'length', 'max'=>250),
             array('updateDate', 'safe'),
+            array('webAddress', 'length', 'max'=>250),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, role, userName, email, password, fullName, gender, age, country, state, city, address, postcode, latitude, longitude, phone, aboutMe, image, facebookId, twitterId, googleId, linkedinId, facebookLink, twitterLink, googleLink, linkedinLink, webAddress, sendPushNotification, shareOnFacebook, shareOnTwitter, shareOnInstagram, activationCode, isActivated, isDisabled, disableReason, createDate, updateDate, createId, updateId', 'safe', 'on'=>'search'),
@@ -135,6 +137,7 @@ class User extends FoodTalkActiveRecord
             'state' => 'State',
             'city' => 'City',
             'address' => 'Address',
+        	'region' => 'Region',
             'postcode' => 'Postcode',
             'latitude' => 'Latitude',
             'longitude' => 'Longitude',
@@ -194,6 +197,7 @@ class User extends FoodTalkActiveRecord
         $criteria->compare('country',$this->country,true);
         $criteria->compare('state',$this->state,true);
         $criteria->compare('city',$this->city,true);
+        $criteria->compare('region',$this->region,true);        
         $criteria->compare('address',$this->address,true);
         $criteria->compare('postcode',$this->postcode,true);
         $criteria->compare('latitude',$this->latitude);
@@ -223,6 +227,9 @@ class User extends FoodTalkActiveRecord
         $criteria->compare('createId',$this->createId,true);
         $criteria->compare('updateId',$this->updateId,true);
 
+        if(isset($_SESSION['region']))
+        	$criteria->addCondition("t.region = '".$_SESSION['region']."'");
+        
         if(Yii::app()->controller->action->id=='disabled')
         	$criteria->addCondition("t.isDisabled = 1");
         else

@@ -137,17 +137,15 @@ class Post extends FoodTalkActiveRecord
 
         
         $criteria->with[]='dishReview';
-//         $criteria->compare("DishReview.",$this->userId);
 
         $criteria->with[]='user';
         $criteria->compare("user.userName",$this->userId);
         
+		$criteria->with[]='checkedInRestaurant';
 
         
-        
-//         $criteria->with[]='checkedInRestaurant';
-//         $criteria->compare("checkedInRestaurant.restaurantName",$this->checkedInRestaurantId);
-
+        if(isset($_SESSION['region']))
+        	$criteria->addCondition("(checkedInRestaurant.region = '".$_SESSION['region']."' or ( checkedInRestaurantId IS NULL and user.region ='".$_SESSION['region']."' )) ");
         
  		if(Yii::app()->controller->action->id=='disabled')
  			$criteria->addCondition("t.isDisabled = 1");
@@ -158,9 +156,6 @@ class Post extends FoodTalkActiveRecord
 		
 		if($admin){
 		
-// 			if($type=='restaurant'){
-				
-				
 				if(!empty($options)){
 					if(isset($options['restaurant']) && is_numeric($options['restaurant']))
 						$criteria->addCondition("checkedInRestaurantId = ".$options['restaurant']);
@@ -173,39 +168,22 @@ class Post extends FoodTalkActiveRecord
 					}
 					
 				}
-				// 		        $criteria->addCondition("image IS NOT NULL");
-// 			}
-			
 				
 				
 			if($type=='reviews'){
-				$criteria->with[]='checkedInRestaurant';
-				
 				$criteria->addCondition("t.image IS NULL");
 				$criteria->addCondition("checkedInRestaurantId IS not NULL");
-				// 		        $criteria->addCondition("image IS NOT NULL");
 			}	
 
 			if($type=='inactive'){
-				
-				$criteria->with[]='checkedInRestaurant';
 				$criteria->addCondition("checkedInRestaurantId IS not NULL");				
 				$criteria->addCondition("checkedInRestaurant.isActivated = 0");
 				$criteria->addCondition("checkedInRestaurant.isDisabled = 0");
-				
-				if(isset($_SESSION['region']))
-					$criteria->addCondition("checkedInRestaurant.region = '".$_SESSION['region']."'");
-				
 			}
 			
-			
 	        if($type=='checkin'){   	
-	        	$criteria->with[]='checkedInRestaurant';	        	
 		        $criteria->addCondition("checkedInRestaurantId IS not NULL");
 		        $criteria->addCondition("t.image IS NOT NULL");
-		        
-		        if(isset($_SESSION['region']))
-		        	$criteria->addCondition("checkedInRestaurant.region = '".$_SESSION['region']."'");
 	        }
 	        
 	        if($type=='post'){
@@ -223,13 +201,7 @@ class Post extends FoodTalkActiveRecord
 	        	$order = 'f.createDate desc';
 	        }
 	        
-// 	        if($type=='reviews'){
-// 	        	$criteria->addCondition("checkedInRestaurantId IS NOT NULL");
-// 	        	$criteria->addCondition("image IS NULL");
-// 	        }
-
 		}
-// 			$criteria->order = $order;
 
         return new CActiveDataProvider($this, array(
                 'criteria'=>$criteria,
