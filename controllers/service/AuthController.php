@@ -100,6 +100,22 @@ class AuthController extends ServiceBaseController
      * if record exists, update it and return userId and sessionId
      * if record does not exist create a new user and return userId and sessionId
      */
+	
+	public function actionTest(){
+		
+		$_JSON = $this->getJsonInput();
+		if(!isset($_JSON) || empty($_JSON))
+			$result = $this->error($apiName, WS_ERR_POST_PARAM_MISSED, 'No input received.');
+		
+		
+		sleep(5);
+		
+		$result = $_JSON; 
+		
+		$this->sendResponse(json_encode($result, JSON_UNESCAPED_UNICODE));
+		
+	}
+	
     public function actionSignin()
     {
         $apiName = 'auth/signin';
