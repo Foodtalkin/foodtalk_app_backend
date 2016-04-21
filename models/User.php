@@ -261,7 +261,7 @@ class User extends FoodTalkActiveRecord
     /**
      * Returns query to get user records
      */
-    public static function getQuery($userId, $selectAllFields=false, $includeCuisine=false, $includeCount=false)
+    public static function getQuery($userId, $selectAllFields=false, $includeCuisine=false, $includeCount=false, $includeScores=false)
     {
         $sql = 'SELECT u.id';
         $sql .= ',IFNULL(u.userName, "") as userName';
@@ -312,7 +312,13 @@ class User extends FoodTalkActiveRecord
             $sql .= ',(SELECT COUNT(*) FROM `follower` f2 WHERE f2.followedUserId=u.id AND f2.followerUserId='.$userId.') as iFollowedIt';
         }
         
-        $sql .= ' FROM user u';
+        if($includeScores)
+        {
+        	$sql .= ', s.avilablePoints, s.totalPoints, s.score ';
+        	$sql .= ' FROM user u left join activityScore s on s.facebookId = u.facebookId';
+        	
+        }else 
+	        $sql .= ' FROM user u';
         
         return $sql;
     }
@@ -322,7 +328,7 @@ class User extends FoodTalkActiveRecord
      */
     public static function getProfileById($userId, $profileUserId)
     {
-        $sql = self::getQuery($userId, false, false, true);
+        $sql = self::getQuery($userId, false, false, true, true);
         $sql .= ' WHERE u.id=' .$profileUserId;
         $sql .= ' AND u.isDisabled=0 ';
         //LogInFile($sql);

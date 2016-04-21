@@ -40,7 +40,7 @@ class ServiceBaseController extends Controller
     protected function isAuthentic($sessionId = null)
     {
         // Remove old sessions
-        Session::model()->deleteAll('timestamp <= DATE_SUB(NOW(), INTERVAL 1 MONTH) and sessionId != "TEST" ');
+        Session::model()->deleteAll('timestamp <= DATE_SUB(NOW(), INTERVAL 1 MONTH) and sessionId != "GUEST" ');
 
         if (null === $sessionId) 
             $sessionId = filter_var($_POST['sessionId'], FILTER_SANITIZE_STRING);
