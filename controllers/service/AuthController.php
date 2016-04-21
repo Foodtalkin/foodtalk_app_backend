@@ -300,8 +300,8 @@ class AuthController extends ServiceBaseController
                      * This feature will be temporary and added after most of the application finished
                      * If auto follow is not required, comment this part out
                      */
-//                     if($isNewUser)
-//                         Follower::autoFollow($user->id);
+                    if($isNewUser)
+                        Follower::autoFollow($user->id);
                     /* end of auto follow part */
                     
                     $result = array(

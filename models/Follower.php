@@ -218,24 +218,32 @@ class Follower extends FoodTalkActiveRecord
     
     public static function autoFollow($userId)
     {
+    	
+    	
+    	$sql = "INSERT INTO `follower`(`followerUserId`, `followedUserId`) SELECT id, '$userId' from `user` WHERE id != $userId and id > 0 ";
+    	Yii::app()->db->createCommand($sql)->query();
+    	
+ 		$sql = "INSERT INTO `follower`(`followerUserId`, `followedUserId`) SELECT '$userId', id from `user` WHERE id != $userId and id > 0 ";
+ 		Yii::app()->db->createCommand($sql)->query();
+    	
         //get all users
-        $users= User::getUserNames();
-        foreach($users as $user)
-        {
-            if($userId != $user['id'])
-            {
-                //current user follows other user (if not already followed)
-                $follower1 = new Follower('follow_api');
-                $follower1->followerUserId = $userId;
-                $follower1->followedUserId = $user['id'];
-                $follower1->save();
+//         $users= User::getUserNames();
+//         foreach($users as $user)
+//         {
+//             if($userId != $user['id'])
+//             {
+//                 //current user follows other user (if not already followed)
+//                 $follower1 = new Follower('follow_api');
+//                 $follower1->followerUserId = $userId;
+//                 $follower1->followedUserId = $user['id'];
+//                 $follower1->save();
                 
-                //other user follows current user  (if not already followed)
-                $follower2 = new Follower('follow_api');
-                $follower2->followerUserId = $user['id'];
-                $follower2->followedUserId = $userId;
-                $follower2->save();
-            }
-        }
+//                 //other user follows current user  (if not already followed)
+//                 $follower2 = new Follower('follow_api');
+//                 $follower2->followerUserId = $user['id'];
+//                 $follower2->followedUserId = $userId;
+//                 $follower2->save();
+//             }
+//         }
     }
 }
