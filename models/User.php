@@ -314,8 +314,9 @@ class User extends FoodTalkActiveRecord
         
         if($includeScores)
         {
-        	$sql .= ', s.avilablePoints, s.totalPoints, s.score ';
+        	$sql .= ' , IFNULL(s.avilablePoints, "0") as avilablePoints, IFNULL(s.totalPoints, "0") as totalPoints, IFNULL(s.score , "0") as score ';
         	$sql .= ' FROM user u left join activityScore s on s.facebookId = u.facebookId';
+        	
         	
         }else 
 	        $sql .= ' FROM user u';
