@@ -175,6 +175,7 @@ class Comment extends FoodTalkActiveRecord
         $sql .= ',NOW() as currentDate';
         $sql .= ',u.id as userId';
         $sql .= ',IFNULL(u.userName, "") as userName';
+        $sql .= ',IFNULL(u.fullName, "") as fullName';
         $sql .= ',IFNULL(CONCAT("' . imagePath('user') . '", u.image), "") as userImage';
         $sql .= ',IFNULL(CONCAT("' . thumbPath('user') . '", u.image), "") as userThumb';
         $sql .= ' FROM comment c JOIN user u ON c.userId = u.id and c.isDisabled = 0 ';
