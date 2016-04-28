@@ -27,7 +27,20 @@ class UserController extends ServiceBaseController
                     $result = $this->error($apiName, WS_ERR_WONG_USER, 'Please login before using this service.');
                 else
                 {
-                    $selectedUserId = $_JSON['selectedUserId']; //filter_var($_JSON['selectedUserId'], FILTER_SANITIZE_NUMBER_INT);
+//                     $selectedUserId = $_JSON['selectedUserId']; //filter_var($_JSON['selectedUserId'], FILTER_SANITIZE_NUMBER_INT);
+                    
+                    $selectedUser = $_JSON['selectedUserId']; //filter_var($_JSON['selectedUserId'], FILTER_SANITIZE_NUMBER_INT);
+                    
+                    
+                    if(is_numeric($selectedUser))
+                    	$selectedUserId = $selectedUser;
+                    //                     	$user = User::model()->findByAttributes(array('userName'=>$_JSON['userName']));
+                    else {
+                    	$selected_user = User::model()->findByAttributes(array('userName'=>$selectedUser));
+                    	$selectedUserId = $selected_user['id'];
+                    }
+                    
+                    
                     $profile = User::getProfileById($userId, $selectedUserId);
                     
                     if(is_null($profile) || empty($profile))
@@ -300,7 +313,16 @@ class UserController extends ServiceBaseController
                 else
                 {
                     $selectedUserId = $_JSON['selectedUserId']; //filter_var($_JSON['selectedUserId'], FILTER_SANITIZE_NUMBER_INT);
-                    $selectedUser = User::model()->findByPk($selectedUserId);
+                    
+//                     $selectedUser = $_JSON['selectedUserId']; //filter_var($_JSON['selectedUserId'], FILTER_SANITIZE_NUMBER_INT);
+                    
+                    
+                    if(is_numeric($selectedUserId))
+	                    $selectedUser = User::model()->findByPk($selectedUserId);
+                    else {
+                    	$selectedUser = User::model()->findByAttributes(array('userName'=>$selectedUserId));
+                    	$selectedUserId = $selected_user['id'];
+                    }
                     
                     if(is_null($selectedUser))
                         $result = $this->error($apiName, WS_ERR_WONG_VALUE, 'Selected user does not exist.');
