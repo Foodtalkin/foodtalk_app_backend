@@ -478,6 +478,7 @@ class PostController extends ServiceBaseController
     				foreach ($comments as &$comment)
     				{
     					$comment['timeElapsed'] = getTimeElapsed(date_create($comment['createDate']), date_create($comment['currentDate']));
+    					$comment['userMentioned'] = UserMentioned::getUserByComment($comment['id']);
 //     					$post['tags'] = Tag::getTagsByPostId($post['id']);
     				}
     				
