@@ -204,7 +204,8 @@ class Event extends FoodTalkActiveRecord
         $sql .= ',u1.userName as raiserName';
         $sql .= ',IFNULL(e.relatedUserId, "") as relatedUserId';
         $sql .= ',IFNULL(u2.userName, "") as relatedUserName';
-        $sql .= ',e.elementId';
+        $sql .= ',IFNULL(e.elementId, "0") as elementId';
+//         $sql .= ',e.elementId';
         $sql .= ',e.eventDate';
         $sql .= ',e.isNotified';
         $sql .= ',e.channel';

@@ -205,7 +205,7 @@ class ParseCommand extends CConsoleCommand
 					
 					$data['alert'] = $message;
 					$data['eventType'] = $eventType;
-					if(isset($data['elementId']) && $data['elementId'] && $data['elementId']!='')
+// 					if(isset($data['elementId']) && $data['elementId'] && $data['elementId']!='')
 						$data['elementId'] = $event['elementId'];
 					$data['class'] = $event['className'];
 						
@@ -219,7 +219,7 @@ class ParseCommand extends CConsoleCommand
 					
 					$data['alert'] = $message;
 					$data['eventType'] = $eventType;
-					if(isset($data['elementId']) && $data['elementId'] && $data['elementId']!='')
+// 					if(isset($data['elementId']) && $data['elementId'] && $data['elementId']!='')
 						$data['elementId'] = $event['elementId'];
 					$data['class'] = $event['className'];
 					
