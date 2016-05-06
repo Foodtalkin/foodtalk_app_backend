@@ -439,7 +439,17 @@ class UserController extends ServiceBaseController
     			else
     			{
     				$selectedUserId = $_JSON['selectedUserId']; //filter_var($_JSON['selectedUserId'], FILTER_SANITIZE_NUMBER_INT);
-    				$selectedUser = User::model()->findByPk($selectedUserId);
+    				
+    				
+
+    				if(is_numeric($selectedUserId))
+	    				$selectedUser = User::model()->findByPk($selectedUserId);
+    				//                     	$user = User::model()->findByAttributes(array('userName'=>$_JSON['userName']));
+    				else {
+    					$selectedUser = User::model()->findByAttributes(array('userName'=>$selectedUser));
+    					$selectedUserId = $selectedUser['id'];
+    				}
+    				
     
     				if(is_null($selectedUser))
     					$result = $this->error($apiName, WS_ERR_WONG_VALUE, 'Selected user does not exist.');
@@ -458,7 +468,7 @@ class UserController extends ServiceBaseController
     							'api' => $apiName,
     							'apiMessage' => 'Records fetched successfully',
     							'status' => 'OK',
-    							'checkInPosts' => $checkInPosts
+    							'checkIn' => $checkInPosts
     					);
     				}
     			}

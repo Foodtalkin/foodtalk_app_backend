@@ -478,8 +478,8 @@ class Post extends FoodTalkActiveRecord
     	
     	$pageStart = ($page-1) * $recordCount;
     	
-    	$sql = 'SELECT count(1) checkinCount ,checkedInRestaurantId restaurantId, restaurantName FROM '.
-    	'(SELECT DISTINCT checkinId, checkedInRestaurantId, r.restaurantName FROM `post` p INNER JOIN restaurant r on r.id = p.checkedInRestaurantId and r.isDisabled = 0 WHERE p.userId = '.$userId.' and p.isDisabled = 0 and checkinId is not null) a '.
+    	$sql = 'SELECT count(1) checkinCount ,checkedInRestaurantId restaurantId, restaurantName, area FROM '.
+    	'(SELECT DISTINCT checkinId, checkedInRestaurantId, r.restaurantName, IFNULL(r.area, "") area FROM `post` p INNER JOIN restaurant r on r.id = p.checkedInRestaurantId and r.isDisabled = 0 WHERE p.userId = '.$userId.' and p.isDisabled = 0 and checkinId is not null) a '.
     	' GROUP BY checkedInRestaurantId ORDER BY `checkinCount`  DESC , restaurantName asc limit '.$pageStart. ','.$recordCount;
     	
     	$result = Yii::app()->db->createCommand($sql)->queryAll(true);
