@@ -21,8 +21,11 @@ class AuthController extends ServiceBaseController
         $i = 0;
         do
         {
-            $sessionId = sha1(microtime());
-            $session->sessionId = $sessionId;
+        	
+        	if($session->isNewRecord){
+	            $sessionId = sha1(microtime());
+	            $session->sessionId = $sessionId;
+        	}
             // Safety guard
             if (++$i > 10) 
             {
@@ -34,7 +37,7 @@ class AuthController extends ServiceBaseController
             throw new Exception(print_r($session->getErrors(), true), WS_ERR_UNKNOWN);
         }
 
-        return $sessionId;
+        return $session->sessionId;
     }
 
     
