@@ -321,7 +321,7 @@ class UserController extends ServiceBaseController
 	                    $selectedUser = User::model()->findByPk($selectedUserId);
                     else {
                     	$selectedUser = User::model()->findByAttributes(array('userName'=>$selectedUserId));
-                    	$selectedUserId = $selected_user['id'];
+                    	$selectedUserId = $selectedUser['id'];
                     }
                     
                     if(is_null($selectedUser))
