@@ -299,9 +299,13 @@ class Post extends FoodTalkActiveRecord
 
     public static function getPost($postId = false, $userId , $options = array()){
     	
-    	$sql = 'SELECT p.`id`, p.`userId`, IFNULL(p.`checkedInRestaurantId`, "") as checkedInRestaurantId  , IFNULL(CONCAT("' . imagePath('post') . '", p.image), "") as postImage , d.dishName, IFNULL(dr.rating, "0") as rating, p.`tip`, u.userName, u.id userId, '
+    	$sql = 'SELECT p.`id`, p.`userId`, IFNULL(p.`checkedInRestaurantId`, "") as checkedInRestaurantId  , IFNULL(CONCAT("' . imagePath('post') . '", p.image), "") as postImage , d.dishName, IFNULL(dr.rating, "0") as rating, p.`tip`, u.userName, u.id userId, ';
+
     			
-			.'(SELECT COUNT(*) FROM `bookmark` b1 WHERE b1.postId=p.id AND b1.isDisabled=0 AND b1.userId='.$userId.') as iBookark, '
+    if($postId)	
+    		$sql .=' (SELECT MAX(id) FROM `post` pp WHERE pp.id < '.$postId.' AND pp.isDisabled=0 AND pp.userId = p.userId) as `next` , (SELECT MIN(id) FROM `post` pp WHERE pp.id > '.$postId.' AND pp.isDisabled=0 AND pp.userId=p.userId) as `previous`, ';	
+    			
+			$sql .='(SELECT COUNT(*) FROM `bookmark` b1 WHERE b1.postId=p.id AND b1.isDisabled=0 AND b1.userId='.$userId.') as iBookark, '
     		.'(SELECT COUNT(*) FROM `bookmark` b2 WHERE b2.postId=p.id AND b2.isDisabled=0) as bookmarkCount, '
     			
     			.'(SELECT COUNT(*) FROM `like` l2 WHERE l2.postId=p.id AND l2.isDisabled=0 AND l2.userId='.$userId.') as iLikedIt, p.createDate, NOW() as currentDate '.
