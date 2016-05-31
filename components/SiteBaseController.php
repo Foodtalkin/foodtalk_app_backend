@@ -143,6 +143,7 @@ class SiteBaseController extends Controller
        		'comment.delete',
        		'comment.disabled',
        		'comment.restore',
+        	'comment.approve',
 
         		
         	'notification.index',

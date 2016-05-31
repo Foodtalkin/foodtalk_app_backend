@@ -189,12 +189,16 @@ class Dish extends FoodTalkActiveRecord
 	
 	
 	
-	public static function listByName($dishName='')
+	public static function listByName($dishName='', $region='')
 	{
 		if(strlen($dishName) >1 )
 		{
 			$sql = 'SELECT d.id, CHAR_LENGTH(d.dishName) length, d.dishName , COUNT(d.id) postCount, MATCH(dishName) against ("'.$dishName.'") score FROM `dish` d inner JOIN dishReview r on r.dishId = d.id INNER join post on post.id = r.postId AND post.checkedInRestaurantId is not null ';
 			$sql .= ' INNER JOIN restaurant on restaurant.id = post.checkedInRestaurantId AND restaurant.isDisabled = 0 AND restaurant.isActivated = 1';
+			
+			if(strlen($region) >1)
+				$sql .=' and restaurant.region ="'.$region.'" ';
+			
 			$sql .=' where  MATCH(dishName) against ("'.$dishName.'*" IN BOOLEAN MODE ) AND d.isDisabled = 0 GROUP by d.id ORDER BY score desc, length asc, dishName ASC';
 			
 		}else{

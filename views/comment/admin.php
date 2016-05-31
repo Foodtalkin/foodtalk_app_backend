@@ -96,7 +96,36 @@ $type = Yii::app()->request->getParam('type',false);
 		*/
 		array(
 			'class'=>'CButtonColumn',
-				'template' => ' {delete}',
+				'template' => ' {delete} {approve}',
+				
+				
+				
+				'buttons'=>array(
+						'approve' => array(
+								'label'=>'✓',
+								//                     			CHtml::image('http://wcdn3.dataknet.com/static/resources/icons/set29/3e4058cd.png', 'approve'),
+						//                     				'imageUrl'=>'http://wcdn3.dataknet.com/static/resources/icons/set29/3e4058cd.png',
+								'url'=>'Yii::app()->createAbsoluteUrl("comment/approve", array("id"=>$data->id))',
+// 								'visible'=>'$data->reportedCount',
+								'click'=>"function(){
+                                if(!confirm('Approve this Comment ?')) return false;
+                                $.fn.yiiGridView.update('post-grid', {
+                                    type:'POST',
+                                    url:$(this).attr('href'),
+                                    success:function(data) {
+                                        $.fn.yiiGridView.update('post-grid');
+                                    }
+                                })
+                                return false;
+                            }",
+								//'imageUrl'=>'/path/to/copy.gif',  // image URL of the button. If not set or false, a text link is used
+								//'options' => array('class'=>'copy'), // HTML options for the button
+						)
+					)
+				
+				
+				
+				
 		),
 	),
 )); ?>

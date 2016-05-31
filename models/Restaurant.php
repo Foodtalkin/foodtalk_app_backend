@@ -454,13 +454,16 @@ class Restaurant extends FoodTalkActiveRecord
     /**
      * Returns restaurant records
      */
-    public static function getRestaurants($userId, $latitude=0, $longitude=0, $includeCuisine = true, $includeCount = false, $searchText='', $recordCount=0, $exceptions='', $maxDistance=0)
+    public static function getRestaurants($userId, $latitude=0, $longitude=0, $includeCuisine = true, $includeCount = false, $searchText='', $recordCount=0, $exceptions='', $maxDistance=0, $region='')
     {
         $sql = self::getQuery($userId, $latitude, $longitude, $includeCuisine, $includeCount);
         $sql .= " WHERE r.isDisabled = 0";
         
         if(!empty($searchText))
             $sql .= ' AND r.restaurantName LIKE "%' .$searchText. '%"';
+        
+        if(!empty($region))
+        	$sql .= ' AND r.region = "' .$region. '"';
         
         if($exceptions)
             $sql .= ' AND r.id NOT IN (' .$exceptions. ')';

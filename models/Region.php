@@ -92,6 +92,11 @@ class Region extends CActiveRecord
 		));
 	}
 
+	public static function getQuery($userId, $latitude=0, $longitude=0, $includeCuisine = true, $includeCount = false)
+	{
+		
+	}
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!

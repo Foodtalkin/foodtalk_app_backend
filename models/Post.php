@@ -263,11 +263,11 @@ class Post extends FoodTalkActiveRecord
         if($includeCount)
         {
         	$sql .= ',(SELECT COUNT(*) FROM `follower` f WHERE f.followedUserId=u.id) as followersCount';       	 
-            $sql .= ',(SELECT COUNT(*) FROM `like` l WHERE l.postId=p.id AND l.isDisabled=0) as likeCount';
-            $sql .= ',(SELECT COUNT(*) FROM comment c WHERE c.postId=p.id AND c.isDisabled=0) as commentCount';
+            $sql .= ',(SELECT COUNT(*) FROM `like` l, user u WHERE l.userId = u.id and u.isDisabled=0 and l.postId=p.id AND l.isDisabled=0) as likeCount';
+            $sql .= ',(SELECT COUNT(*) FROM comment c, user u WHERE c.userId = u.id and u.isDisabled=0 and c.postId=p.id AND c.isDisabled=0) as commentCount';
             $sql .= ',(SELECT COUNT(*) FROM `flag` f WHERE f.postId=p.id AND f.isDisabled=0) as flagCount';
             
-            $sql .= ',(SELECT COUNT(*) FROM `bookmark` b2 WHERE b2.postId=p.id AND b2.isDisabled=0) as bookmarkCount';
+            $sql .= ',(SELECT COUNT(*) FROM `bookmark` b2, user u WHERE b2.userId = u.id and u.isDisabled=0 and b2.postId=p.id AND b2.isDisabled=0) as bookmarkCount';
             
             $sql .= ',(SELECT COUNT(*) FROM `like` l2 WHERE l2.postId=p.id AND l2.isDisabled=0 AND l2.userId='.$userId.') as iLikedIt';
             $sql .= ',(SELECT COUNT(*) FROM `flag` f2 WHERE f2.postId=p.id AND f2.isDisabled=0 AND f2.userId='.$userId.') as iFlaggedIt';

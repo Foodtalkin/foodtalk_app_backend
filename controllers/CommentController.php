@@ -42,6 +42,21 @@ class CommentController extends SiteBaseController
 		));
 	}
 
+	public function actionApprove($id)
+	{
+		// 		$this->loadModel($id)->delete();
+	
+		$flags = Flag::model()->deleteAllByAttributes(array('commentId'=>$id));
+	
+		// 		$model=$this->loadModel($id);
+		// 		$model->isDisabled = 1;
+		// 		$model->save();
+	
+		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+		if(!isset($_GET['ajax']))
+			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+	}
+	
 	/**
 	 * Updates a particular model.
 	 * If update is successful, the browser will be redirected to the 'view' page.

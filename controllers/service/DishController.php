@@ -28,8 +28,14 @@ class DishController extends ServiceBaseController
                     $search = '';
                     if(isset($_JSON['search']) && $_JSON['search'])
                         $search = filter_var($_JSON['search'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
+                    
+                    
+                    $region = '';
+                    if(isset($_JSON['region']) && $_JSON['region'])
+                    	$region = filter_var($_JSON['region'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
+                    
 
-                    $result = Dish::listByName($search);
+                    $result = Dish::listByName($search, $region);
                     $result = array(
                         'api' => $apiName,
                         'apiMessage' => 'Tags fetched successfully.',

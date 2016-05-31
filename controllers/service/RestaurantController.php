@@ -256,7 +256,7 @@ class RestaurantController extends ServiceBaseController
 //                    $sql .= " ORDER BY distance";
 //                    
 //                    $restaurants = Yii::app()->db->createCommand($sql)->queryAll(true);
-                    $restaurants = Restaurant::getRestaurants($userId, $latitude, $longitude, $includeCuisine, $includeCount, $searchText, $recordCount, $exceptions, $restaurantDistance);
+                    $restaurants = Restaurant::getRestaurants($userId, $latitude, $longitude, $includeCuisine, $includeCount, $searchText, $recordCount, $exceptions, $restaurantDistance, $region);
                     $result = array(
                         'api' => $apiName,
                         'apiMessage' => 'Records fetched successfully',
