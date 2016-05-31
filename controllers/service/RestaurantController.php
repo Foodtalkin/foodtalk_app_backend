@@ -212,6 +212,7 @@ class RestaurantController extends ServiceBaseController
                     $recordCount = 0;   //0 means all records
                     $exceptions = '';   //list of restaurant ids that are not to be included in the list
                     $restaurantDistance = 10000;
+                    $region='';
                     
                     if(isset($_JSON['latitude']) && !empty($_JSON['latitude']))
                         $latitude = filter_var($_JSON['latitude'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
@@ -231,6 +232,8 @@ class RestaurantController extends ServiceBaseController
                         $exceptions = filter_var($_JSON['exceptions'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
                     
                     
+                    if(isset($_JSON['region']) && $_JSON['region'])
+                    	$region = filter_var($_JSON['region'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
                     
                     
 //                     restaurants with 1 km only
