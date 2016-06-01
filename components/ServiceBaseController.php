@@ -147,9 +147,9 @@ class ServiceBaseController extends Controller
 
     	$userSQL = '(select userId from session where sessionId = "'.$sessionId.'")';
     		 
-    	$sql = 'insert into access_logs (ip_address, user_id, end_point, latitude, longitude, dump, method) values (:ip_address, '.$userSQL.', :end_point, :latitude, :longitude, :dump, :method)';
+    	$sql = 'insert into access_logs (ip_address, user_id, platform, end_point, latitude, longitude, dump, method) values (:ip_address, '.$userSQL.', :platform,  :end_point, :latitude, :longitude, :dump, :method)';
 
-	$result = Yii::app()->db->createCommand($sql)->query(array('ip_address'=> $ip_address, 'end_point'=> $end_point, 'latitude'=> $latitude, 'longitude'=> $longitude, 'dump'=> $dump, 'method'=> $method));
+	$result = Yii::app()->db->createCommand($sql)->query(array('ip_address'=> $ip_address, 'platform'=> $_SERVER['HTTP_USER_AGENT'], 'end_point'=> $end_point, 'latitude'=> $latitude, 'longitude'=> $longitude, 'dump'=> $dump, 'method'=> $method));
 	    
 
         // Init output
