@@ -242,6 +242,9 @@ class AuthController extends ServiceBaseController
                     if(isset($_JSON['longitude']))
                         $user->longitude = filter_var($_JSON['longitude'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
                     
+                    if(isset($_JSON['region']))
+                    	$user->region = filter_var($_JSON['region'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
+                    
                     //save image
                     if(isset($_JSON['image']) && !empty($_JSON['image']))
                     {
