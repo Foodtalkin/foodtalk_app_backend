@@ -177,6 +177,10 @@ class Post extends FoodTalkActiveRecord
         $sql .= ',IFNULL(CONCAT("' . thumbPath('user') . '", u.image), "") as userThumb';
         $sql .= ',IFNULL(u.facebookId, "") as facebookId';
         $sql .= ',IFNULL(r.restaurantName, "") as restaurantName';
+        
+        $sql .= ',IFNULL(r.area, "") as area';
+        $sql .= ',IFNULL(r.region, "") as region';
+        
         //$sql .= ",RADIANS(ACOS(SIN(DEGREES($latitude)) * SIN(DEGREES(r.latitude)) + COS(DEGREES($latitude)) * COS(DEGREES(r.latitude)) * COS(DEGREES($longitude - r.longitude)))) * 111189.577 as restaurantDistance";
         $sql .= ",DEGREES(ACOS(SIN(RADIANS($latitude)) * SIN(RADIANS(r.latitude)) + COS(RADIANS($latitude)) * COS(RADIANS(r.latitude)) * COS(RADIANS($longitude - r.longitude)))) * 111189.3006 as restaurantDistance";
         

@@ -318,6 +318,10 @@ class RestaurantController extends ServiceBaseController
                     
                     if(isset($_JSON['address']) && !empty($_JSON['address']))
                     	$restaurant->address = filter_var($_JSON['address'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
+
+                    if(isset($_JSON['region']) && !empty($_JSON['region']))
+                    	$restaurant->region = filter_var($_JSON['region'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
+                    
                     
                     if(isset($_JSON['city']) && !empty($_JSON['city']))
                     	$restaurant->city = filter_var($_JSON['city'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);

@@ -253,6 +253,9 @@ class Post extends FoodTalkActiveRecord
         $sql .= ',IFNULL(u.facebookId, "") as facebookId';
         $sql .= ',IFNULL(r.restaurantName, "") as restaurantName';
         
+        $sql .= ',IFNULL(r.area, "") as area';
+        $sql .= ',IFNULL(r.region, "") as region';
+        
         $sql .= ' , IFNULL(r.isActivated, 0) as restaurantIsActive ';
         
         if($latitude && $longitude)
