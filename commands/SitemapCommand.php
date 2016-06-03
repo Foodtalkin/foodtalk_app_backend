@@ -132,7 +132,7 @@ class Sitemap {
 
 	function Sitemap($file_path,$domain){
 		$this->open=true;
-		$this->file_path='/var/www/html/webapp/public/'.$file_path;
+		$this->file_path='/var/www/webapp/public/'.$file_path;
 
 		$this->dom = new DOMDocument();
 		$this->dom->encoding = 'utf-8';
