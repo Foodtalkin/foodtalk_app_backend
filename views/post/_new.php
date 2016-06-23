@@ -44,7 +44,10 @@
 	</div>
 	
 	<div class="row">
-		<?php echo $form->labelEx($model,'userId'); ?>
+	
+		<?php 
+// 	print_r ($_SESSION);
+		echo $form->labelEx($model,'userId'); ?>
 		<?php echo $form->dropDownList($model, 'userId', CHtml::listData(Manager::model()->findAll(), 'id', 'managerName')); ?>
 		<?php echo $form->error($model,'userId'); ?>
 	
@@ -57,7 +60,7 @@
 				'checkedInRestaurantId', 
 				CHtml::listData(
 						Restaurant::model()->findAll(
-								array("condition"=>"isActivated = 1 and isDisabled = 0",'order'=>'restaurantName', "select"=>"id, CONCAT(restaurantName, ' (', IFNULL(area, IFNULL(address, '') )  , ')', IF(isDisabled = 1, '-DISABLE RESTAURANT', IF(isActivated = 0, '-INACTIVE RESTAURANT', ''))) as restaurantName")
+								array("condition"=>'region = "'.$_SESSION['region'].'" and '." isActivated = 1 and isDisabled = 0",'order'=>'restaurantName', "select"=>"id, CONCAT(restaurantName, ' (', IFNULL(area, IFNULL(address, '') )  , ')', IF(isDisabled = 1, '-DISABLE RESTAURANT', IF(isActivated = 0, '-INACTIVE RESTAURANT', ''))) as restaurantName")
 								), 
 						'id', 
 						'restaurantName'
