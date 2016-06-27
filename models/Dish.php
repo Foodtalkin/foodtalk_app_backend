@@ -6,6 +6,7 @@
  * The followings are the available columns in table 'dish':
  * @property string $id
  * @property string $dishName
+ * @property string $url
  * @property integer $isDisabled
  * @property string $disableReason
  * @property string $createDate
@@ -33,13 +34,13 @@ class Dish extends FoodTalkActiveRecord
 		return array(
 			array('dishName', 'required'),
 			array('isDisabled', 'numerical', 'integerOnly'=>true),
-			array('dishName', 'length', 'max'=>191),
+			array('dishName, url', 'length', 'max'=>191),
 			array('disableReason', 'length', 'max'=>128),
 			array('createId, updateId', 'length', 'max'=>10),
 			array('updateDate', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, dishName, isDisabled, disableReason, createDate, updateDate, createId, updateId', 'safe', 'on'=>'search'),
+			array('id, dishName, url, isDisabled, disableReason, createDate, updateDate, createId, updateId', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -66,6 +67,7 @@ class Dish extends FoodTalkActiveRecord
 		return array(
 			'id' => 'ID',
 			'dishName' => 'Dish Name',
+			'url' => 'Url',
 			'isDisabled' => 'Is Disabled',
 			'disableReason' => 'Disable Reason',
 			'createDate' => 'Create Date',
@@ -95,6 +97,7 @@ class Dish extends FoodTalkActiveRecord
 
 		$criteria->compare('id',$this->id,true);
 		$criteria->compare('dishName',$this->dishName,true);
+		$criteria->compare('url',$this->url,true);
 		$criteria->compare('t.isDisabled',$this->isDisabled);
 		$criteria->compare('disableReason',$this->disableReason,true);
 		$criteria->compare('createDate',$this->createDate,true);
@@ -158,10 +161,28 @@ class Dish extends FoodTalkActiveRecord
 		
 		if($create){
 			if(!$dish){
-					
+				$append ='';
 				$dish = new self('api_insert');
 				$dish->dishName = $dishName;
-				$dish->save();
+				
+				$doSave=true;
+				while ($doSave){
+					
+					$dish->url = self::urlfy($dishName.$append);
+					
+					try {
+						
+						$dish->save();
+						$doSave = false;
+						
+					}catch (Exception $e){
+
+						$append++;
+						
+					}
+				}
+				
+				
 			}
 		}
 		
@@ -171,9 +192,13 @@ class Dish extends FoodTalkActiveRecord
 	
 	public static function listAll($options=array('id'=>0))
 	{
-		$sql = 'SELECT d.dishName name, d.id , COUNT(d.id) as postCount';
+		$sql = 'SELECT d.dishName name, d.url, d.id , COUNT(d.id) as postCount';
 		
 		$sql .=' FROM `dish` d INNER JOIN dishReview r on r.dishId = d.id INNER JOIN post on post.id = r.postId and post.isDisabled = 0 ';
+		
+		if (isset($options['with']) && $options['with'] == 'checkin')
+			$sql .=' INNER JOIN restaurant on post.checkedInRestaurantId = restaurant.id and post.checkinId is not null ';
+		
 		$sql .=' where  d.isDisabled = 0 ';
 		
 		if( isset($options['id']) && is_numeric($options['id']) && $options['id']>0)
