@@ -19,6 +19,15 @@ abstract class FoodTalkActiveRecord extends CActiveRecord
         return parent::beforeSave();
     }
     
+    protected function urlfy($string){
+    	
+    	$string = str_replace(' ', '-', $string);
+    	$string = str_replace('&', 'and', $string);
+    	$string = preg_replace('/[^A-Za-z0-9\-]/', '', $string); 
+    	
+    	return preg_replace('/-+/', '-', $string);
+    }
+    
     protected function afterSave()
     {
     	
