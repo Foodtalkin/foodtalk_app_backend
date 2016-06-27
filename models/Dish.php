@@ -197,7 +197,7 @@ class Dish extends FoodTalkActiveRecord
 		$sql .=' FROM `dish` d INNER JOIN dishReview r on r.dishId = d.id INNER JOIN post on post.id = r.postId and post.isDisabled = 0 ';
 		
 		if (isset($options['with']) && $options['with'] == 'checkin')
-			$sql .=' INNER JOIN restaurant on post.checkedInRestaurantId = restaurant.id and post.checkinId is not null ';
+			$sql .=' INNER JOIN restaurant on post.checkedInRestaurantId = restaurant.id and post.checkinId is not null restaurant.isDisabled = 0 AND restaurant.isActivated = 1';
 		
 		$sql .=' where  d.isDisabled = 0 ';
 		
