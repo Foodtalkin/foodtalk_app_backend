@@ -77,25 +77,46 @@ class SitemapCommand extends CConsoleCommand
 		
 	}
 	
+// 	public function actionDish() {
+		
+// 		$file_path='dish.xml';
+		
+// 		$site_map =  new Sitemap($file_path, $this->domain);
+		
+// 		$objects = Dish::listAll();
+		
+// 		foreach ($objects as $obj){
+// 			$loc = new url();
+			
+// 			$loc->loc($this->domain .'dish/'. str_replace(' ', '-', $obj['name']));
+			
+// 			$site_map->AppendUrl($loc->getUrl(), array(),date("Y-m-d"));
+				
+// 		}
+// 		$site_map->Save();
+		
+// 	}
 	public function actionDish() {
-		
+	
 		$file_path='dish.xml';
-		
+	
 		$site_map =  new Sitemap($file_path, $this->domain);
-		
-		$objects = Dish::listAll();
-		
+	
+		$objects = Dish::listAll(array('with'=>'checkin'));
+	
 		foreach ($objects as $obj){
 			$loc = new url();
-			
+				
+// 			$loc->loc($this->domain .'dish/'. $obj['url']);
 			$loc->loc($this->domain .'dish/'. str_replace(' ', '-', $obj['name']));
 			
 			$site_map->AppendUrl($loc->getUrl(), array(),date("Y-m-d"));
-				
+	
 		}
 		$site_map->Save();
-		
+	
 	}
+	
 	
 }
 
