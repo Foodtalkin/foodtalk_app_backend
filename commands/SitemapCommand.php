@@ -107,8 +107,8 @@ class SitemapCommand extends CConsoleCommand
 		foreach ($objects as $obj){
 			$loc = new url();
 				
-// 			$loc->loc($this->domain .'dish/'. $obj['url']);
-			$loc->loc($this->domain .'dish/'. str_replace(' ', '-', $obj['name']));
+			$loc->loc($this->domain .'dish/'. $obj['url']);
+// 			$loc->loc($this->domain .'dish/'. str_replace(' ', '-', $obj['name']));
 			
 			$site_map->AppendUrl($loc->getUrl(), array(),date("Y-m-d"));
 	
