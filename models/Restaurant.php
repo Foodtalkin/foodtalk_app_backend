@@ -374,6 +374,7 @@ class Restaurant extends FoodTalkActiveRecord
         $sql .= ',IFNULL(r.state, "") as state';
         $sql .= ',IFNULL(r.city, "") as city';
         $sql .= ',IFNULL(r.area, "") as area';
+        $sql .= ',IFNULL(r.region, "") as region';
         $sql .= ',IFNULL(r.address, "") as address';
         $sql .= ',IFNULL(r.postcode, "") as postcode';
         $sql .= ',IFNULL(r.latitude, 0) as latitude';

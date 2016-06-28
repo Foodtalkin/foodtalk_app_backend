@@ -1,5 +1,4 @@
-<script src="/themes/abound/js/selectize.js"></script>
-<script src="/foodtalk/themes/abound/js/selectize.js"></script>
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/themes/abound/js/selectize.js"></script>
 <?php
 /* @var $this RestaurantController */
 /* @var $model Restaurant */
@@ -52,7 +51,85 @@ else{
 
 
 
+echo Yii::app()->request->baseUrl."<br/>" ;
 ?>
+
+<!-- 						<select id="select-repo" class="repositories" placeholder="Pick a repository..."> -->
+<!-- 						</select> -->
+
+<script>
+$( document ).ready(function() {
+$('#duplicateId').selectize({
+    valueField: 'id',
+    labelField: 'restaurantName',
+    searchField: 'restaurantName',
+    create: false,
+    render: {
+        option: function(item, escape) {
+
+            return '<div>' +
+                '<span class="title">' +
+                    '<span class="name">' + escape(item.restaurantName) + '</span>' +
+                '</span>' +
+                    '<br><span class="by">' + escape(item.address) +', ('+ escape(item.region) +')</span>' +
+            '</div>';
+        }
+    },
+    load: function(query, callback) {
+        if (!query.length) return callback();
+        $.ajax({
+        	url: '<?php echo Yii::app()->request->baseUrl; ?>/index.php/service/restaurant/list?sessionId=GUEST&searchText=' + encodeURIComponent(query),
+            type: 'GET',
+            error: function() {
+                callback();
+            },
+            success: function(res) {
+                callback(res.restaurants);
+            }
+        });
+    }
+});
+});
+
+// $('#select-repo').selectize({
+//     valueField: 'url',
+//     labelField: 'name',
+//     searchField: 'name',
+//     create: false,
+//     render: {
+//         option: function(item, escape) {
+//         	console.log(item);
+            
+//             return '<div>' +
+//                 '<span class="title">' +
+//                     '<span class="name">' + item.name + '</span>' +
+// //                     '<span class="by">' + escape(item.username) + '</span>' +
+//                 '</span>' +
+// //                 '<span class="description">' + escape(item.description) + '</span>' +
+// //                 '<ul class="meta">' +
+// //                     (item.language ? '<li class="language">' + escape(item.language) + '</li>' : '') +
+// //                     '<li class="watchers"><span>' + escape(item.watchers) + '</span> watchers</li>' +
+// //                     '<li class="forks"><span>' + escape(item.forks) + '</span> forks</li>' +
+// //                 '</ul>' +
+//             '</div>';
+//         }
+//     },
+//     load: function(query, callback) {
+//         if (!query.length) return callback();
+//         $.ajax({
+// //         	url: 'http://localhost/foodtalk/index.php/service/restaurant/list?sessionId=GUEST&searchText=' + encodeURIComponent(query),
+//             url: 'https://api.github.com/legacy/repos/search/' + encodeURIComponent(query),
+//             type: 'GET',
+//             error: function() {
+//                 callback();
+//             },
+//             success: function(res) {
+//                 callback(res.repositories);
+//             }
+//         });
+//     }
+// });
+</script>
 
 <h1>Restaurant: <?php echo $model->restaurantName; ?>
 </h1>
@@ -77,18 +154,18 @@ echo CHtml::dropDownList(
 						$model->duplicateId, 
 						CHtml::listData(
 								Restaurant::model()->findAll(
-										array("condition"=>"isActivated = 1 and isDisabled = 0 ",'order'=>'restaurantName', "select"=>"id, CONCAT(restaurantName, ' (', IFNULL(area, IFNULL(address, '') )  , ')', IF(isDisabled = 1, '-DISABLE RESTAURANT', IF(isActivated = 0, '-INACTIVE RESTAURANT', ''))) as restaurantName")), 
+										array("condition"=>"id = ".($model->duplicateId ? $model->duplicateId : 0),'order'=>'restaurantName', "select"=>"id, CONCAT(restaurantName, ' (', IFNULL(area, IFNULL(address, '') )  , ')', IF(isDisabled = 1, '-DISABLE RESTAURANT', IF(isActivated = 0, '-INACTIVE RESTAURANT', ''))) as restaurantName")), 
 								'id', 
 								'restaurantName'
-								),
-						array('empty'=>array('Select a Restaurant'))
+								)
+// 						array('empty'=>array('Select a Restaurant'))
 					);
 ?>
 </span>
 <script>
-	$('#duplicateId').selectize({
-		allowEmptyOption: true
-	});
+// 	$('#duplicateId').selectize({
+// 		allowEmptyOption: true
+// 	});
 
 	$('.selectize-control').width('300px');
 // 	$('.selectize-control').style["padding-left"] = "60px";

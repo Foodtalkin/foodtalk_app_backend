@@ -207,7 +207,7 @@ class ServiceBaseController extends Controller
         return (isset($statusMessages[$status])) ? $statusMessages[$status] : '';
     }
 
-    function sendResponse($body = '', $status = 200, $contentType = 'text/html')
+    function sendResponse($body = '', $status = 200, $contentType = 'application/json')
     {
         $statusHeader = 'HTTP/1.1 ' . $status . ' ' . $this->getStatusMessage($status);
         header($statusHeader);
