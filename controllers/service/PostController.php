@@ -127,7 +127,7 @@ class PostController extends ServiceBaseController
                     
                     if(isset($_JSON['dishName'])){
                     	
-                    	$_JSON['dishName'] = mb_convert_encoding( $_JSON['dishName'], "UTF-8", "BASE64" );
+//                     	$_JSON['dishName'] = mb_convert_encoding( $_JSON['dishName'], "UTF-8", "BASE64" );
                     	$dish = Dish::getDishByNmae($_JSON['dishName']);
                     	$dishReview->dishId = $dish->id;
 	                    $dishReview->save();
@@ -642,6 +642,7 @@ class PostController extends ServiceBaseController
                     $exceptions = '';   //list of post ids that are not to be included in the list
                     $tagId = 0;
                     $search='';
+                    $dishId = '';
                     $page = 1; 
                     
                     if(isset($_JSON['latitude']) && $_JSON['latitude'])
@@ -653,7 +654,11 @@ class PostController extends ServiceBaseController
                     if(isset($_JSON['recordCount']) && $_JSON['recordCount'])
                         $recordCount = filter_var($_JSON['recordCount'], FILTER_SANITIZE_NUMBER_INT);
 
-                    if(isset($_JSON['search']) && $_JSON['search'])
+                    
+                    if(isset($_JSON['dishId']) && $_JSON['dishId'])
+                    	$dishId = filter_var($_JSON['dishId'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
+                    
+                    elseif(isset($_JSON['search']) && $_JSON['search'])
                     	$search = filter_var($_JSON['search'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
                     
                     if(isset($_JSON['exceptions']) && $_JSON['exceptions'])
@@ -667,7 +672,7 @@ class PostController extends ServiceBaseController
                     
                     $posts = 
 //                     Post::getDiscoverPosts($userId, $latitude, $longitude, $tagId, $recordCount, $exceptions);
-                    Post::getDiscoverPosts($userId, $latitude, $longitude, $tagId, $recordCount, $exceptions,0, $search, $page);
+                    Post::getDiscoverPosts($userId, $latitude, $longitude, $tagId, $recordCount, $exceptions,0, $search, $page, 0, $dishId);
                     $result = array(
                         'api' => $apiName,
                         'apiMessage' => 'Posts fetched successfully.',

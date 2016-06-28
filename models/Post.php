@@ -729,7 +729,7 @@ class Post extends FoodTalkActiveRecord
     	
     }
     
-    public static function getDiscoverPosts($userId, $latitude=0, $longitude=0, $tagId=0, $recordCount=15, $exceptions='', $maxDistance=0, $search='', $page = 1, $days=0)
+    public static function getDiscoverPosts($userId, $latitude=0, $longitude=0, $tagId=0, $recordCount=15, $exceptions='', $maxDistance=0, $search='', $page = 1, $days=0, $dishId)
     {
 
     	$pagestart = ($page-1) * $recordCount;
@@ -788,6 +788,10 @@ class Post extends FoodTalkActiveRecord
     	if($search)
     		$sql .= ' AND d.dishName = "'.$search.'"';
 //     		$sql .= ' AND MATCH (d.dishName) against ("'.$search.'")';
+    	if($dishId)
+    		$sql .= ' AND d.url = "'.$dishId.'"';
+    	
+    	
     	
     	$sql .= ' GROUP BY p.checkedInRestaurantId) pop';
 //}end of temporary popular_post table
