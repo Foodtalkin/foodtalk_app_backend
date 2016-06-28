@@ -303,7 +303,7 @@ class Post extends FoodTalkActiveRecord
 
     public static function getPost($postId = false, $userId , $options = array()){
     	
-    	$sql = 'SELECT p.`id`, p.`userId`, IFNULL(p.`checkedInRestaurantId`, "") as checkedInRestaurantId  , IFNULL(CONCAT("' . imagePath('post') . '", p.image), "") as postImage , d.dishName, IFNULL(dr.rating, "0") as rating, p.`tip`, u.userName, u.id userId, ';
+    	$sql = 'SELECT p.`id`, p.`userId`, IFNULL(p.`checkedInRestaurantId`, "") as checkedInRestaurantId  , IFNULL(CONCAT("' . imagePath('post') . '", p.image), "") as postImage , d.dishName, IFNULL(d.url, "") as dishUrl IFNULL(dr.rating, "0") as rating, p.`tip`, u.userName, u.id userId, ';
 
     			
     if($postId)	
@@ -641,6 +641,7 @@ class Post extends FoodTalkActiveRecord
     	$sql .= ',IFNULL(CONCAT("' . thumbPath('post') . '", p.image), "") as postThumb';
     	
     	$sql .= ',IFNULL(d.dishName, "") as dishName';
+    	$sql .= ',IFNULL(d.url, "") as dishUrl';
    	 
 		$sql .= ',IFNULL(p.tip, "") as tip,p.createDate,NOW() as currentDate,IFNULL(u.userName, "") as userName';
 		$sql .= ',IFNULL(u.email, "") as email,IFNULL(u.country, "") as country,IFNULL(u.state, "") as state,IFNULL(u.city, "") as city';
@@ -740,6 +741,7 @@ class Post extends FoodTalkActiveRecord
     	$sql .= ',IFNULL(CONCAT("' . imagePath('post') . '", p.image), "") as postImage';
     	$sql .= ',IFNULL(CONCAT("' . thumbPath('post') . '", p.image), "") as postThumb';
     	$sql .= ',IFNULL(d.dishName, "") as dishName';
+    	$sql .= ',IFNULL(d.url, "") as dishUrl';
     	$sql .= ',IFNULL(dr.rating, "0") as rating';
     	 
 //     	if($search)
