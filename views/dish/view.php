@@ -29,7 +29,7 @@ $type = Yii::app()->request->getParam('type',false);
 <tr class="even"><th>Create Date</th><td><?php echo $model->createDate;?></td></tr>
 <tr class="odd"><th>Active</th><td>
 <tr class="even"><th>Dish url</th><td> 
-<input  style="width: 350px;" maxlength="32" name="url" type="text" value="<?php echo $model->url;?>">
+<input readonly="readonly" style="width: 350px;" maxlength="32" name="url" type="text" value="<?php echo $model->url;?>">
 
 <tr class="odd"><th>Cuisines</th><td>
 
