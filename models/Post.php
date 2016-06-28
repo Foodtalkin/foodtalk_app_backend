@@ -237,6 +237,7 @@ class Post extends FoodTalkActiveRecord
         $sql .= ',IFNULL(CONCAT("' . thumbPath('post') . '", p.image), "") as postThumb';
         $sql .= ',IFNULL(p.tip, "") as tip';
         $sql .= ',IFNULL(d.dishName, "") as dishName';        
+        $sql .= ',IFNULL(d.url, "") as dishUrl';
         $sql .= ',IFNULL(dr.rating, "0") as rating';
         
         $sql .= ',p.createDate';
