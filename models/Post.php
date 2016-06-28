@@ -303,7 +303,7 @@ class Post extends FoodTalkActiveRecord
 
     public static function getPost($postId = false, $userId , $options = array()){
     	
-    	$sql = 'SELECT p.`id`, p.`userId`, IFNULL(p.`checkedInRestaurantId`, "") as checkedInRestaurantId  , IFNULL(CONCAT("' . imagePath('post') . '", p.image), "") as postImage , d.dishName, IFNULL(d.url, "") as dishUrl IFNULL(dr.rating, "0") as rating, p.`tip`, u.userName, u.id userId, ';
+    	$sql = 'SELECT p.`id`, p.`userId`, IFNULL(p.`checkedInRestaurantId`, "") as checkedInRestaurantId  , IFNULL(CONCAT("' . imagePath('post') . '", p.image), "") as postImage , d.dishName, IFNULL(d.url, "") as dishUrl, IFNULL(dr.rating, "0") as rating, p.`tip`, u.userName, u.id userId, ';
 
     			
     if($postId)	
