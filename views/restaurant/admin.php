@@ -81,7 +81,7 @@ if(Yii::app()->controller->action->id=='suggestion'){
 	$columns[]='phoneNo';
 }else{
 	
-// 	$columns[]='area';
+	$columns[]='region';
 	$columns[]='area';
 	$columns[]='latitude';
 }
