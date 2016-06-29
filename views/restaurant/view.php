@@ -168,6 +168,7 @@ echo CHtml::dropDownList(
 // 	});
 
 	$('.selectize-control').width('300px');
+	$('#duplicateId').width('300px');
 // 	$('.selectize-control').style["padding-left"] = "60px";
 	
 </script>
