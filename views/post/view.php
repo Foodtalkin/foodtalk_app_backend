@@ -1,6 +1,5 @@
 
-<script src="/themes/abound/js/selectize.js"></script>
-<script src="/foodtalk/themes/abound/js/selectize.js"></script>
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/themes/abound/js/selectize.js"></script>
 <?php
 $rating = array(1,2,3,4,5);
 // $rating = array(0.5,1,1.5,2,2.5,3,3.5,4,4.5,5);
@@ -96,7 +95,7 @@ echo 'checked';
 					$model->checkedInRestaurantId, 
 					CHtml::listData(
 							Restaurant::model()->findAll(
-									array("condition"=>'region = "'.$_SESSION['region'].'" and '." (isActivated = 1 and  isDisabled = 0) or id = ".intval($model->checkedInRestaurantId),'order'=>'restaurantName', "select"=>"id, CONCAT(restaurantName, ' (', IFNULL(area, IFNULL(address, '') )  , ')', IF(isDisabled = 1, '-DISABLE RESTAURANT', IF(isActivated = 0, '-INACTIVE RESTAURANT', ''))) as restaurantName")),
+									array("condition"=>"id = ".($model->checkedInRestaurantId ? $model->checkedInRestaurantId : 0),'order'=>'restaurantName', "select"=>"id, CONCAT(restaurantName, ' (', IFNULL(area, IFNULL(address, '') )  , ')', IF(isDisabled = 1, '-DISABLE RESTAURANT', IF(isActivated = 0, '-INACTIVE RESTAURANT', ''))) as restaurantName")),
 							'id', 
 							'restaurantName'),
 					array('empty'=>'Select a Restaurant')
@@ -107,13 +106,52 @@ echo 'checked';
 <a target="_blank" href="#" >Open this Resturant</a>
 
 <script>
-	$('#checkedInRestaurantId').selectize({
-		allowEmptyOption: true
-	});
+// 	$('#checkedInRestaurantId').selectize({
+// 		allowEmptyOption: true
+// 	});
+
+
+	$( document ).ready(function() {
+		$('#checkedInRestaurantId').selectize({
+		    valueField: 'id',
+		    labelField: 'restaurantName',
+		    searchField: 'restaurantName',
+		    create: false,
+		    render: {
+		        option: function(item, escape) {
+
+		            return '<div>' +
+		                '<span class="title">' +
+		                    '<span class="name">' + escape(item.restaurantName) + '</span>' +
+		                '</span>' +
+		                    '<br><span class="by">' + escape(item.address) +', ('+ escape(item.region) +')</span>' +
+		            '</div>';
+		        }
+		    },
+		    load: function(query, callback) {
+		        if (!query.length) return callback();
+		        $.ajax({
+		        	url: '<?php echo Yii::app()->request->baseUrl; ?>/index.php/service/restaurant/list?sessionId=GUEST&searchText=' + encodeURIComponent(query),
+		            type: 'GET',
+		            error: function() {
+		                callback();
+		            },
+		            success: function(res) {
+		                callback(res.restaurants);
+		            }
+		        });
+		    }
+		});
+		});
+
+	
+	
 	$('#Post_userId').selectize({
 		allowEmptyOption: false
 	});
 
+	$('#checkedInRestaurantId').width('300px');
+	
 	$('.selectize-control').width('300px');
 	$('.selectize-control').css( "float", "left" );
 
