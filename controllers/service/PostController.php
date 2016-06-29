@@ -127,7 +127,7 @@ class PostController extends ServiceBaseController
                     
                     if(isset($_JSON['dishName'])){
                     	
-//                     	$_JSON['dishName'] = mb_convert_encoding( $_JSON['dishName'], "UTF-8", "BASE64" );
+                    	$_JSON['dishName'] = mb_convert_encoding( $_JSON['dishName'], "UTF-8", "BASE64" );
                     	$dish = Dish::getDishByNmae($_JSON['dishName']);
                     	$dishReview->dishId = $dish->id;
 	                    $dishReview->save();
