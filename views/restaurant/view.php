@@ -235,6 +235,7 @@ function validate_frm(form){
 		'country',
 		'state',
 		'city',
+		'region',
 		'area',
 		'address',
 		'postcode',
