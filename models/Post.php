@@ -314,9 +314,9 @@ class Post extends FoodTalkActiveRecord
     			
     			.'(SELECT COUNT(*) FROM `like` l2 WHERE l2.postId=p.id AND l2.isDisabled=0 AND l2.userId='.$userId.') as iLikedIt, p.createDate, NOW() as currentDate '.
     			', IFNULL(CONCAT("' . imagePath('user') . '", u.image, "?type=large"), "") as userImage '.
-    			', IFNULL(CONCAT("' . thumbPath('user') . '", u.image), "") as userThumb, IFNULL(r.restaurantName, "") as restaurantName'
+    			', IFNULL(CONCAT("' . thumbPath('user') . '", u.image), "") as userThumb, IFNULL(r.region,"") as restaurantRegion, IFNULL(r.restaurantName, "") as restaurantName'
     			.' , IFNULL(r.isActivated, 0) as restaurantIsActive '    					
-			.', (select count(1) from comment where comment.postId = p.id and comment.isDisabled = 0) as comment_count , (select count(1) from `like` where `like`.isDisabled= 0 and `like`.`postId` = p.`id`) as like_count '
+			.', u.region , (select count(1) from comment where comment.postId = p.id and comment.isDisabled = 0) as comment_count , (select count(1) from `like` where `like`.isDisabled= 0 and `like`.`postId` = p.`id`) as like_count '
 			.' FROM `post` p INNER JOIN user u on p.userId = u.id AND u.isDisabled=0 LEFT JOIN restaurant r on p.checkedInRestaurantId = r.id 
 					INNER JOIN dishReview dr on p.id = dr.postId INNER JOIN dish d on d.id = dr.dishId and d.isDisabled = 0
 					WHERE p.isDisabled = 0 ';
