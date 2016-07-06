@@ -644,6 +644,7 @@ class PostController extends ServiceBaseController
                     $search='';
                     $dishId = '';
                     $page = 1; 
+                    $region ='';
                     
                     if(isset($_JSON['latitude']) && $_JSON['latitude'])
                         $latitude = filter_var($_JSON['latitude'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
@@ -670,9 +671,13 @@ class PostController extends ServiceBaseController
                     if(isset($_JSON['page']) && $_JSON['page'])
                     	$page = filter_var($_JSON['page'], FILTER_SANITIZE_NUMBER_INT);
                     
+                    if(isset($_JSON['region']) && $_JSON['region'])
+                    	$region = filter_var($_JSON['region'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
+                    
+                    
                     $posts = 
 //                     Post::getDiscoverPosts($userId, $latitude, $longitude, $tagId, $recordCount, $exceptions);
-                    Post::getDiscoverPosts($userId, $latitude, $longitude, $tagId, $recordCount, $exceptions,0, $search, $page, 0, $dishId);
+                    Post::getDiscoverPosts($userId, $latitude, $longitude, $tagId, $recordCount, $exceptions,0, $search, $page, 0, $dishId, $region);
                     $result = array(
                         'api' => $apiName,
                         'apiMessage' => 'Posts fetched successfully.',

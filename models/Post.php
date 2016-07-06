@@ -731,7 +731,7 @@ class Post extends FoodTalkActiveRecord
     	
     }
     
-    public static function getDiscoverPosts($userId, $latitude=0, $longitude=0, $tagId=0, $recordCount=15, $exceptions='', $maxDistance=0, $search='', $page = 1, $days=0, $dishId)
+    public static function getDiscoverPosts($userId, $latitude=0, $longitude=0, $tagId=0, $recordCount=15, $exceptions='', $maxDistance=0, $search='', $page = 1, $days=0, $dishId='', $region='')
     {
 
     	$pagestart = ($page-1) * $recordCount;
@@ -793,6 +793,10 @@ class Post extends FoodTalkActiveRecord
 //     		$sql .= ' AND MATCH (d.dishName) against ("'.$search.'")';
     	if($dishId)
     		$sql .= ' AND d.url = "'.$dishId.'"';
+
+    	if($region)
+    		$sql .= ' AND r.region = "'.$region.'"';
+    	 
     	
     	
     	
