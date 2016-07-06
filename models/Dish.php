@@ -218,7 +218,7 @@ class Dish extends FoodTalkActiveRecord
 	{
 		if(strlen($dishName) >1 )
 		{
-			$sql = 'SELECT d.id, CHAR_LENGTH(d.dishName) length, d.dishName , COUNT(d.id) postCount, MATCH(dishName) against ("'.$dishName.'") score FROM `dish` d inner JOIN dishReview r on r.dishId = d.id INNER join post on post.id = r.postId AND post.checkedInRestaurantId is not null and post.isDisabled = 0 ';
+			$sql = 'SELECT d.id, d.url, CHAR_LENGTH(d.dishName) length, d.dishName , COUNT(d.id) postCount, MATCH(dishName) against ("'.$dishName.'") score FROM `dish` d inner JOIN dishReview r on r.dishId = d.id INNER join post on post.id = r.postId AND post.checkedInRestaurantId is not null and post.isDisabled = 0 ';
 			$sql .= ' INNER JOIN restaurant on restaurant.id = post.checkedInRestaurantId AND restaurant.isDisabled = 0 AND restaurant.isActivated = 1';
 			
 			if(strlen($region) >1)
@@ -227,7 +227,7 @@ class Dish extends FoodTalkActiveRecord
 			$sql .=' where  MATCH(dishName) against ("'.$dishName.'*" IN BOOLEAN MODE ) AND d.isDisabled = 0 GROUP by d.id ORDER BY score desc, length asc, dishName ASC';
 			
 		}else{
-			$sql = 'SELECT d.id, d.dishName , COUNT(d.id) postCount, MATCH(dishName) against ("'.$dishName.'") score FROM `dish` d inner JOIN dishReview r on r.dishId = d.id INNER join post on post.id = r.postId ';
+			$sql = 'SELECT d.id, d.dishName , d.url, COUNT(d.id) postCount, MATCH(dishName) against ("'.$dishName.'") score FROM `dish` d inner JOIN dishReview r on r.dishId = d.id INNER join post on post.id = r.postId ';
 			$sql .=' where  MATCH(dishName) against ("'.$dishName.'*" IN BOOLEAN MODE ) AND d.isDisabled = 0 GROUP by d.id ORDER BY score desc, dishName ASC';
 			
 		}
