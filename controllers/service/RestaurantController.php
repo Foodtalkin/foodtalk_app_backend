@@ -230,6 +230,7 @@ class RestaurantController extends ServiceBaseController
                     if(isset($_JSON['foodtalksuggested']) && !empty($_JSON['foodtalksuggested'])  && $_JSON['foodtalksuggested']=='1' ){
 //                     	$searchText = filter_var($_JSON['searchText'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
                     	$foodtalksuggested=1;
+                    	$restaurantDistance=0;
                     }
                     
                     
