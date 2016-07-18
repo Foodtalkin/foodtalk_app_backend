@@ -197,6 +197,29 @@ class RestaurantController extends SiteBaseController
         if(!isset($_GET['ajax']))
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
     }
+
+    
+    public function actionSuggested($id,$suggested)
+    {
+        	
+    	$model=$this->loadModel($id);
+    	if($suggested>0)
+	    	$model->suggested = 1;
+    	else 
+    		$model->suggested = 0;
+    	$model->save();
+    	//         $model = $this->loadModel($id);
+    	//         $model->isDisabled = 1;
+    	//         $model->updateDate = new CDbExpression("NOW()");
+    	//         $model->updateId = Yii::app()->user->id;
+    	//         $model->update(array('isDeleted', 'updateDate', 'updateId'));
+    
+    	// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+    	if(!isset($_GET['ajax']))
+    		$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+    }
+    
+    
     
     /**
      * Restores a particular model.
@@ -242,6 +265,12 @@ class RestaurantController extends SiteBaseController
     
     
     public function actionVerified()
+    {
+    	$this->admin();
+    }
+    
+    
+    public function actionfoodtalkSuggested()
     {
     	$this->admin();
     }

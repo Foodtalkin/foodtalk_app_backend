@@ -5,6 +5,7 @@
  *
  * The followings are the available columns in table 'restaurant':
  * @property string $id
+ * @property integer $duplicateId
  * @property string $role
  * @property string $restaurantName
  * @property string $email
@@ -19,6 +20,8 @@
  * @property string $postcode
  * @property double $latitude
  * @property double $longitude
+ * @property integer $verified
+ * @property integer $suggested
  * @property string $phone1
  * @property string $phone2
  * @property string $highlights
@@ -60,6 +63,7 @@
  * @property string $updateDate
  * @property string $createId
  * @property string $updateId
+ * @property string $region
  *
  * The followings are the available model relations:
  * @property Favourite[] $favourites
@@ -84,7 +88,7 @@ class Restaurant extends FoodTalkActiveRecord
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('homeDelivery, veg, nonVeg, dineIn, seating, outdoorSeating, airConditioned, lounge, serveAlcohol, microbrewery, fullBar, pub, nightClub, smokingZone, sheesha, wifi, liveMusic, entryFee, isActivated, isDisabled', 'numerical', 'integerOnly'=>true),
+            array('homeDelivery, veg, nonVeg, dineIn, seating, suggested, outdoorSeating, airConditioned, lounge, serveAlcohol, microbrewery, fullBar, pub, nightClub, smokingZone, sheesha, wifi, liveMusic, entryFee, isActivated, isDisabled', 'numerical', 'integerOnly'=>true),
             array('latitude, longitude', 'numerical'),
             array('role', 'length', 'max'=>16),
             array('restaurantName, email, contactName, area, address, image, disableReason, timing', 'length', 'max'=>128),
@@ -140,6 +144,7 @@ class Restaurant extends FoodTalkActiveRecord
             'city' => 'City',
             'area' => 'Area',
         	'region' => 'Region',
+        	'suggested' => 'Suggested',	        		
             'address' => 'Address',
             'postcode' => 'Postcode',
             'latitude' => 'Latitude',
@@ -217,6 +222,11 @@ class Restaurant extends FoodTalkActiveRecord
         $criteria->compare('city',$this->city,true);
         $criteria->compare('area',$this->area,true);
         $criteria->compare('region',$this->region,true);
+        
+        $criteria->compare('suggested',$this->suggested,true);
+        
+        
+        
         $criteria->compare('address',$this->address,true);
         $criteria->compare('postcode',$this->postcode,true);
         $criteria->compare('latitude',$this->latitude);
@@ -305,7 +315,14 @@ class Restaurant extends FoodTalkActiveRecord
        			$criteria->addCondition("t.isDisabled = 1");
        			
        				break;
-       			
+    		case 'foodtalkSuggested':
+    			$criteria->addCondition("t.isActivated = 1");
+        		$criteria->addCondition("t.isDisabled = 0");
+        		$criteria->addCondition("t.suggested = 1");
+        		break;
+       				
+       				
+       				
         	default:
         		$criteria->addCondition("t.isActivated = 1");
         		$criteria->addCondition("t.isDisabled = 0");
@@ -455,7 +472,7 @@ class Restaurant extends FoodTalkActiveRecord
     /**
      * Returns restaurant records
      */
-    public static function getRestaurants($userId, $latitude=0, $longitude=0, $includeCuisine = true, $includeCount = false, $searchText='', $recordCount=0, $exceptions='', $maxDistance=0, $region='')
+    public static function getRestaurants($userId, $latitude=0, $longitude=0, $includeCuisine = true, $includeCount = false, $searchText='', $recordCount=0, $exceptions='', $maxDistance=0, $region='', $foodtalksuggested=0)
     {
         $sql = self::getQuery($userId, $latitude, $longitude, $includeCuisine, $includeCount);
         $sql .= " WHERE r.isDisabled = 0";
@@ -474,10 +491,15 @@ class Restaurant extends FoodTalkActiveRecord
 		else 
 			$sql .= ' AND r.isActivated = 1 ';
         
+		if($foodtalksuggested)
+			$sql .= ' AND r.suggested = 1 ';
+		
         
         $sql .= ' ORDER BY distance ASC';
         
-        if($recordCount != 0)
+        if($foodtalksuggested)
+        	$sql .= ' LIMIT 30';
+        elseif($recordCount != 0)
             $sql .= ' LIMIT ' . $recordCount;
         
         $restaurants = Yii::app()->db->createCommand($sql)->queryAll(true);

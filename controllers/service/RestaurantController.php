@@ -213,6 +213,8 @@ class RestaurantController extends ServiceBaseController
                     $exceptions = '';   //list of restaurant ids that are not to be included in the list
                     $restaurantDistance = 10000;
                     $region='';
+                    $foodtalksuggested = 0;
+                    
                     
                     if(isset($_JSON['latitude']) && !empty($_JSON['latitude']))
                         $latitude = filter_var($_JSON['latitude'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
@@ -224,6 +226,12 @@ class RestaurantController extends ServiceBaseController
                         $searchText = filter_var($_JSON['searchText'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
 	                    $restaurantDistance=0;
                     }
+                    
+                    if(isset($_JSON['foodtalksuggested']) && !empty($_JSON['foodtalksuggested'])  && $_JSON['foodtalksuggested']=='1' ){
+//                     	$searchText = filter_var($_JSON['searchText'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
+                    	$foodtalksuggested=1;
+                    }
+                    
                     
                     if(isset($_JSON['recordCount']) && $_JSON['recordCount'])
                         $recordCount = filter_var($_JSON['recordCount'], FILTER_SANITIZE_NUMBER_INT);
@@ -259,7 +267,7 @@ class RestaurantController extends ServiceBaseController
 //                    $sql .= " ORDER BY distance";
 //                    
 //                    $restaurants = Yii::app()->db->createCommand($sql)->queryAll(true);
-                    $restaurants = Restaurant::getRestaurants($userId, $latitude, $longitude, $includeCuisine, $includeCount, $searchText, $recordCount, $exceptions, $restaurantDistance, $region);
+                    $restaurants = Restaurant::getRestaurants($userId, $latitude, $longitude, $includeCuisine, $includeCount, $searchText, $recordCount, $exceptions, $restaurantDistance, $region, $foodtalksuggested);
                     $result = array(
                         'api' => $apiName,
                         'apiMessage' => 'Records fetched successfully',

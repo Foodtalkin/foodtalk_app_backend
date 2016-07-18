@@ -104,6 +104,10 @@ class SiteBaseController extends Controller
             'restaurant.reported',
             'restaurant.delete',
         	'restaurant.suggestion',
+        		
+        	'restaurant.suggested',
+        	'restaurant.foodtalkSuggested',
+        		
             'restaurant.restore',
         		
        		'restaurant.verified',

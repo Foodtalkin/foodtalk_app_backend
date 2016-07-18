@@ -109,6 +109,11 @@
 
 	<div class="checkbox">
 		<?php 
+		
+		echo $form->checkBox($model, 'suggested');
+		echo $form->labelEx($model,'suggested');
+		echo $form->error($model,'suggested');
+		
 		echo $form->checkBox($model, 'homeDelivery'); 
 		echo $form->labelEx($model,'homeDelivery'); 
 		echo $form->error($model,'homeDelivery');

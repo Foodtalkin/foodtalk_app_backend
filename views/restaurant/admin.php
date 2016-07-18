@@ -70,6 +70,7 @@ if($action =='reported'){
 		  <li<?php if($action=='inactive') { ?> class="active"<?php } ?>><a href="<?php echo Yii::app()->createAbsoluteUrl("restaurant/inactive"); ?>">Inactive</a></li>
 		  <li<?php if($action=='disabled') { ?> class="active"<?php } ?>><a href="<?php echo Yii::app()->createAbsoluteUrl("restaurant/disabled"); ?>">Disabled</a></li>
 		  <li<?php if($action=='duplicate') { ?> class="active"<?php } ?>><a href="<?php echo Yii::app()->createAbsoluteUrl("restaurant/duplicate"); ?>">Duplicate</a></li>
+		  <li<?php if($action=='foodtalkSuggested') { ?> class="active"<?php } ?>><a href="<?php echo Yii::app()->createAbsoluteUrl("restaurant/foodtalkSuggested"); ?>">FoodtalkSuggested</a></li>
 		  	  
 		</ul>	
 	<?php
@@ -84,7 +85,18 @@ if(Yii::app()->controller->action->id=='suggestion'){
 	$columns[]='region';
 	$columns[]='area';
 	$columns[]='latitude';
+// 	$columns[]='suggested';
 }
+$columns[] = array(
+		
+				'name'=>'suggested',
+				'value'=>'CHtml::checkBox("cid[]",$data->suggested?true:false,array("onclick"=>"suggestedResturant(this)", "value"=>$data->id,"id"=>"cid_".$data->id))',
+				'type'=>'raw',
+				'htmlOptions'=>array('width'=>5),
+				//'visible'=>false,
+		
+);
+
 
 $columns[] = array(
                     'class'=>'CButtonColumn',
@@ -156,3 +168,30 @@ $columns[] = array(
 	'filter'=>$model,
 	'columns'=>$columns
 )); ?>
+<script>
+function suggestedResturant(checkbox){
+
+
+
+	baseurl = '<?php echo Yii::app()->createAbsoluteUrl("restaurant/suggested/id"); ?>/'
+	
+	if(checkbox.checked){
+
+		url = baseurl + checkbox.value + '/suggested/1/';	
+	}
+	else{
+		url = baseurl + checkbox.value + '/suggested/0/';			
+
+	}
+
+	$.fn.yiiGridView.update('restaurant-grid', {
+        type:'POST',
+        url:url,
+        success:function(data) {
+            $.fn.yiiGridView.update('restaurant-grid');
+        }
+    });		
+		
+}
+
+</script>
