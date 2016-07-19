@@ -127,8 +127,9 @@ class Bookmark extends FoodTalkActiveRecord
 		$pagestart = ($page-1) * $recordCount;
 
         //fetch all tips related to current restaurant
-        $sql = 'select distinct d.dishName, d.id, p.id FROM dish d INNER JOIN dishReview r on d.id = r.dishId INNER JOIN post p on p.id = r.postId';
+        $sql = 'select d.dishName, p.id, IFNULL(r.id, 0) as checkedInRestaurantId, IFNULL(r.restaurantName, "") as restaurantName FROM dish d INNER JOIN dishReview dr on d.id = dr.dishId INNER JOIN post p on p.id = dr.postId and p.isDisabled = 0';
 		$sql .= ' INNER JOIN  bookmark b on b.postId = p.id and b.userId = '.$userId;
+		$sql .= ' LEFT JOIN  restaurant r on r.id = p.checkedInRestaurantId and r.isActivated = 1 and r.isDisabled = 0';
 		$sql .= ' WHERE d.isDisabled=0 and b.isDisabled = 0';
 
         if($exceptions)
