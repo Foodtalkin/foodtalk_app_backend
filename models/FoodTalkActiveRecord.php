@@ -88,7 +88,7 @@ abstract class FoodTalkActiveRecord extends CActiveRecord
     	$fieldsToTranslate = array(
     			'categoryName',
     			'cityName',
-    			'message',
+//     			'message',
     			'cuisineName',
     			'dishName',
     			'contactName',
