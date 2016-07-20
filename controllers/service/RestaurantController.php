@@ -211,7 +211,7 @@ class RestaurantController extends ServiceBaseController
                     $searchText = '';
                     $recordCount = 0;   //0 means all records
                     $exceptions = '';   //list of restaurant ids that are not to be included in the list
-                    $restaurantDistance = 10000;
+                    $restaurantDistance = 15000;
                     $region='';
                     $foodtalksuggested = 0;
                     
