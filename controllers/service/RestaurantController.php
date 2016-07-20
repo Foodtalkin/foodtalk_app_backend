@@ -155,13 +155,18 @@ class RestaurantController extends ServiceBaseController
                     {
                         $exceptions = '';   //list of post ids that are not to be included in the list
                     
+                        $recordCount=15;
+                        
+                        if(isset($_JSON['recordCount']) && $_JSON['recordCount'])
+                        	$recordCount = filter_var($_JSON['recordCount'], FILTER_SANITIZE_NUMBER_INT);
+                        
                         if(isset($_JSON['exceptions']) && $_JSON['exceptions'])
                             $exceptions = filter_var($_JSON['exceptions'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
                         $page = 1;
                         if(isset($_JSON['page']) && $_JSON['page'])
                         	$page = filter_var($_JSON['page'], FILTER_SANITIZE_NUMBER_INT);
                         
-                        $imagePosts = Post::getImagePostsByRestaurantId($userId, $restaurantId, 15, $exceptions, $page);
+                        $imagePosts = Post::getImagePostsByRestaurantId($userId, $restaurantId, $recordCount, $exceptions, $page);
                         
                         $result = array(
                             'api' => $apiName,
