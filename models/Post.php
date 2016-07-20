@@ -280,8 +280,8 @@ class Post extends FoodTalkActiveRecord
         
         $sql .= ' FROM post p JOIN user u ON p.userId = u.id AND u.isDisabled=0 ';
         
-        $sql .= ' LEFT JOIN dishReview dr ON p.id = dr.postId';
-        $sql .= ' LEFT JOIN dish d ON d.id = dr.dishId';
+        $sql .= ' INNER JOIN dishReview dr ON p.id = dr.postId';
+        $sql .= ' INNER JOIN dish d ON d.id = dr.dishId and d.isDisabled=0 ';
         
         $sql .= ' LEFT JOIN restaurant r ON p.checkedInRestaurantId = r.id';
         $sql .= ' WHERE p.isDisabled = 0';
