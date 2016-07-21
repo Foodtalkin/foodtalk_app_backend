@@ -212,6 +212,7 @@ class ServiceBaseController extends Controller
         $statusHeader = 'HTTP/1.1 ' . $status . ' ' . $this->getStatusMessage($status);
         header($statusHeader);
         header('Content-type: ' . $contentType);
+        header('Access-Control-Allow-Origin: *');
         echo $body;
     }
     
