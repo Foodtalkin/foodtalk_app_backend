@@ -150,6 +150,7 @@ class Notification extends FoodTalkActiveRecord
         $sql .= ',e.eventType';
         $sql .= ',e.raiserId';
         $sql .= ',u1.userName as raiserName';
+        $sql .= ',u1.userName';
         $sql .= ',IFNULL(CONCAT("' . imagePath('user') . '", u1.image), "") as raiserImage';
         $sql .= ',IFNULL(CONCAT("' . thumbPath('user') . '", u1.image), "") as raiserThumb';
         $sql .= ',IFNULL(e.relatedUserId, "") as relatedUserId';
