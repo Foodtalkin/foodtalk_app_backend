@@ -307,8 +307,9 @@ class Post extends FoodTalkActiveRecord
     }
 
     public static function getPost($postId = false, $userId , $options = array()){
+    	    	
     	
-    	$sql = 'SELECT p.`id`, p.`userId`, IFNULL(p.`checkedInRestaurantId`, "") as checkedInRestaurantId  , IFNULL(CONCAT("' . imagePath('post') . '", p.image), "") as postImage , d.dishName, IFNULL(d.url, "") as dishUrl, IFNULL(dr.rating, "0") as rating, p.`tip`, u.userName, u.id userId, ';
+    	$sql = 'SELECT p.`id`, p.`userId`, IFNULL(p.`checkedInRestaurantId`, "") as checkedInRestaurantId  , IFNULL(CONCAT(IF(isGif, "http://res.cloudinary.com/digital-food-talk-pvt-ltd/image/upload/q_60/", "' . imagePath('post') . '"), p.image), "") as postImage, d.dishName, IFNULL(d.url, "") as dishUrl, IFNULL(dr.rating, "0") as rating, p.`tip`, u.userName, u.id userId, ';
 
     			
     if($postId)	
@@ -641,9 +642,13 @@ class Post extends FoodTalkActiveRecord
     {    	
 		$sql  = 'SELECT p.id,p.userId, p.checkinId';
     	$sql .= ',IFNULL(p.checkedInRestaurantId, 0) as checkedInRestaurantId';
+
+    	$sql .= ',IFNULL(CONCAT(IF(isGif, "http://res.cloudinary.com/digital-food-talk-pvt-ltd/image/upload/q_60/", "' . imagePath('post') . '"), p.image), "") as postImage';
+    	$sql .= ',IFNULL(CONCAT(IF(isGif, "http://res.cloudinary.com/digital-food-talk-pvt-ltd/image/upload/q_60,c_thumb,h_160,w_160/", "' . thumbPath('post') . '"), p.image), "") as postThumb';
+    	 
     	
-    	$sql .= ',IFNULL(CONCAT("' . imagePath('post') . '", p.image), "") as postImage';
-    	$sql .= ',IFNULL(CONCAT("' . thumbPath('post') . '", p.image), "") as postThumb';
+//     	$sql .= ',IFNULL(CONCAT("' . imagePath('post') . '", p.image), "") as postImage';
+//     	$sql .= ',IFNULL(CONCAT("' . thumbPath('post') . '", p.image), "") as postThumb';
     	
     	$sql .= ',IFNULL(d.dishName, "") as dishName';
     	$sql .= ',IFNULL(d.url, "") as dishUrl';
@@ -743,8 +748,13 @@ class Post extends FoodTalkActiveRecord
     	
     	$sql  = 'SELECT p.id,p.userId, p.checkinId';
     	$sql .= ',IFNULL(p.checkedInRestaurantId, 0) as checkedInRestaurantId';
-    	$sql .= ',IFNULL(CONCAT("' . imagePath('post') . '", p.image), "") as postImage';
-    	$sql .= ',IFNULL(CONCAT("' . thumbPath('post') . '", p.image), "") as postThumb';
+    	
+    	$sql .= ',IFNULL(CONCAT(IF(isGif, "http://res.cloudinary.com/digital-food-talk-pvt-ltd/image/upload/q_60/", "' . imagePath('post') . '"), p.image), "") as postImage';
+    	$sql .= ',IFNULL(CONCAT(IF(isGif, "http://res.cloudinary.com/digital-food-talk-pvt-ltd/image/upload/q_60,c_thumb,h_160,w_160/", "' . thumbPath('post') . '"), p.image), "") as postThumb';
+    	 
+    	
+//     	$sql .= ',IFNULL(CONCAT("' . imagePath('post') . '", p.image), "") as postImage';
+//     	$sql .= ',IFNULL(CONCAT("' . thumbPath('post') . '", p.image), "") as postThumb';
     	$sql .= ',IFNULL(d.dishName, "") as dishName';
     	$sql .= ',IFNULL(d.url, "") as dishUrl';
     	$sql .= ',IFNULL(dr.rating, "0") as rating';
@@ -913,8 +923,13 @@ class Post extends FoodTalkActiveRecord
     public static function getCheckinImages($postUserId, $recordCount=0, $exceptions='')
     {
         $sql = 'SELECT p.id';
-        $sql .= ',IFNULL(CONCAT("' . imagePath('post') . '", p.image), "") as postImage';
-        $sql .= ',IFNULL(CONCAT("' . thumbPath('post') . '", p.image), "") as postThumb';
+        
+        $sql .= ',IFNULL(CONCAT(IF(isGif, "http://res.cloudinary.com/digital-food-talk-pvt-ltd/image/upload/q_60/", "' . imagePath('post') . '"), p.image), "") as postImage';
+        $sql .= ',IFNULL(CONCAT(IF(isGif, "http://res.cloudinary.com/digital-food-talk-pvt-ltd/image/upload/q_60,c_thumb,h_160,w_160/", "' . thumbPath('post') . '"), p.image), "") as postThumb';
+        
+        
+//         $sql .= ',IFNULL(CONCAT("' . imagePath('post') . '", p.image), "") as postImage';
+//         $sql .= ',IFNULL(CONCAT("' . thumbPath('post') . '", p.image), "") as postThumb';
         $sql .= ' FROM post p';
         $sql .= ' WHERE p.isDisabled = 0';
         $sql .= ' AND p.userId =' . $postUserId;
