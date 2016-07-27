@@ -148,6 +148,7 @@ class Notification extends FoodTalkActiveRecord
         $sql .= ',n.eventId';
         $sql .= ',n.isSeen';
         $sql .= ',e.eventType';
+        $sql .= ',c.className as class';
         $sql .= ',e.raiserId';
         $sql .= ',u1.userName as raiserName';
         $sql .= ',u1.userName';
@@ -160,6 +161,9 @@ class Notification extends FoodTalkActiveRecord
         $sql .= ',e.isNotified';
         $sql .= ' FROM `notification` n';
         $sql .= ' JOIN `event` e ON n.eventId=e.id';
+        
+        $sql .= ' INNER JOIN `eventClass` c ON e.eventType=c.id and c.isDisabled = 0 ';
+        
         $sql .= ' JOIN `user` u1 ON e.raiserId=u1.id';
         $sql .= ' LEFT JOIN `user` u2 ON e.relatedUserId=u2.id';
         return $sql;
