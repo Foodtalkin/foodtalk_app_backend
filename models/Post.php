@@ -233,8 +233,13 @@ class Post extends FoodTalkActiveRecord
         $sql = 'SELECT p.id';
         $sql .= ',p.userId, p.checkinId';
         $sql .= ',IFNULL(p.checkedInRestaurantId, 0) as checkedInRestaurantId';
-        $sql .= ',IFNULL(CONCAT("' . imagePath('post') . '", p.image), "") as postImage';
-        $sql .= ',IFNULL(CONCAT("' . thumbPath('post') . '", p.image), "") as postThumb';
+        
+        $sql .= ',IFNULL(CONCAT(IF(isGif, "http://res.cloudinary.com/digital-food-talk-pvt-ltd/image/upload/q_60/", "' . imagePath('post') . '"), p.image), "") as postImage';
+        $sql .= ',IFNULL(CONCAT(IF(isGif, "http://res.cloudinary.com/digital-food-talk-pvt-ltd/image/upload/q_60,c_thumb,h_160,w_160/", "' . thumbPath('post') . '"), p.image), "") as postThumb';
+        
+        
+//         $sql .= ',IFNULL(CONCAT("' . imagePath('post') . '", p.image), "") as postImage';
+//         $sql .= ',IFNULL(CONCAT("' . thumbPath('post') . '", p.image), "") as postThumb';
         $sql .= ',IFNULL(p.tip, "") as tip';
         $sql .= ',IFNULL(d.dishName, "") as dishName';        
         $sql .= ',IFNULL(d.url, "") as dishUrl';
