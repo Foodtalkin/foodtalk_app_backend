@@ -51,7 +51,7 @@ class BookmarkController extends ServiceBaseController
                             }
                             
                             //save event
-//                             Event::saveEvent(Event::RESTAURANT_MARKED_FAVOURITE, $userId, $favourite->id, $favourite->createDate);
+                            Event::saveEvent(11, $userId, $postId, $favourite->createDate, $post->userId );
 
                             //send notifications to followers of the user
 //                            $sql = Follower::getQueryForFollower($userId);

@@ -60,7 +60,7 @@ class ParseCommand extends CConsoleCommand
 	public function actionTest(){
 		
 		echo "SENDING PUSH ...\n";
-		$this->sendPushNotification();
+		$this->sendPushNotification(false);
 		
 // 		$notificationType = Notification::NOTIFICATION_PUBLIC;
 // 		$notifyData = array(
@@ -170,7 +170,7 @@ class ParseCommand extends CConsoleCommand
 	}
 	
 	
-	protected function sendPushNotification(){
+	protected function sendPushNotification($push = true){
 		
 		//fetch all events that have not been notified yet
 		$events = Event::getEvents(0);
@@ -227,7 +227,7 @@ class ParseCommand extends CConsoleCommand
 							"data" => $data
 					);
 				}
-				
+				if($push)
 				PushParseNotification($notificationType, $notifyData, [$event['channel']]);
 				
 			}
