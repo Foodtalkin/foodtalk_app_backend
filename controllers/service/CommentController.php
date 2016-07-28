@@ -81,7 +81,7 @@ class CommentController extends ServiceBaseController
                         
 //                         var_dump($post->user->userName);
                         
-                        $message = $user->userName.' also commented on '.$post->user->userName."'s post";
+                        $message = $user->userName.' also commented on '.$post->user->userName."'s post.";
                         
                         
                         foreach ($user_comments as $comm){
