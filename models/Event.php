@@ -246,13 +246,16 @@ class Event extends FoodTalkActiveRecord
      * @param type $relatedUserId
      * @return int
      */
-    public static function saveEvent($eventType, $raiserId, $elementId, $eventDate, $relatedUserId=0)
+    public static function saveEvent($eventType, $raiserId, $elementId, $eventDate, $relatedUserId=0, $message = false)
     {
         $event = new Event();
         $event->eventType = $eventType;
         $event->raiserId = $raiserId;
         $event->elementId = $elementId;
         $event->eventDate = $eventDate;
+        
+        if($message and strlen($message)>0)
+        	$event->message = trim($message);
         
         $dontSave = false;
         

@@ -184,7 +184,12 @@ class ParseCommand extends CConsoleCommand
 			
 			switch ($eventGroup) {
 		    case Notification::NOTIFICATION_GROUP_YOU:
-		    	$message = $event['raiserName'] . $event['defaultMessage'];
+		    	
+		    	if(strlen(trim($event['message']))>0)
+			    	$message = $event['message'];
+		    	else
+			    	$message = $event['raiserName'] . $event['defaultMessage'];
+		    	
 		    	$notificationType = Notification::NOTIFICATION_GROUP_YOU;
 		    	break;
 	    		

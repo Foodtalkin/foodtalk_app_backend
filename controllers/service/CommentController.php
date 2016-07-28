@@ -39,12 +39,13 @@ class CommentController extends ServiceBaseController
                         $comment->userId = $userId;
                         $comment->postId = $postId;
                         $comment->postUserId = $post->userId;
-                        $comment->comment = filter_var(base64_decode($_JSON['comment']), FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
-//                         $comment->comment = $_JSON['comment'];
+//                         $comment->comment = filter_var(base64_decode($_JSON['comment']), FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
+                        $comment->comment = $_JSON['comment'];
                         //$comment->comment = filter_var($_JSON['comment'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
                         //save record
                         $comment->save();
                         
+                        $ignore_user = array(); 
                         
                         if(isset($_JSON['userMentioned']) && count($_JSON['userMentioned']) > 0){
                         	foreach ($_JSON['userMentioned']as $userM){	
@@ -56,9 +57,13 @@ class CommentController extends ServiceBaseController
 	                        	$userMentioned->commentId = $comment->id;
 	                        	$userMentioned->save();
 	                        	Event::saveEvent(Event::USER_MENTIONED_COMMENT, $userId, $comment->postId, $comment->createDate, $userMentioned->userId);
+	                        	$ignore_user[] = $userMentioned->userId;
                         	}
                         }
                         
+                        
+                        
+
                         
                         if ($comment->hasErrors()) 
                         {
@@ -67,6 +72,24 @@ class CommentController extends ServiceBaseController
                         
                         //save event
                         Event::saveEvent(Event::COMMENT_CREATED, $userId, $comment->postId, $comment->createDate, $post->userId);
+                        
+                        $ignore_user[] = $post->userId;
+                        $sql = 'SELECT DISTINCT userId FROM `comment` WHERE postId = '.$postId;
+                        
+                        $user_comments = Yii::app()->db->createCommand($sql)->queryAll(true);
+                        
+                        
+//                         var_dump($post->user->userName);
+                        
+                        $message = $user->userName.' also commented on '.$post->user->userName."'s post";
+                        
+                        
+                        foreach ($user_comments as $comm){
+                        	
+                        	if(!in_array($comm['userId'], $ignore_user))
+// 		                        Event::saveEvent(12, $userId, $comment->postId, $comment->createDate, $comm['userId']);
+                        		Event::saveEvent(12, $userId, $comment->postId, $comment->createDate, $comm['userId'], $message );
+                        }
                         
                         //send notifications to followers of the post user
 //                        $sql = Follower::getQueryForFollower($post->userId);
