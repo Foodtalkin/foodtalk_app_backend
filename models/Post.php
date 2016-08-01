@@ -316,13 +316,14 @@ class Post extends FoodTalkActiveRecord
     		$sql .=' (SELECT MAX(id) FROM `post` pp WHERE pp.id < '.$postId.' AND pp.isDisabled=0 AND pp.userId = p.userId) as `next` , (SELECT MIN(id) FROM `post` pp WHERE pp.id > '.$postId.' AND pp.isDisabled=0 AND pp.userId=p.userId) as `previous`, ';	
     			
 			$sql .='(SELECT COUNT(*) FROM `bookmark` b1 WHERE b1.postId=p.id AND b1.isDisabled=0 AND b1.userId='.$userId.') as iBookark, '
-    		.'(SELECT COUNT(*) FROM `bookmark` b2 WHERE b2.postId=p.id AND b2.isDisabled=0) as bookmarkCount, '
+    		.' (SELECT COUNT(*) FROM `bookmark` b2, user u WHERE b2.userId = u.id and u.isDisabled=0 and b2.postId=p.id AND b2.isDisabled=0) as bookmarkCount, '
+    				
     			
     			.'(SELECT COUNT(*) FROM `like` l2 WHERE l2.postId=p.id AND l2.isDisabled=0 AND l2.userId='.$userId.') as iLikedIt, p.createDate, NOW() as currentDate '.
     			', IFNULL(CONCAT("' . imagePath('user') . '", u.image, "?type=large"), "") as userImage '.
     			', IFNULL(CONCAT("' . thumbPath('user') . '", u.image), "") as userThumb, IFNULL(r.region,"") as restaurantRegion, IFNULL(r.restaurantName, "") as restaurantName'
     			.' , IFNULL(r.isActivated, 0) as restaurantIsActive '    					
-			.', u.region , (select count(1) from comment where comment.postId = p.id and comment.isDisabled = 0) as comment_count , (select count(1) from `like` where `like`.isDisabled= 0 and `like`.`postId` = p.`id`) as like_count '
+			.', u.region , (SELECT COUNT(*) FROM `like` l, user u WHERE l.userId = u.id and u.isDisabled=0 and l.postId=p.id AND l.isDisabled=0) as like_count,  (SELECT COUNT(*) FROM comment c, user u WHERE c.userId = u.id and u.isDisabled=0 and c.postId=p.id AND c.isDisabled=0) as comment_count '
 			.' FROM `post` p INNER JOIN user u on p.userId = u.id AND u.isDisabled=0 LEFT JOIN restaurant r on p.checkedInRestaurantId = r.id 
 					INNER JOIN dishReview dr on p.id = dr.postId INNER JOIN dish d on d.id = dr.dishId and d.isDisabled = 0
 					WHERE p.isDisabled = 0 ';
@@ -772,11 +773,18 @@ class Post extends FoodTalkActiveRecord
     	$sql .= ' , IFNULL(r.isActivated, 0) as restaurantIsActive ';
     	
     	$sql .= ",DEGREES(ACOS(SIN(RADIANS($latitude)) * SIN(RADIANS(r.latitude)) + COS(RADIANS($latitude)) * COS(RADIANS(r.latitude)) * COS(RADIANS($longitude - r.longitude)))) * 111189.3006 as restaurantDistance";
-    	$sql .= ',(SELECT COUNT(*) FROM `like` l WHERE l.postId=p.id AND l.isDisabled=0) as likeCount';
-    	$sql .= ',(SELECT COUNT(*) FROM comment c WHERE c.postId=p.id AND c.isDisabled=0) as commentCount';
+//     	$sql .= ',(SELECT COUNT(*) FROM `like` l WHERE l.postId=p.id AND l.isDisabled=0) as likeCount';
+    	
+    	$sql .= ',(SELECT COUNT(*) FROM `like` l, user u WHERE l.userId = u.id and u.isDisabled=0 and l.postId=p.id AND l.isDisabled=0) as likeCount';
+    	$sql .= ',(SELECT COUNT(*) FROM comment c, user u WHERE c.userId = u.id and u.isDisabled=0 and c.postId=p.id AND c.isDisabled=0) as commentCount';
+    	
+    	
+//     	$sql .= ',(SELECT COUNT(*) FROM comment c WHERE c.postId=p.id AND c.isDisabled=0) as commentCount';
     	$sql .= ',(SELECT COUNT(*) FROM `flag` f WHERE f.postId=p.id AND f.isDisabled=0) as flagCount';
     	
-    	$sql .= ',(SELECT COUNT(*) FROM `bookmark` b2 WHERE b2.postId=p.id AND b2.isDisabled=0) as bookmarkCount';
+    	$sql .= ',(SELECT COUNT(*) FROM `bookmark` b2, user u WHERE b2.userId = u.id and u.isDisabled=0 and b2.postId=p.id AND b2.isDisabled=0) as bookmarkCount';
+    	 
+//     	$sql .= ',(SELECT COUNT(*) FROM `bookmark` b2 WHERE b2.postId=p.id AND b2.isDisabled=0) as bookmarkCount';
     	
     	$sql .= ',(SELECT COUNT(*) FROM `like` l2 WHERE l2.postId=p.id AND l2.isDisabled=0 AND l2.userId='.$userId.') as iLikedIt';
     	$sql .= ',(SELECT COUNT(*) FROM `flag` f2 WHERE f2.postId=p.id AND f2.isDisabled=0 AND f2.userId='.$userId.') as iFlaggedIt';
