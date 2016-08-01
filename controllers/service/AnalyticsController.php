@@ -37,33 +37,33 @@ class AnalyticsController extends ServiceBaseController
                 	$sql = 'SELECT count(1) cnt FROM `post`, user WHERE post.userId = user.id AND post.isDisabled = 0  AND user.role = "manager"';
                 	$internalPost = Yii::app()->db->createCommand($sql)->queryAll(true);
                 	
-                	$sql = "SELECT DATE_FORMAT(u.createDate,'%d-%m-%Y') as onbord, COUNT(1) as cnt FROM `user` u WHERE createDate >= DATE(NOW()) - INTERVAL 7 DAY and u.userName is not null GROUP BY onbord ORDER BY onbord ASC";                	 
+                	$sql = "SELECT DATE_FORMAT(u.createDate,'%Y-%m-%d') as onbord, COUNT(1) as cnt FROM `user` u WHERE createDate >= DATE(NOW()) - INTERVAL 7 DAY and u.userName is not null GROUP BY onbord ORDER BY onbord ASC";                	 
                 	$onbording = Yii::app()->db->createCommand($sql)->queryAll(true);
 
                 	
-                	$sql = "select onbord, count(1) as cnt, platform from  (SELECT DISTINCT DATE_FORMAT(u.createDate,'%d-%m-%Y') as onbord, u.id, IF(SUBSTRING_INDEX(platform, 'FoodTalk/com.foodtalkindia.FoodTalk', 1) = '', 'ios', IF(platform = 'FoodTalk webapp 1.0', 'web', 'android')) as  platform FROM user u  INNER JOIN `access_logs`  l on l.user_id = u.id 
+                	$sql = "select onbord, count(1) as cnt, platform from  (SELECT DISTINCT DATE_FORMAT(u.createDate,'%Y-%m-%d') as onbord, u.id, IF(SUBSTRING_INDEX(platform, 'FoodTalk/com.foodtalkindia.FoodTalk', 1) = '', 'ios', IF(platform = 'FoodTalk webapp 1.0', 'web', 'android')) as  platform FROM user u  INNER JOIN `access_logs`  l on l.user_id = u.id 
 WHERE u.createDate >= DATE(NOW()) - INTERVAL 7 DAY and u.userName is NOT null) tmp GROUP by onbord, platform ORDER BY `tmp`.`onbord` ASC ";
                 	$onbordingPlatforms = Yii::app()->db->createCommand($sql)->queryAll(true);
                 	
-                	$sql = "SELECT  acitve_on, COUNT(1) as cnt, platform FROM (SELECT DISTINCT DATE_FORMAT(l.timestamp,'%d-%m-%Y') as acitve_on, u.id, IF(SUBSTRING_INDEX(platform, 'FoodTalk/com.foodtalkindia.FoodTalk', 1) = '', 'ios', IF(platform = 'FoodTalk webapp 1.0', 'web', 'android')) as  platform FROM user u  INNER JOIN `access_logs`  l on l.user_id = u.id 
+                	$sql = "SELECT  acitve_on, COUNT(1) as cnt, platform FROM (SELECT DISTINCT DATE_FORMAT(l.timestamp,'%Y-%m-%d') as acitve_on, u.id, IF(SUBSTRING_INDEX(platform, 'FoodTalk/com.foodtalkindia.FoodTalk', 1) = '', 'ios', IF(platform = 'FoodTalk webapp 1.0', 'web', 'android')) as  platform FROM user u  INNER JOIN `access_logs`  l on l.user_id = u.id 
 WHERE l.timestamp >= DATE(NOW()) - INTERVAL 7 DAY and u.userName is NOT null and u.id >0) tmp GROUP BY acitve_on, platform ORDER BY `tmp`.`acitve_on` ASC";
              		$weeklyactiveuser = Yii::app()->db->createCommand($sql)->queryAll(true);
                 	
                 	
-             		$sql= "SELECT DATE_FORMAT(post.createDate,'%d-%m-%Y') as createon , count(1) cnt FROM `post`, user WHERE post.userId = user.id AND post.isDisabled = 0 and post.createDate >= DATE(NOW()) - INTERVAL 7 DAY GROUP BY createon ORDER BY `createon` ASC";
+             		$sql= "SELECT DATE_FORMAT(post.createDate,'%Y-%m-%d') as createon , count(1) cnt FROM `post`, user WHERE post.userId = user.id AND post.isDisabled = 0 and post.createDate >= DATE(NOW()) - INTERVAL 7 DAY GROUP BY createon ORDER BY `createon` ASC";
              		$weeklyPosts = Yii::app()->db->createCommand($sql)->queryAll(true);
 
              		
-             		$sql= "SELECT DATE_FORMAT(like.createDate,'%d-%m-%Y') as createon , count(1) cnt FROM `like`, user WHERE like.userId = user.id AND like.isDisabled = 0 and like.createDate >= DATE(NOW()) - INTERVAL 7 DAY GROUP BY createon ORDER BY `createon` ASC";
+             		$sql= "SELECT DATE_FORMAT(like.createDate,'%Y-%m-%d') as createon , count(1) cnt FROM `like`, user WHERE like.userId = user.id AND like.isDisabled = 0 and like.createDate >= DATE(NOW()) - INTERVAL 7 DAY GROUP BY createon ORDER BY `createon` ASC";
              		$weeklylikes = Yii::app()->db->createCommand($sql)->queryAll(true);
              		 
-             		$sql= "SELECT DATE_FORMAT(comment.createDate,'%d-%m-%Y') as createon , count(1) cnt FROM `comment`, user WHERE comment.userId = user.id AND comment.isDisabled = 0 and comment.createDate >= DATE(NOW()) - INTERVAL 7 DAY GROUP BY createon ORDER BY `createon` ASC";
+             		$sql= "SELECT DATE_FORMAT(comment.createDate,'%Y-%m-%d') as createon , count(1) cnt FROM `comment`, user WHERE comment.userId = user.id AND comment.isDisabled = 0 and comment.createDate >= DATE(NOW()) - INTERVAL 7 DAY GROUP BY createon ORDER BY `createon` ASC";
              		$weeklycomments = Yii::app()->db->createCommand($sql)->queryAll(true);
              		 
-             		$sql = "SELECT DATE_FORMAT(bookmark.createDate,'%d-%m-%Y') as createon , count(1) cnt FROM `bookmark`, user WHERE bookmark.userId = user.id AND bookmark.isDisabled = 0 and bookmark.createDate >= DATE(NOW()) - INTERVAL 7 DAY GROUP BY createon ORDER BY `createon` ASC";
+             		$sql = "SELECT DATE_FORMAT(bookmark.createDate,'%Y-%m-%d') as createon , count(1) cnt FROM `bookmark`, user WHERE bookmark.userId = user.id AND bookmark.isDisabled = 0 and bookmark.createDate >= DATE(NOW()) - INTERVAL 7 DAY GROUP BY createon ORDER BY `createon` ASC";
              		$weeklyBookmark = Yii::app()->db->createCommand($sql)->queryAll(true);
              		
-             		$sql = "SELECT DATE_FORMAT(userMentioned.createDate,'%d-%m-%Y') as createon , count(1) cnt FROM `userMentioned`, user WHERE userMentioned.userId = user.id AND  userMentioned.createDate >= DATE(NOW()) - INTERVAL 7 DAY GROUP BY createon ORDER BY `createon` ASC";
+             		$sql = "SELECT DATE_FORMAT(userMentioned.createDate,'%Y-%m-%d') as createon , count(1) cnt FROM `userMentioned`, user WHERE userMentioned.userId = user.id AND  userMentioned.createDate >= DATE(NOW()) - INTERVAL 7 DAY GROUP BY createon ORDER BY `createon` ASC";
              		$weeklyuserMentioned = Yii::app()->db->createCommand($sql)->queryAll(true);
              		
                 	
