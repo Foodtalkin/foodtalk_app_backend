@@ -37,42 +37,45 @@ class AnalyticsController extends ServiceBaseController
                 	$sql = 'SELECT count(1) cnt FROM `post`, user WHERE post.userId = user.id AND post.isDisabled = 0  AND user.role = "manager"';
                 	$internalPost = Yii::app()->db->createCommand($sql)->queryAll(true);
                 	
-                	$sql = "SELECT DATE_FORMAT(u.createDate,'%Y-%m-%d') as onbord, COUNT(1) as cnt FROM `user` u WHERE createDate >= DATE(NOW()) - INTERVAL 7 DAY and u.userName is not null GROUP BY onbord ORDER BY onbord ASC";                	 
+                	$sql = "SELECT DATE_FORMAT(u.createDate,'%Y-%m-%d') as onbord, COUNT(1) as cnt FROM `user` u WHERE createDate >= DATE(NOW()) - INTERVAL 6 DAY and u.userName is not null GROUP BY onbord ORDER BY onbord ASC";                	 
                 	$onbording = Yii::app()->db->createCommand($sql)->queryAll(true);
 
                 	
-                	$sql = "select onbord, count(1) as cnt, platform from  (SELECT DISTINCT DATE_FORMAT(u.createDate,'%Y-%m-%d') as onbord, u.id, IF(SUBSTRING_INDEX(platform, 'FoodTalk/com.foodtalkindia.FoodTalk', 1) = '', 'ios', IF(platform = 'FoodTalk webapp 1.0', 'web', 'android')) as  platform FROM user u  INNER JOIN `access_logs`  l on l.user_id = u.id 
-WHERE u.createDate >= DATE(NOW()) - INTERVAL 7 DAY and u.userName is NOT null) tmp GROUP by onbord, platform ORDER BY `tmp`.`onbord` ASC ";
+                	$sql = "SELECT theday as onbord, name  as platform, IFNULL(cnt, 0 ) as cnt FROM ( SELECT DISTINCT DATE_FORMAT(timestamp,'%Y-%m-%d') as theday, name
+FROM access_logs , device
+WHERE timestamp >= DATE(NOW()) - INTERVAL 6 DAY ) as calander 
+LEFT JOIN
+( SELECT onbord, count(1) as cnt, platform from  (SELECT DISTINCT DATE_FORMAT(u.createDate,'%Y-%m-%d') as onbord, u.id, IF(SUBSTRING_INDEX(platform, 'FoodTalk/com.foodtalkindia.FoodTalk', 1) = '', 'ios', IF(platform = 'FoodTalk webapp 1.0', 'web', 'android')) as  platform FROM user u  INNER JOIN `access_logs`  l on l.user_id = u.id 
+WHERE u.createDate >= DATE(NOW()) - INTERVAL 6 DAY and u.userName is NOT null) tmp GROUP by onbord, platform ) as tt on tt.onbord = calander.theday and BINARY calander.name = BINARY tt.platform 
+ORDER by onbord ASC";
                 	$onbordingPlatforms = Yii::app()->db->createCommand($sql)->queryAll(true);
                 	
-                	$sql = "SELECT  acitve_on, COUNT(1) as cnt, platform FROM (SELECT DISTINCT DATE_FORMAT(l.timestamp,'%Y-%m-%d') as acitve_on, u.id, IF(SUBSTRING_INDEX(platform, 'FoodTalk/com.foodtalkindia.FoodTalk', 1) = '', 'ios', IF(platform = 'FoodTalk webapp 1.0', 'web', 'android')) as  platform FROM user u  INNER JOIN `access_logs`  l on l.user_id = u.id 
-WHERE l.timestamp >= DATE(NOW()) - INTERVAL 7 DAY and u.userName is NOT null and u.id >0) tmp GROUP BY acitve_on, platform ORDER BY `tmp`.`acitve_on` ASC";
+                	$sql = "SELECT theday as acitve_on, name  as platform, IFNULL(cnt, 0 ) as cnt FROM ( SELECT DISTINCT DATE_FORMAT(timestamp,'%Y-%m-%d') as theday, name
+FROM access_logs , device
+WHERE timestamp >= DATE(NOW()) - INTERVAL 6 DAY ) as calander 
+LEFT JOIN
+( SELECT  acitve_on, COUNT(1) as cnt, platform FROM (SELECT DISTINCT DATE_FORMAT(l.timestamp,'%Y-%m-%d') as acitve_on, u.id, IF(SUBSTRING_INDEX(platform, 'FoodTalk/com.foodtalkindia.FoodTalk', 1) = '', 'ios', IF(platform = 'FoodTalk webapp 1.0', 'web', 'android')) as  platform FROM user u  INNER JOIN `access_logs`  l on l.user_id = u.id 
+WHERE l.timestamp >= DATE(NOW()) - INTERVAL 6 DAY and u.userName is NOT null and u.id >0) tmp GROUP BY acitve_on, platform  ) as tt on tt.acitve_on = calander.theday and BINARY calander.name = BINARY tt.platform 
+ORDER by acitve_on ASC";
              		$weeklyactiveuser = Yii::app()->db->createCommand($sql)->queryAll(true);
                 	
                 	
-             		$sql= "SELECT DATE_FORMAT(post.createDate,'%Y-%m-%d') as createon , count(1) cnt FROM `post`, user WHERE post.userId = user.id AND post.isDisabled = 0 and post.createDate >= DATE(NOW()) - INTERVAL 7 DAY GROUP BY createon ORDER BY `createon` ASC";
+             		$sql= "SELECT DATE_FORMAT(post.createDate,'%Y-%m-%d') as createon , count(1) cnt FROM `post`, user WHERE post.userId = user.id AND post.isDisabled = 0 and post.createDate >= DATE(NOW()) - INTERVAL 6 DAY GROUP BY createon ORDER BY `createon` ASC";
              		$weeklyPosts = Yii::app()->db->createCommand($sql)->queryAll(true);
 
              		
-             		$sql= "SELECT DATE_FORMAT(like.createDate,'%Y-%m-%d') as createon , count(1) cnt FROM `like`, user WHERE like.userId = user.id AND like.isDisabled = 0 and like.createDate >= DATE(NOW()) - INTERVAL 7 DAY GROUP BY createon ORDER BY `createon` ASC";
+             		$sql= "SELECT DATE_FORMAT(like.createDate,'%Y-%m-%d') as createon , count(1) cnt FROM `like`, user WHERE like.userId = user.id AND like.isDisabled = 0 and like.createDate >= DATE(NOW()) - INTERVAL 6 DAY GROUP BY createon ORDER BY `createon` ASC";
              		$weeklylikes = Yii::app()->db->createCommand($sql)->queryAll(true);
              		 
-             		$sql= "SELECT DATE_FORMAT(comment.createDate,'%Y-%m-%d') as createon , count(1) cnt FROM `comment`, user WHERE comment.userId = user.id AND comment.isDisabled = 0 and comment.createDate >= DATE(NOW()) - INTERVAL 7 DAY GROUP BY createon ORDER BY `createon` ASC";
+             		$sql= "SELECT DATE_FORMAT(comment.createDate,'%Y-%m-%d') as createon , count(1) cnt FROM `comment`, user WHERE comment.userId = user.id AND comment.isDisabled = 0 and comment.createDate >= DATE(NOW()) - INTERVAL 6 DAY GROUP BY createon ORDER BY `createon` ASC";
              		$weeklycomments = Yii::app()->db->createCommand($sql)->queryAll(true);
              		 
-             		$sql = "SELECT DATE_FORMAT(bookmark.createDate,'%Y-%m-%d') as createon , count(1) cnt FROM `bookmark`, user WHERE bookmark.userId = user.id AND bookmark.isDisabled = 0 and bookmark.createDate >= DATE(NOW()) - INTERVAL 7 DAY GROUP BY createon ORDER BY `createon` ASC";
+             		$sql = "SELECT DATE_FORMAT(bookmark.createDate,'%Y-%m-%d') as createon , count(1) cnt FROM `bookmark`, user WHERE bookmark.userId = user.id AND bookmark.isDisabled = 0 and bookmark.createDate >= DATE(NOW()) - INTERVAL 6 DAY GROUP BY createon ORDER BY `createon` ASC";
              		$weeklyBookmark = Yii::app()->db->createCommand($sql)->queryAll(true);
              		
-             		$sql = "SELECT DATE_FORMAT(userMentioned.createDate,'%Y-%m-%d') as createon , count(1) cnt FROM `userMentioned`, user WHERE userMentioned.userId = user.id AND  userMentioned.createDate >= DATE(NOW()) - INTERVAL 7 DAY GROUP BY createon ORDER BY `createon` ASC";
+             		$sql = "SELECT DATE_FORMAT(userMentioned.createDate,'%Y-%m-%d') as createon , count(1) cnt FROM `userMentioned`, user WHERE userMentioned.userId = user.id AND  userMentioned.createDate >= DATE(NOW()) - INTERVAL 6 DAY GROUP BY createon ORDER BY `createon` ASC";
              		$weeklyuserMentioned = Yii::app()->db->createCommand($sql)->queryAll(true);
              		
-                	
-//                 	$onbordingJson = '[{"onbord":"22-07-2016","cnt":"15","platform":"android"}, {"onbord":"22-07-2016","cnt":"17","platform":"ios"}, {"onbord":"23-07-2016","cnt":"14","platform":"android"}, {"onbord":"23-07-2016","cnt":"15","platform":"ios"}, {"onbord":"23-07-2016","cnt":"2","platform":"web"}, {"onbord":"24-07-2016","cnt":"15","platform":"android"}, {"onbord":"24-07-2016","cnt":"12","platform":"ios"}, {"onbord":"25-07-2016","cnt":"14","platform":"android"}, {"onbord":"25-07-2016","cnt":"15","platform":"ios"}, {"onbord":"26-07-2016","cnt":"34","platform":"android"}, {"onbord":"26-07-2016","cnt":"27","platform":"ios"}, {"onbord":"27-07-2016","cnt":"14","platform":"android"}, {"onbord":"27-07-2016","cnt":"16","platform":"ios"}, {"onbord":"28-07-2016","cnt":"8","platform":"android"}, {"onbord":"28-07-2016","cnt":"11","platform":"ios"}, {"onbord":"28-07-2016","cnt":"1","platform":"web"}, {"onbord":"29-07-2016","cnt":"4","platform":"android"}, {"onbord":"29-07-2016","cnt":"4","platform":"ios"}, {"onbord":"29-07-2016","cnt":"1","platform":"web"}]';
-                	
-//                 	$onbordingJson = '[{"onbord":"22-07-2016","cnt":"32"}, {"onbord":"23-07-2016","cnt":"30"}, {"onbord":"24-07-2016","cnt":"27"}, {"onbord":"25-07-2016","cnt":"29"}, {"onbord":"26-07-2016","cnt":"61"}, {"onbord":"27-07-2016","cnt":"30"}, {"onbord":"28-07-2016","cnt":"20"}, {"onbord":"29-07-2016","cnt":"8"}]';
-                	
-//                 	$onbording = json_decode($onbordingJson, true);
-                			
                 			
                 	
                 	$result = array(
