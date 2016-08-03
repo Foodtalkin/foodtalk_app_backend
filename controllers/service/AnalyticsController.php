@@ -27,8 +27,7 @@ class AnalyticsController extends ServiceBaseController
                 {
                 	
                 	
-                	$sql = "select platform, count(1) as cnt from (SELECT DISTINCT u.id, IF(SUBSTRING_INDEX(platform, 'FoodTalk/com.foodtalkindia.FoodTalk', 1) = '', 'ios', IF(platform = 'FoodTalk webapp 1.0', 'web', 'android')) as platform FROM user u INNER JOIN `access_logs` l on l.user_id = u.id WHERE u.userName is NOT null AND l.method ='POST' and l.platform is not null) tmp 
-                			GROUP by platform"; 
+                	$sql = "select platform, count(1) as cnt from (SELECT DISTINCT u.id, IF(SUBSTRING_INDEX(platform, 'FoodTalk/com.foodtalkindia.FoodTalk', 1) = '', 'ios', IF(SUBSTRING_INDEX(platform, 'iOS', 1) = '','ios', IF(platform = 'FoodTalk webapp 1.0', 'web', 'android'))) as platform FROM user u INNER JOIN `access_logs` l on l.user_id = u.id WHERE u.userName is NOT null AND l.method ='POST' and l.platform is not null) tmp GROUP by platform"; 
                 	$totalUsers = Yii::app()->db->createCommand($sql)->queryAll(true);
                 	
                 	$sql = 'SELECT count(1) cnt FROM `post`, user WHERE post.userId = user.id AND post.isDisabled = 0';
@@ -45,7 +44,7 @@ class AnalyticsController extends ServiceBaseController
 FROM access_logs , device
 WHERE timestamp >= DATE(NOW()) - INTERVAL 6 DAY ) as calander 
 LEFT JOIN
-( SELECT onbord, count(1) as cnt, platform from  (SELECT DISTINCT DATE_FORMAT(u.createDate,'%Y-%m-%d') as onbord, u.id, IF(SUBSTRING_INDEX(platform, 'FoodTalk/com.foodtalkindia.FoodTalk', 1) = '', 'ios', IF(platform = 'FoodTalk webapp 1.0', 'web', 'android')) as  platform FROM user u  INNER JOIN `access_logs`  l on l.user_id = u.id 
+( SELECT onbord, count(1) as cnt, platform from  (SELECT DISTINCT DATE_FORMAT(u.createDate,'%Y-%m-%d') as onbord, u.id, IF(SUBSTRING_INDEX(platform, 'FoodTalk/com.foodtalkindia.FoodTalk', 1) = '', 'ios', IF(SUBSTRING_INDEX(platform, 'iOS', 1) = '','ios', IF(platform = 'FoodTalk webapp 1.0', 'web', 'android'))) as  platform FROM user u  INNER JOIN `access_logs`  l on l.user_id = u.id 
 WHERE u.createDate >= DATE(NOW()) - INTERVAL 6 DAY and u.userName is NOT null) tmp GROUP by onbord, platform ) as tt on tt.onbord = calander.theday and BINARY calander.name = BINARY tt.platform 
 ORDER by onbord ASC";
                 	$onbordingPlatforms = Yii::app()->db->createCommand($sql)->queryAll(true);
@@ -54,7 +53,7 @@ ORDER by onbord ASC";
 FROM access_logs , device
 WHERE timestamp >= DATE(NOW()) - INTERVAL 6 DAY ) as calander 
 LEFT JOIN
-( SELECT  acitve_on, COUNT(1) as cnt, platform FROM (SELECT DISTINCT DATE_FORMAT(l.timestamp,'%Y-%m-%d') as acitve_on, u.id, IF(SUBSTRING_INDEX(platform, 'FoodTalk/com.foodtalkindia.FoodTalk', 1) = '', 'ios', IF(platform = 'FoodTalk webapp 1.0', 'web', 'android')) as  platform FROM user u  INNER JOIN `access_logs`  l on l.user_id = u.id 
+( SELECT  acitve_on, COUNT(1) as cnt, platform FROM (SELECT DISTINCT DATE_FORMAT(l.timestamp,'%Y-%m-%d') as acitve_on, u.id, IF(SUBSTRING_INDEX(platform, 'FoodTalk/com.foodtalkindia.FoodTalk', 1) = '', 'ios', IF(SUBSTRING_INDEX(platform, 'iOS', 1) = '','ios', IF(platform = 'FoodTalk webapp 1.0', 'web', 'android'))) as  platform FROM user u  INNER JOIN `access_logs`  l on l.user_id = u.id 
 WHERE l.timestamp >= DATE(NOW()) - INTERVAL 6 DAY and u.userName is NOT null and u.id >0) tmp GROUP BY acitve_on, platform  ) as tt on tt.acitve_on = calander.theday and BINARY calander.name = BINARY tt.platform 
 ORDER by acitve_on ASC";
              		$weeklyactiveuser = Yii::app()->db->createCommand($sql)->queryAll(true);
