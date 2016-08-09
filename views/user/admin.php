@@ -11,7 +11,9 @@ $this->breadcrumbs=array(
 $this->menu=array(
         array('label'=>'Dashboard', 'url'=>array('/dashboard')),
 		array('label'=>'Active users', 'url'=>array('user/admin')),
+		array('label'=>'Reported users', 'url'=>array('user/reported')),	
 		array('label'=>'Disabled users', 'url'=>array('user/disabled')),
+		
 	//array('label'=>'List User', 'url'=>array('index')),
 	//array('label'=>'Create User', 'url'=>array('create')),
 );

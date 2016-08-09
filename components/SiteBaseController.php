@@ -96,7 +96,11 @@ class SiteBaseController extends Controller
             'user.update',
             'user.delete',
             'user.restore',
-       		'user.disabled',        		
+       		'user.disabled',
+        	'user.reported',
+        		
+        		
+        		
             'restaurant.admin',
             'restaurant.create',
             'restaurant.update',

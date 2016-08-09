@@ -230,10 +230,32 @@ class User extends FoodTalkActiveRecord
         if(isset($_SESSION['region']))
         	$criteria->addCondition("t.region = '".$_SESSION['region']."'");
         
-        if(Yii::app()->controller->action->id=='disabled')
+        $action = Yii::app()->controller->action->id;
+        
+        
+        if($action=='disabled')
         	$criteria->addCondition("t.isDisabled = 1");
         else
         	$criteria->addCondition("t.isDisabled = 0");
+        
+        //         if($action=='reported')
+        	//         	$criteria->addCondition("t.isDisabled = 1");
+        
+        
+        
+        	//         if($admin){
+        	//         	$criteria->with[]='user';
+        	//         	$criteria->compare("user.userName",$this->userId);
+        	//         }
+        	//         if($admin){
+        	//         	$criteria->with[]='user pu';
+        	//         	$criteria->compare("pu userName usrName",$this->postUserId);
+        	//         }
+        
+        	if($action=='reported'){
+        		$criteria->join =" Inner JOIN flag f ON f.postUserId = t.id AND  f.commentId IS NULL AND f.postId is null ";
+        		$order = 'f.createDate desc';
+        	}
         
         return new CActiveDataProvider($this, array(
                 'criteria'=>$criteria,
