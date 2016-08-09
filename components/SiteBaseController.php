@@ -52,7 +52,7 @@ class SiteBaseController extends Controller
     public function guestTasks()
     {
         return array(
-            'site.index',
+//             'site.index',
             'site.contact',
             'site.about',
             'site.login',
@@ -148,6 +148,14 @@ class SiteBaseController extends Controller
        		'comment.disabled',
        		'comment.restore',
         	'comment.approve',
+        		
+//         	'adwords.index',
+        	'adwords.view',        	
+        	'adwords.create',
+        	'adwords.update',
+        	'adwords.delete',
+        	'adwords.admin',
+        		
 
         		
         	'notification.index',

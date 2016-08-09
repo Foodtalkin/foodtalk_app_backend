@@ -33,6 +33,11 @@ $disabled = true;
 					, array('empty'=>'Select a Target Screen','required'=>true, 'disabled'=>$disabled )); ?>
 <?php echo $form->error($model,'eventType'); ?>
 </td></tr>
+<tr><td><?php echo $form->labelEx($model,'region'); ?></td><td>
+		<?php
+		echo $form->dropDownList($model, 'region', CHtml::listData(Region::model()->findAll(), 'name', 'name'), array('empty'=>'Select a Target Screen','required'=>true, 'disabled'=>$disabled ));
+		echo $form->error($model,'region'); ?>
+</td></tr>
 
 <tr class="odd"><th><?php echo $form->labelEx($model,'Notify Message'); ?></th><td>
 <?php echo $form->textArea($model,'message',array('required'=>true, 'size'=>80,'maxlength'=>200, 'style'=>'width: 400px;','disabled'=>$disabled  )); ?>

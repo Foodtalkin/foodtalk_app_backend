@@ -49,7 +49,13 @@ echo CHtml::dropDownList(
 		);
 ?>
 </div>
-
+	<div class="row">
+		<?php
+// 		$model->region = isset($_SESSION['region'])? $_SESSION['region'] : '';
+		echo $form->labelEx($model,'region'); ?>
+		<?php echo $form->dropDownList($model, 'region', CHtml::listData(Region::model()->findAll(), 'name', 'name'), array('empty'=>'Select a Region'));
+		echo $form->error($model,'region'); ?>
+	</div>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'Notify Message *'); ?>

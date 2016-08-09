@@ -34,7 +34,7 @@ abstract class FoodTalkActiveRecord extends CActiveRecord
     	if($this->isNewRecord)
     		$this->logActivity();
     	
-    	elseif($this->isDisabled==1)
+    	elseif(isset($this->isDisabled) && $this->isDisabled==1)
     		$this->logActivity('delete');    	
     	
     	return parent::afterSave();

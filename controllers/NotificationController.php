@@ -16,6 +16,8 @@ class NotificationController extends SiteBaseController
 		if(isset($_POST['Event']) && $_POST['action']=='update')
 		{
 			
+			$model->region= $_POST['Event']['region'];
+			
 			$model->eventType = $_POST['Event']['eventType'];
 			$model->message = $_POST['Event']['message'];
 			$model->eventDate = $_POST['Event']['eventDate'];
@@ -69,6 +71,9 @@ class NotificationController extends SiteBaseController
 		    	$model->elementId = $_POST['Event']['elementId'];
 	        
 // 	        $model->raiserId = $raiserId;
+
+	        $model->region= $_POST['Event']['region'];
+	         
 	        $model->message = $_POST['Event']['message'];
 	        $model->eventDate = $_POST['Event']['eventDate'];
 	        $model->channel = $_POST['Event']['channel'];
