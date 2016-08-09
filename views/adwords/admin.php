@@ -45,8 +45,7 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 	'dataProvider'=>$model->search(),
 	'filter'=>$model,
 	'columns'=>array(
-		'id',
-		'entityId',
+// 		'id',
 		'title',
 			array(
 					'name' => 'image',
@@ -54,14 +53,15 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 					'value' => '(!empty($data->image))? CHtml::image(thumbPath("post") . $data->image, "") : " "',
 					'filter' => false
 			),
+		'entityId',
 		'points',
-		'paymentUrl',
-		/*
-		'description',
 		'totalSlots',
 		'bookedSlots',
-		'description2',
+		'paymentUrl',
 		'expiry',
+		/*
+		'description',
+		'description2',
 		'type',
 		'isDisabled',
 		'disableReason',
