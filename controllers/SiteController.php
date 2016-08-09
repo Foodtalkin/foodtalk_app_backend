@@ -77,6 +77,9 @@ class SiteController extends Controller
      */
     public function actionLogin()
     {
+    	if(!Yii::app()->user->isGuest)
+    		$this->redirect(array('user/admin'));
+    	
         $model=new LoginForm('manager');
 
         // if it is ajax validation request
@@ -96,6 +99,8 @@ class SiteController extends Controller
                 $this->redirect(array('user/admin'));
             }
         }
+
+        
         // display the login form
         $this->render('login',array('model'=>$model));
     }
