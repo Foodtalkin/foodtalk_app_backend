@@ -58,9 +58,10 @@
     </script> 
 	<div class="row">
 	
+	
+		<?php if(!$model->isNewRecord ){ ?>
 		<img alt="AddImage" src="<?php echo imagePath('post').$model->image ?> ">
-		
-		<?php echo $form->labelEx($model,'image'); ?>
+		<?php } echo $form->labelEx($model,'image'); ?>
 		<?php echo $form->hiddenField($model,'image',array('size'=>60,'maxlength'=>128)); ?>
 		<?php echo $form->error($model,'image'); ?>
 	</div>
