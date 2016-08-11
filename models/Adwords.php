@@ -9,6 +9,7 @@
  * @property string $title
  * @property string $image
  * @property integer $points
+ * @property string $couponCode
  * @property string $paymentUrl
  * @property string $description
  * @property integer $totalSlots
@@ -45,12 +46,13 @@ class Adwords extends FoodTalkActiveRecord
 			array('entityId, points, totalSlots, bookedSlots, isDisabled', 'numerical', 'integerOnly'=>true),
 			array('title', 'length', 'max'=>200),
 			array('image, paymentUrl', 'length', 'max'=>255),
+			array('couponCode', 'length', 'max'=>50),
 			array('type, createId, updateId', 'length', 'max'=>10),
 			array('disableReason', 'length', 'max'=>128),
 			array('description2, expiry, updateDate', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, entityId, title, image, points, paymentUrl, description, totalSlots, bookedSlots, description2, expiry, type, isDisabled, disableReason, createDate, updateDate, createId, updateId', 'safe', 'on'=>'search'),
+			array('id, entityId, title, image, points, couponCode, paymentUrl, description, totalSlots, bookedSlots, description2, expiry, type, isDisabled, disableReason, createDate, updateDate, createId, updateId', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -76,6 +78,7 @@ class Adwords extends FoodTalkActiveRecord
 			'title' => 'Title',
 			'image' => 'Image',
 			'points' => 'Points',
+			'couponCode' => 'Coupon Code',
 			'paymentUrl' => 'Payment Url',
 			'description' => 'Description',
 			'totalSlots' => 'Total Slots',
@@ -115,6 +118,7 @@ class Adwords extends FoodTalkActiveRecord
 		$criteria->compare('title',$this->title,true);
 		$criteria->compare('image',$this->image,true);
 		$criteria->compare('points',$this->points);
+		$criteria->compare('couponCode',$this->couponCode,true);
 		$criteria->compare('paymentUrl',$this->paymentUrl,true);
 		$criteria->compare('description',$this->description,true);
 		$criteria->compare('totalSlots',$this->totalSlots);
@@ -145,7 +149,7 @@ class Adwords extends FoodTalkActiveRecord
 		return parent::model($className);
 	}
 	
-  public static function getQuery($userId = null)
+  public static function getQuery($userId = null, $all = false)
     {
         $sql = 'SELECT ad.id';
         
@@ -154,6 +158,7 @@ class Adwords extends FoodTalkActiveRecord
         $sql .= ',IFNULL(CONCAT("' . imagePath('post') . '", ad.image), "") as adImage';
         $sql .= ',IFNULL(CONCAT("' . thumbPath('post') . '", ad.image), "") as adThumb';
         $sql .= ',IFNULL(ad.points , "") as points';
+        $sql .= ',IFNULL(ad.couponCode , "") as couponCode';
         $sql .= ',IFNULL(ad.paymentUrl , "") as paymentUrl';
         $sql .= ',IFNULL(ad.description , "") as description';
         $sql .= ',IFNULL(ad.totalSlots , "") as totalSlots';
@@ -161,21 +166,33 @@ class Adwords extends FoodTalkActiveRecord
         $sql .= ',IFNULL(ad.description2 , "") as description2';
         $sql .= ',IFNULL(ad.expiry , "") as expiry';
         
-        if($userId > 0)
+        
+        if($all &&  $userId > 0){        	
+        	$sql .= ',IFNULL(rp.id , 0) as rid';
+        	$sql .= ',IFNULL(rp.pointsRedeemed , "0") as pointsRedeemed';
+	        $sql .= ',IF(rp.id > 0, 1 , 0 ) as iRedeemed';        
+        }
+		elseif($userId > 0)
         $sql .= ',IF((SELECT COUNT(*) FROM `redeemPoints` rp WHERE rp.redeemFor = ad.type and ad.id = rp.entityId  and  rp.userId = '.$userId.') > 0, 1 , 0 ) as iRedeemed';
         
-//         if($userId > 0){        	
-//         	$sql .= ',IFNULL(rp.id , 0) as rid';
-//         	$sql .= ',IFNULL(rp.pointsRedeemed , "0") as pointsRedeemed';
-// 	        $sql .= ',IF(rp.id > 0, 1 , 0 ) as iRedeemed';        
-//         }
+        
         $sql .= ',ad.type';
         $sql .= ' FROM adwords ad';
         
-//         if($userId > 0)
-//         	$sql .= ' LEFT JOIN redeemPoints rp on rp.redeemFor = ad.type and ad.id = rp.entityId  and  rp.userId = '.$userId;
+        if($all &&  $userId > 0)
+        	$sql .= ' INNER JOIN redeemPoints rp on rp.redeemFor = ad.type and ad.id = rp.entityId  and  rp.userId = '.$userId;
         
         return $sql;
+    }
+    
+    
+    public static function getRedeemdAddsByUser($userId){
+    	
+    	$sql = self::getQuery($userId, true);
+    	$sql .= ' WHERE ad.expiry >now() ';
+    	$ads = Yii::app()->db->createCommand($sql)->queryAll(true);
+    	return $ads;
+    	
     }
     
     
@@ -197,7 +214,7 @@ class Adwords extends FoodTalkActiveRecord
     {
         //fetch all contactUs records of a specific user
         $sql = self::getQuery($userId);
-        $sql .= ' WHERE ad.isDisabled=0 ';
+        $sql .= ' WHERE ad.isDisabled=0  and ad.expiry >now() ';
         
         if($type){
         	$sql .=  ' AND ad.type = "' .$type.'" ';

@@ -73,6 +73,12 @@
 	</div>
 
 	<div class="row">
+		<?php echo $form->labelEx($model,'couponCode'); ?>
+		<?php echo $form->textField($model,'couponCode',array('size'=>50,'maxlength'=>50)); ?>
+		<?php echo $form->error($model,'couponCode'); ?>
+	</div>
+	
+	<div class="row">
 		<?php echo $form->labelEx($model,'paymentUrl'); ?>
 		<?php echo $form->textField($model,'paymentUrl',array('size'=>60,'maxlength'=>255)); ?>
 		<?php echo $form->error($model,'paymentUrl'); ?>
@@ -113,7 +119,11 @@
 		
 				<?php echo $form->dropDownList($model, 'type', CHtml::listData(
 						
-				array(array('id'=>'event', 'title'=>'Event'))
+				array(
+						array('id'=>'event', 'title'=>'Event'),
+						array('id'=>'offers', 'title'=>'Offers')
+						
+				)
 						, 'id', 'title'
 						
 				),  array('required'=>true)); ?>

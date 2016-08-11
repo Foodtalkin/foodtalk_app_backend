@@ -25,15 +25,19 @@
 	<?php echo CHtml::encode($data->points); ?>
 	<br />
 
+	<b><?php echo CHtml::encode($data->getAttributeLabel('couponCode')); ?>:</b>
+	<?php echo CHtml::encode($data->couponCode); ?>
+	<br />
+
 	<b><?php echo CHtml::encode($data->getAttributeLabel('paymentUrl')); ?>:</b>
 	<?php echo CHtml::encode($data->paymentUrl); ?>
 	<br />
 
+	<?php /*
 	<b><?php echo CHtml::encode($data->getAttributeLabel('description')); ?>:</b>
 	<?php echo CHtml::encode($data->description); ?>
 	<br />
 
-	<?php /*
 	<b><?php echo CHtml::encode($data->getAttributeLabel('totalSlots')); ?>:</b>
 	<?php echo CHtml::encode($data->totalSlots); ?>
 	<br />

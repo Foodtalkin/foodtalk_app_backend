@@ -101,6 +101,47 @@ class AdwordsController extends ServiceBaseController
     }
     
     
+    
+    public function actionRedeedmed()
+    {
+    	$apiName = 'adwords/redeedmed';
+    	$sessionId = null;
+    
+    	$_JSON = $this->getJsonInput();
+    
+    	try
+    	{
+    		if(!isset($_JSON) || empty($_JSON))
+    			$result = $this->error($apiName, WS_ERR_POST_PARAM_MISSED, 'No input received.');
+    		else if(!isset($_JSON['sessionId']) || empty($_JSON['sessionId']))
+    			$result = $this->error($apiName, WS_ERR_POST_PARAM_MISSED, 'Please enter session id.');
+    		else
+    		{
+    			$userId = $this->isAuthentic($_JSON['sessionId']);
+    			$user = User::model()->findByPk($userId);
+    			if (is_null($user))
+    				$result = $this->error($apiName, WS_ERR_WONG_USER, 'Please login before using this service.');
+    			else
+    			{
+    				$redeemdList = Adwords::getRedeemdAddsByUser($userId);
+    				
+    				$result = array(
+    						'api' => $apiName,
+    						'apiMessage' => 'Redeedmed adds fetched successfully.',
+    						'status' => 'OK',
+    						'contactUs' => $redeemdList
+    				);
+    			}
+    		}
+    	}
+    	catch (Exception $e)
+    	{
+    		$result = $this->error($apiName, $e->getCode(), Yii::t('app', $e->getMessage()));
+    	}
+    	$this->sendResponse(json_encode($result, JSON_UNESCAPED_UNICODE));
+    }
+    
+    
     public function actionBookSlot()
     {
     	$apiName = 'adwords/bookslot';
@@ -135,6 +176,7 @@ class AdwordsController extends ServiceBaseController
     				$avil = Adwords::getAvailability($adId, $userId, $quantity);
     				
     				$add = Adwords::model()->findByPk($adId);
+    				
     				
     				if($avil['avilableSlots'] >= $quantity && $avil['avilablePoints'] >= $avil['points']){
     					

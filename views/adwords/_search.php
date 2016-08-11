@@ -37,6 +37,11 @@
 	</div>
 
 	<div class="row">
+		<?php echo $form->label($model,'couponCode'); ?>
+		<?php echo $form->textField($model,'couponCode',array('size'=>50,'maxlength'=>50)); ?>
+	</div>
+
+	<div class="row">
 		<?php echo $form->label($model,'paymentUrl'); ?>
 		<?php echo $form->textField($model,'paymentUrl',array('size'=>60,'maxlength'=>255)); ?>
 	</div>
