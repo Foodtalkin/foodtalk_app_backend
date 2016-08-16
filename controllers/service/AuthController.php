@@ -283,10 +283,10 @@ class AuthController extends ServiceBaseController
                     
                     if(isset($referralUser) && !is_null($referralUser) || !empty($referralUser)){
                     
-                    	$sql = "insert into activityLog  ( `facebookId`, `activityType`, `elementId`, `points`) select '".$referralUser->facebookId."' , id, '".$user->id."', 1000 from activityPoints where activityTable = 'user'";					
+                    	$sql = "insert into activityLog  ( `facebookId`, `activityType`, `elementId`, `points`) select '".$referralUser->facebookId."' , id, '".$user->id."', 500 from activityPoints where activityTable = 'user'";					
                     	Yii::app()->db->createCommand($sql)->query();
 
-                    	$sql = "insert into activityLog  ( `facebookId`, `activityType`, `elementId`, `points`) select '".$user->facebookId."' , id, '".$user->id."', 1000 from activityPoints where activityTable = 'user'";
+                    	$sql = "insert into activityLog  ( `facebookId`, `activityType`, `elementId`, `points`) select '".$user->facebookId."' , id, '".$user->id."', 500 from activityPoints where activityTable = 'user'";
                     	Yii::app()->db->createCommand($sql)->query();
                     
                     }
