@@ -1007,7 +1007,7 @@ class UserController extends ServiceBaseController
     				$result = $this->error($apiName, WS_ERR_WONG_USER, 'Please login before using this service.');
     			else
     			{
-    				$users = User::getReferrals($userId);
+    				$users = User::getReferral($userId);
     
     				$result = array(
     						'api' => $apiName,

@@ -372,7 +372,7 @@ class User extends FoodTalkActiveRecord
         return $users;
     }
     
-    public static function getReferrals($userId){
+    public static function getReferral($userId){
     	
         $sql = 'Select u.id, u.userName, u.fullName, u.image thumb, l.points, l.createDate as obboard FROM user u';
         $sql .= ' INNER JOIN activityLog l on l.elementId = u.id';
