@@ -245,6 +245,15 @@ class AuthController extends ServiceBaseController
                     if(isset($_JSON['region']))
                     	$user->region = filter_var($_JSON['region'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
                     
+                    
+                    if(isset($_JSON['referral']) && strlen(trim($_JSON['referral'])) > 1 && empty($user->referral)){
+                    	$referral = filter_var($_JSON['referral'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
+                    	$referralUser = User::model()->findByAttributes(array('userName' => $referral));
+
+                    	if(!is_null($referralUser) || !empty($referralUser))
+                    		$user->referral = $referralUser->userName; 
+                    }
+                    
                     //save image
                     if(isset($_JSON['image']) && !empty($_JSON['image']))
                     {
@@ -270,6 +279,16 @@ class AuthController extends ServiceBaseController
                     if ($user->hasErrors()) 
                     {
                         throw new Exception(print_r($user->getErrors(), true), WS_ERR_UNKNOWN);
+                    }
+                    
+                    if(isset($referralUser) && !is_null($referralUser) || !empty($referralUser)){
+                    
+                    	$sql = "insert into activityLog  ( `facebookId`, `activityType`, `elementId`, `points`) select '".$referralUser->facebookId."' , id, '".$user->id."', 1000 from activityPoints where activityTable = 'user'";					
+                    	Yii::app()->db->createCommand($sql)->query();
+
+                    	$sql = "insert into activityLog  ( `facebookId`, `activityType`, `elementId`, `points`) select '".$user->facebookId."' , id, '".$user->id."', 1000 from activityPoints where activityTable = 'user'";
+                    	Yii::app()->db->createCommand($sql)->query();
+                    
                     }
                     
                     //hack for auto pin restaurants
