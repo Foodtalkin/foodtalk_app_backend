@@ -172,9 +172,11 @@ class Adwords extends FoodTalkActiveRecord
 	        $sql .= ',IF(rp.id > 0, 1 , 0 ) as iRedeemed';        
         	$sql .= ',IFNULL(rp.createDate , "-") as bookedOn';
         }
-		elseif($userId > 0)
-        $sql .= ',IF((SELECT COUNT(*) FROM `redeemPoints` rp WHERE rp.redeemFor = ad.type and ad.id = rp.entityId  and  rp.userId = '.$userId.') > 0, 1 , 0 ) as iRedeemed';
-        
+		elseif($userId > 0){
+        	$sql .= ',IF((SELECT COUNT(*) FROM `redeemPoints` rp WHERE rp.redeemFor = ad.type and ad.id = rp.entityId  and  rp.userId = '.$userId.') > 0, 1 , 0 ) as iRedeemed';
+        	$sql .= ',IFNULL((SELECT a.avilablePoints FROM user u LEFT JOIN activityScore a on a.facebookId = u.facebookId where u.id = '.$userId.'), 0) as avilablePoints ';
+        	
+		}
         
         $sql .= ',ad.type';
         $sql .= ' FROM adwords ad';
