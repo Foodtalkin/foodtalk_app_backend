@@ -372,6 +372,19 @@ class User extends FoodTalkActiveRecord
         return $users;
     }
     
+    public static function getReferrals($userId){
+    	
+        $sql = 'Select u.id, u.userName, u.fullName, u.image thumb, l.points, l.createDate as obboard FROM user u';
+        $sql .= ' INNER JOIN activityLog l on l.elementId = u.id';
+    	$sql .= ' INNER JOIN activityPoints p on p.id = l.activityType and p.activityTable = "user"';
+    	$sql .= ' WHERE l.facebookId = (SELECT facebookId from user WHERE user.id = '.$userId.')';
+    	
+    	$users = Yii::app()->db->createCommand($sql)->queryAll(true);
+    	return $users;
+    	
+    }
+    
+    
     /**
      * 
      * @param type $userId
