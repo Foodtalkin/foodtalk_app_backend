@@ -202,37 +202,49 @@ class ParseCommand extends CConsoleCommand
 			}
 			if($notificationType){
 				
+				$data['alert'] = $message;
+				$data['eventType'] = $eventType;
+				$data['elementId'] = $event['elementId'];
+				$data['class'] = $event['className'];
+				
+				$notifyData = array();
+				
+				
+				$notifyData['region'] = $event['region'];
 				
 				if($notificationType == Notification::NOTIFICATION_GROUP_YOU){
 					
 					$notfyId = Notification::saveNotification($event['relatedUserId'], Notification::NOTIFICATION_GROUP_YOU, $message, $event['id']);
 					
 					
-					$data['alert'] = $message;
-					$data['eventType'] = $eventType;
-// 					if(isset($data['elementId']) && $data['elementId'] && $data['elementId']!='')
-						$data['elementId'] = $event['elementId'];
-					$data['class'] = $event['className'];
+// 					$data['alert'] = $message;
+// 					$data['eventType'] = $eventType;
+// // 					if(isset($data['elementId']) && $data['elementId'] && $data['elementId']!='')
+// 						$data['elementId'] = $event['elementId'];
+// 					$data['class'] = $event['className'];
 						
-					
-					$notifyData = array(
-							"receiverId" => $event['relatedUserId'],
-							"data" => $data
-					);
+					$notifyData['receiverId'] = $event['relatedUserId'];
+// 					$notifyData = array(
+// 							"receiverId" => $event['relatedUserId'],
+// 							"data" => $data
+// 					);
 				}
 				if($notificationType == Notification::NOTIFICATION_PUBLIC){
 					
-					$data['alert'] = $message;
-					$data['eventType'] = $eventType;
-// 					if(isset($data['elementId']) && $data['elementId'] && $data['elementId']!='')
-						$data['elementId'] = $event['elementId'];
-					$data['class'] = $event['className'];
+// 					$data['alert'] = $message;
+// 					$data['eventType'] = $eventType;
+// // 					if(isset($data['elementId']) && $data['elementId'] && $data['elementId']!='')
+// 						$data['elementId'] = $event['elementId'];
+// 					$data['class'] = $event['className'];
 					
-					$notifyData = array(
-							"data" => $data
-					);
+// 					$notifyData = array(
+// 							"data" => $data
+// 					);
 				}
-				if($push)
+				
+				$notifyData['data'] = $data;
+				
+// 				if($push)
 				PushParseNotification($notificationType, $notifyData, [$event['channel']]);
 				
 			}

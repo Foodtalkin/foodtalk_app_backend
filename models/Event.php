@@ -209,6 +209,7 @@ class Event extends FoodTalkActiveRecord
         $sql .= ',e.eventDate';
         $sql .= ',e.isNotified';
         $sql .= ',e.channel';
+        $sql .= ',e.region';
         
         $sql .= ',c.eventGroup';
         $sql .= ',c.defaultMessage';
