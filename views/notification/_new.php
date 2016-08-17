@@ -36,7 +36,7 @@ echo CHtml::dropDownList(
 		'',
 		CHtml::listData(
 				Restaurant::model()->findAll(
-						array("condition"=>"isActivated = 1 and isDisabled = 0 ",'order'=>'restaurantName', "select"=>"id, CONCAT(restaurantName, ' (', IFNULL(area, IFNULL(address, '') )  , ')', IF(isDisabled = 1, '-DISABLE RESTAURANT', IF(isActivated = 0, '-INACTIVE RESTAURANT', ''))) as restaurantName")
+						array("condition"=>"isActivated = 1 and isDisabled = 0 and suggested = 1 ",'order'=>'restaurantName', "select"=>"id, CONCAT(restaurantName, ' (', IFNULL(area, IFNULL(address, '') )  , ')', IF(isDisabled = 1, '-DISABLE RESTAURANT', IF(isActivated = 0, '-INACTIVE RESTAURANT', ''))) as restaurantName")
 						),
 				'id',
 				'restaurantName'
