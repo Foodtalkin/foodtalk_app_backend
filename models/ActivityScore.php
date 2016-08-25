@@ -5,6 +5,7 @@
  *
  * The followings are the available columns in table 'activityScore':
  * @property string $facebookId
+ * @property integer $isAppUser
  * @property integer $avilablePoints
  * @property double $totalPoints
  * @property integer $score
@@ -31,15 +32,15 @@ class ActivityScore extends FoodTalkActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('facebookId, createDate', 'required'),
-			array('avilablePoints, score', 'numerical', 'integerOnly'=>true),
+			array('facebookId', 'required'),
+			array('isAppUser,avilablePoints,score', 'numerical', 'integerOnly'=>true),
 			array('totalPoints', 'numerical'),
 			array('facebookId', 'length', 'max'=>30),
 			array('createId, updateId', 'length', 'max'=>10),
 			array('updateDate', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('facebookId, avilablePoints, totalPoints, score, createDate, updateDate, createId, updateId', 'safe', 'on'=>'search'),
+			array('facebookId, isAppUser, avilablePoints, totalPoints, score, createDate, updateDate, createId, updateId', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -61,6 +62,7 @@ class ActivityScore extends FoodTalkActiveRecord
 	{
 		return array(
 			'facebookId' => 'Facebook',
+			'isAppUser' => 'Is App User',
 			'avilablePoints' => 'Avilable Points',
 			'totalPoints' => 'Total Points',
 			'score' => 'Score',
@@ -90,6 +92,7 @@ class ActivityScore extends FoodTalkActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('facebookId',$this->facebookId,true);
+		$criteria->compare('isAppUser',$this->isAppUser);
 		$criteria->compare('avilablePoints',$this->avilablePoints);
 		$criteria->compare('totalPoints',$this->totalPoints);
 		$criteria->compare('score',$this->score);

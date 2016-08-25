@@ -96,6 +96,19 @@ class User extends FoodTalkActiveRecord
         );
     }
 
+    protected function afterSave()
+    {
+    	if($this->isNewRecord){
+    		$ActivityScore = new ActivityScore('create_api');
+    		$ActivityScore->facebookId = $this->facebookId;
+    		$ActivityScore->isAppUser = 1;
+    		try {
+    			$ActivityScore->save();
+    		} catch(CDbException $e) {}
+    	}
+    	return parent::afterSave();
+    }
+
     /**
      * @return array relational rules.
      */
