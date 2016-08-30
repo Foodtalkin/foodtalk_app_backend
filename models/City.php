@@ -6,12 +6,24 @@
  * The followings are the available columns in table 'city':
  * @property string $id
  * @property string $cityName
+ * @property string $shortName
+ * @property string $postalCode
+ * @property string $stateId
+ * @property string $countryId
+ * @property integer $regionId
+ * @property string $googleReference
+ * @property string $googlePlaceId
  * @property integer $isDisabled
  * @property string $disableReason
  * @property string $createDate
  * @property string $updateDate
  * @property string $createId
  * @property string $updateId
+ *
+ * The followings are the available model relations:
+ * @property Region $region
+ * @property Country $country
+ * @property State $state
  */
 class City extends FoodTalkActiveRecord
 {
@@ -23,6 +35,116 @@ class City extends FoodTalkActiveRecord
 		return 'city';
 	}
 
+	public static function getCityFromGoogle($google_place_id, $create = true){
+		
+		$city = self::model()->findByAttributes(array('googlePlaceId'=>$google_place_id));
+		
+		if(!$city){
+			
+			$placeJson = file_get_contents( 'https://maps.googleapis.com/maps/api/place/details/json?placeid=' .$google_place_id. '&key=AIzaSyB89N6mbHGzWBS1O47SzTch76_rN9K1Uws' );
+			$place = json_decode( $placeJson);
+				
+			$locality = false;	//city
+			$postal_code = false;
+			$country = false;
+			$administrative_area_level_1 = false;
+			$administrative_area_level_2 = false;
+			$administrative_area_level_3 = false; //city
+			
+			foreach ( $place->result->address_components as $component ){
+				if(in_array('locality', $component->types)){
+					$locality['long_name'] = $component->long_name;
+					$locality['short_name'] = $component->short_name;
+				}
+				if(in_array('country', $component->types)){
+					$country['long_name'] = $component->long_name;
+					$country['short_name'] = $component->short_name;
+				}
+				if(in_array('postal_code', $component->types)){
+					$postal_code['long_name'] = $component->long_name;
+				}
+				if(in_array('administrative_area_level_1', $component->types)){
+					$administrative_area_level_1['long_name'] = $component->long_name;
+					$administrative_area_level_1['short_name'] = $component->short_name;
+				}
+				if(in_array('administrative_area_level_2', $component->types)){
+					$administrative_area_level_2['long_name'] = $component->long_name;
+					$administrative_area_level_2['short_name'] = $component->short_name;
+				}
+				if(in_array('administrative_area_level_3', $component->types) and !$locality ){
+					$locality['long_name'] = $component->long_name;
+					$locality['short_name'] = $component->short_name;
+				}
+			}
+// 			if(in_array('political', $place->result->types)){
+// 				if(in_array('locality', $place->result->types)){ 
+// 					//  contains city
+// 				}elseif(in_array('country', $place->result->types)) { 
+// 					// contains country
+// 				}
+// 				else { 
+// 					// address
+// 				}
+// 			}
+			$sqlParam = array(':cityName' => $locality['long_name'], ':shortName' => $locality['short_name'], ':countryId' => $country['short_name']);
+			
+			if(!$administrative_area_level_1){
+				
+				$stat = State::getStt(array('shortName'=>$administrative_area_level_1['short_name'], 'name'=> $administrative_area_level_1['long_name'], 'countryId'=>$country['short_name']), false);
+				if($stat){
+					$condition = ' ( cityName = :cityName or shortName = :shortName ) and countryId = :countryId and stateId = :stateId ';
+					$sqlParam[':stateId'] = $stat->id; 
+					$city = self::model()->find($condition, $sqlParam );
+				}
+			}
+			else{
+				$condition = ' ( cityName = :cityName or shortName = :shortName ) and countryId = :countryId and stateId is null ';
+				$city = self::model()->find($condition, $sqlParam );
+			}
+			
+			if(!$city and $create){
+				
+				$city = new City('create_api');
+					
+				$city->cityName = $locality['long_name'];
+				$city->shortName = $locality['short_name'];
+				$city->googlePlaceId = $place->result->place_id;
+				$city->googleReference = $place->result->reference;
+				$city->region = 1;
+				
+				$ctry = Country::getCtry(array('id'=>$country['short_name'], 'name'=> $country['long_name']));
+				$city->countryId = $ctry->id;
+	
+				if ($administrative_area_level_1){
+					$state = State::getStt(array('shortName'=>$administrative_area_level_1['short_name'], 'name'=> $administrative_area_level_1['long_name'], 'countryId'=>$ctry->id));
+					$city->stateId = $state->id;
+				}
+// 				if($postal_code)
+// 					$city->postalCode = $postal_code['long_name']; 
+				
+				$city->save();
+				if ($city->hasErrors())
+				{
+					throw new Exception(print_r($city->getErrors(), true), WS_ERR_UNKNOWN);
+				}
+			}
+			elseif($create){
+				
+				$city->googlePlaceId = $place->result->place_id;
+				$city->googleReference = $place->result->reference;
+				
+				$city->save();
+				if ($city->hasErrors())
+				{
+					throw new Exception(print_r($city->getErrors(), true), WS_ERR_UNKNOWN);
+				}
+			}
+				
+		}
+		return $city;
+	}
+	
+	
 	/**
 	 * @return array validation rules for model attributes.
 	 */
@@ -31,15 +153,18 @@ class City extends FoodTalkActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('cityName', 'required'),
-			array('isDisabled', 'numerical', 'integerOnly'=>true),
-			array('cityName', 'length', 'max'=>255),
-			array('disableReason', 'length', 'max'=>128),
-			array('createId, updateId', 'length', 'max'=>10),
+			array('cityName, countryId', 'required'),
+			array('regionId, isDisabled', 'numerical', 'integerOnly'=>true),
+			array('cityName, disableReason', 'length', 'max'=>255),
+			array('shortName, postalCode, region', 'length', 'max'=>255),
+			array('stateId, createId, updateId', 'length', 'max'=>10),
+			array('countryId', 'length', 'max'=>3),
+			array('googleReference', 'length', 'max'=>255),
+			array('googlePlaceId', 'length', 'max'=>50),
 			array('updateDate', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, cityName, isDisabled, disableReason, createDate, updateDate, createId, updateId', 'safe', 'on'=>'search'),
+			array('id, cityName, shortName, postalCode, stateId, countryId, regionId, googleReference, googlePlaceId, isDisabled, disableReason, createDate, updateDate, createId, updateId', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -51,6 +176,9 @@ class City extends FoodTalkActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'region' => array(self::BELONGS_TO, 'Region', 'regionId'),
+			'country' => array(self::BELONGS_TO, 'Country', 'countryId'),
+			'state' => array(self::BELONGS_TO, 'State', 'stateId'),
 		);
 	}
 
@@ -62,6 +190,13 @@ class City extends FoodTalkActiveRecord
 		return array(
 			'id' => 'ID',
 			'cityName' => 'City Name',
+			'shortName' => 'Short Name',
+			'postalCode' => 'Postal Code',
+			'stateId' => 'State',
+			'countryId' => 'Country',
+			'regionId' => 'Region',
+			'googleReference' => 'Google Reference',
+			'googlePlaceId' => 'Google Place',
 			'isDisabled' => 'Is Disabled',
 			'disableReason' => 'Disable Reason',
 			'createDate' => 'Create Date',
@@ -91,6 +226,13 @@ class City extends FoodTalkActiveRecord
 
 		$criteria->compare('id',$this->id,true);
 		$criteria->compare('cityName',$this->cityName,true);
+		$criteria->compare('shortName',$this->shortName,true);
+		$criteria->compare('postalCode',$this->postalCode,true);
+		$criteria->compare('stateId',$this->stateId,true);
+		$criteria->compare('countryId',$this->countryId,true);
+		$criteria->compare('regionId',$this->regionId);
+		$criteria->compare('googleReference',$this->googleReference,true);
+		$criteria->compare('googlePlaceId',$this->googlePlaceId,true);
 		$criteria->compare('isDisabled',$this->isDisabled);
 		$criteria->compare('disableReason',$this->disableReason,true);
 		$criteria->compare('createDate',$this->createDate,true);

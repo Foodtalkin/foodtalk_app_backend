@@ -109,10 +109,13 @@ abstract class FoodTalkActiveRecord extends CActiveRecord
     	);
 
     	foreach ($fieldsToTranslate as $field){    		
-    		if(isset($this->$field ) )
+    		if(isset($this->$field ) ){
+    			
+    			if(is_string($this->$field))    			
     			$this->$field = strtolower( $this->$field );
+    			
+    		}
     	}
-//     			var_dump($this->attributes);
 //     	die('BOOOOOOOOOOOOOOO!');
     }
 

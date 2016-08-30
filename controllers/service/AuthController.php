@@ -242,6 +242,14 @@ class AuthController extends ServiceBaseController
                     if(isset($_JSON['longitude']))
                         $user->longitude = filter_var($_JSON['longitude'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
                     
+                    
+                    
+                    if(isset($_JSON['google_place_id'])){
+                    	$city = City::getCityFromGoogle(filter_var($_JSON['google_place_id'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES));
+                    	if($city)
+                    		$user->cityId = $city->id;
+                    }
+                    
                     if(isset($_JSON['region']))
                     	$user->region = filter_var($_JSON['region'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
                     
