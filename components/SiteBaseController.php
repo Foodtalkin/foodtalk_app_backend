@@ -185,6 +185,10 @@ class SiteBaseController extends Controller
         		'region.index',
         		'region.view',
         		
+        		'region.get',
+        		'region.admin',
+        		'region.create',
+        		
             'city.admin',
             'city.create',
             'city.update',

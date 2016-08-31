@@ -11,6 +11,8 @@
  * @property string $createId
  * @property string $updateId
  *
+ * The followings are the available model relations:
+ * @property City[] $cities
  */
 class Region extends FoodTalkActiveRecord
 {
@@ -30,7 +32,7 @@ class Region extends FoodTalkActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('name, createDate', 'required'),
+			array('name', 'required'),
 			array('name', 'length', 'max'=>20),
 			array('createId, updateId', 'length', 'max'=>10),
 			array('updateDate', 'safe'),
@@ -48,6 +50,7 @@ class Region extends FoodTalkActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+				'cities' => array(self::HAS_MANY, 'City', 'regionId'),
 		);
 	}
 

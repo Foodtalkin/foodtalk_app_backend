@@ -25,16 +25,61 @@ class RegionController extends SiteBaseController
 		$referral_url = isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : array('user/admin') ;		
 		$this->redirect($referral_url);
 	}
+
+	public function actionGet($id)
+	{
+		
+		
+		$model=new City('search');
+		$model->unsetAttributes();  // clear any default values
+		
+		$this->render('view',array(
+				'model'=>$this->loadModel($id),
+				'cities'=>$model,
+		));
+	}
 	
 	
+	public function actionCreate()
+	{
+		$model=new Region;
+	
+		// Uncomment the following line if AJAX validation is needed
+		// $this->performAjaxValidation($model);
+	
+		if(isset($_POST['Region']))
+		{
+			$model->attributes=$_POST['Region'];
+			if($model->save())
+				$this->redirect(array('get','id'=>$model->id));
+		}
+	
+		$this->render('create',array(
+				'model'=>$model,
+		));
+	}
 	
 	public function loadModel($id)
 	{
-		$model=Event::model()->findByPk($id);
+		$model=Region::model()->findByPk($id);
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
 	}
+	
+	
+	public function actionAdmin()
+	{
+		$model=new Region('search');
+		$model->unsetAttributes();  // clear any default values
+// 		if(isset($_GET['Dish']))
+// 			$model->attributes=$_GET['Dish'];
+	
+		$this->render('admin',array(
+				'model'=>$model,
+		));
+	}
+	
 	
 	// Uncomment the following methods and override them if needed
 	/*

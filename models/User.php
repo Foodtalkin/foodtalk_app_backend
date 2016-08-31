@@ -351,7 +351,9 @@ class User extends FoodTalkActiveRecord
         if($includeScores)
         {
         	$sql .= ' , IFNULL(s.avilablePoints, "0") as avilablePoints, IFNULL(s.totalPoints, "0") as totalPoints, IFNULL(s.score , "0") as score ';
+        	$sql .= ' , IFNULL(city.cityName, "") as cityName, IFNULL(city.id, "") as cityId, IFNULL(city.stateId , "") as stateId, IFNULL(city.countryId , "") as countryId, IFNULL(city.regionId , "") as regionId';
         	$sql .= ' FROM user u left join activityScore s on s.facebookId = u.facebookId';
+        	$sql .= ' left join city on city.id = u.cityId';
         	
         	
         }else 

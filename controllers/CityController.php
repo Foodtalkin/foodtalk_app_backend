@@ -1,6 +1,6 @@
 <?php
 
-class CityController extends SiteBaseController
+class CityController extends Controller
 {
     /**
      * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -41,6 +41,18 @@ class CityController extends SiteBaseController
             'model'=>$model,
         ));
     }
+    
+    
+    public function actionRemoveRegion($id)
+    {
+    	$model=$this->loadModel($id);
+    	$model->regionId = null;
+    	$model->save();
+    	return true;
+    	
+    }
+    
+    	
 
     /**
      * Updates a particular model.

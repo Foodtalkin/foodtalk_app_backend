@@ -218,7 +218,7 @@ class City extends FoodTalkActiveRecord
 	 * @return CActiveDataProvider the data provider that can return the models
 	 * based on the search/filter conditions.
 	 */
-	public function search()
+	public function search(array $options = [])
 	{
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
@@ -240,6 +240,10 @@ class City extends FoodTalkActiveRecord
 		$criteria->compare('createId',$this->createId,true);
 		$criteria->compare('updateId',$this->updateId,true);
 
+		if(isset($options['regionId']) and $options['regionId'] > 0)
+			$criteria->addCondition('regionId = '.$options['regionId']);
+		
+		
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));

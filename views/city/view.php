@@ -24,5 +24,9 @@ $this->menu=array(
 	'attributes'=>array(
 		'id',
 		'cityName',
+// 		'shortName',
+		'stateId',
+		'countryId',
+		'regionId'	
 	),
 )); ?>
