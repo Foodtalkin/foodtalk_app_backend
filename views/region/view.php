@@ -31,6 +31,16 @@ $this->menu=array(
 ?>
 <br>
 <h3>Cities</h3>
+
+<form method="post">
+<input name="google_place_id" type="hidden" id='google_place_id'>
+<input type="submit" value="Add">
+</form>
+
+<iframe height="400px" width="100%" frameBorder="0" scrolling="no"
+        src="http://localhost/foodtalk/index.php/city/map">
+    </iframe>
+
 <?php 
 $this->widget('zii.widgets.grid.CGridView', array(
 		'id'=>'post-grid',

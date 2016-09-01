@@ -28,7 +28,11 @@ class RegionController extends SiteBaseController
 
 	public function actionGet($id)
 	{
-		
+		if(isset($_POST['google_place_id'])){
+			$city =	City::getCityFromGoogle($_POST['google_place_id']);
+			$city->regionId = $id;
+			$city->save();
+		}
 		
 		$model=new City('search');
 		$model->unsetAttributes();  // clear any default values

@@ -450,7 +450,8 @@ class Restaurant extends FoodTalkActiveRecord
             $sql .= ',(SELECT COUNT(*) FROM `favourite` f WHERE f.restaurantId=r.id AND f.userId='.$userId.') as isMyFavourite';
         }
         
-        $sql .= ' FROM restaurant r';
+        $sql .= ' , IFNULL(city.cityName, "") as cityName, IFNULL(city.id, "") as cityId, IFNULL(city.stateId , "") as stateId, IFNULL(city.countryId , "") as countryId, IFNULL(city.regionId , "") as regionId';
+        $sql .= ' FROM restaurant r left join city on city.id = r.cityId';
         
         return $sql;
     }

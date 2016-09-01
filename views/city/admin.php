@@ -26,6 +26,18 @@ $('.search-form form').submit(function(){
 ");
 ?>
 
+<h1>Add City</h1>
+
+<form method="post">
+<input name="google_place_id" type="hidden" id='google_place_id'>
+<input type="submit" value="Add">
+</form>
+
+<iframe height="400px" width="100%" frameBorder="0" scrolling="no"
+        src="http://localhost/foodtalk/index.php/city/map">
+    </iframe>
+
+
 <h1>Manage Cities</h1>
 
 <p>
@@ -40,6 +52,8 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 	'columns'=>array(
 		'id',
 		'cityName',
+		'stateId',
+		'countryId',
 		array(
                     'class'=>'CButtonColumn',
                     'template' => '{view} {update} {delete} {restore}',

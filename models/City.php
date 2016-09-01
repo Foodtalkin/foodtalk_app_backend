@@ -33,17 +33,31 @@ class City extends FoodTalkActiveRecord
 	public function tableName()
 	{
 		return 'city';
+	}	
+	
+	public static function getAddressFromGoogle($google_place_id, $create = true){
+		
+		return self::getCityFromGoogle($google_place_id, $create, true);
+		
 	}
-
-	public static function getCityFromGoogle($google_place_id, $create = true){
+	
+	
+	public static function getCityFromGoogle($google_place_id, $create = true, $getaddress = false){
 		
 		$city = self::model()->findByAttributes(array('googlePlaceId'=>$google_place_id));
-		
+
+		if($city and $getaddress){
+			
+			$placeJson = file_get_contents( 'https://maps.googleapis.com/maps/api/place/details/json?placeid=' .$google_place_id. '&key=AIzaSyB89N6mbHGzWBS1O47SzTch76_rN9K1Uws' );
+			$place = json_decode( $placeJson);
+				
+		}		
 		if(!$city){
 			
 			$placeJson = file_get_contents( 'https://maps.googleapis.com/maps/api/place/details/json?placeid=' .$google_place_id. '&key=AIzaSyB89N6mbHGzWBS1O47SzTch76_rN9K1Uws' );
 			$place = json_decode( $placeJson);
 				
+			
 			$locality = false;	//city
 			$postal_code = false;
 			$country = false;
@@ -119,8 +133,6 @@ class City extends FoodTalkActiveRecord
 					$state = State::getStt(array('shortName'=>$administrative_area_level_1['short_name'], 'name'=> $administrative_area_level_1['long_name'], 'countryId'=>$ctry->id));
 					$city->stateId = $state->id;
 				}
-// 				if($postal_code)
-// 					$city->postalCode = $postal_code['long_name']; 
 				
 				$city->save();
 				if ($city->hasErrors())
@@ -128,19 +140,12 @@ class City extends FoodTalkActiveRecord
 					throw new Exception(print_r($city->getErrors(), true), WS_ERR_UNKNOWN);
 				}
 			}
-			elseif($create){
-				
-				$city->googlePlaceId = $place->result->place_id;
-				$city->googleReference = $place->result->reference;
-				
-				$city->save();
-				if ($city->hasErrors())
-				{
-					throw new Exception(print_r($city->getErrors(), true), WS_ERR_UNKNOWN);
-				}
-			}
-				
 		}
+		
+		if($getaddress){
+			return array('city'=>$city, 'address'=>$place->result->formatted_address, 'place'=>$place);
+		}
+		
 		return $city;
 	}
 	
@@ -156,7 +161,7 @@ class City extends FoodTalkActiveRecord
 			array('cityName, countryId', 'required'),
 			array('regionId, isDisabled', 'numerical', 'integerOnly'=>true),
 			array('cityName, disableReason', 'length', 'max'=>255),
-			array('shortName, postalCode, region', 'length', 'max'=>255),
+			array('shortName, postalCode, regionId', 'length', 'max'=>255),
 			array('stateId, createId, updateId', 'length', 'max'=>10),
 			array('countryId', 'length', 'max'=>3),
 			array('googleReference', 'length', 'max'=>255),
@@ -243,6 +248,17 @@ class City extends FoodTalkActiveRecord
 		if(isset($options['regionId']) and $options['regionId'] > 0)
 			$criteria->addCondition('regionId = '.$options['regionId']);
 		
+		$order = 't.createDate desc';
+		
+		return new CActiveDataProvider($this, array(
+				'criteria'=>$criteria,
+				'sort'=>array(
+						'defaultOrder'=>$order
+				),
+				'pagination'=>array(
+						'pageSize'=>25
+				)
+		));
 		
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
