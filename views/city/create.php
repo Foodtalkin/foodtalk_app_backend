@@ -20,7 +20,7 @@ $this->menu=array(
 <input type="text" id='target'>
 
 <iframe height="400px" width="100%" frameBorder="0" scrolling="no"
-        src="http://localhost/foodtalk/index.php/city/map">
+       src="<?php echo Yii::app()->createAbsoluteUrl('city/map'); ?>">
     </iframe>
 
 <?php // $this->renderPartial('_form', array('model'=>$model)); 
