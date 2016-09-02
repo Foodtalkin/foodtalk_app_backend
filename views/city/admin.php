@@ -9,7 +9,7 @@ $this->breadcrumbs=array(
 
 $this->menu=array(
 	array('label'=>'Dashboard', 'url'=>array('site/dashboard')),
-	array('label'=>'Create City', 'url'=>array('create')),
+// 	array('label'=>'Create City', 'url'=>array('create')),
 );
 
 Yii::app()->clientScript->registerScript('search', "
@@ -54,6 +54,7 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 		'cityName',
 		'stateId',
 		'countryId',
+		'regionId',
 		array(
                     'class'=>'CButtonColumn',
                     'template' => '{view} {update} {delete} {restore}',

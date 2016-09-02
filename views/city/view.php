@@ -8,11 +8,11 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-	array('label'=>'Dashboard', 'url'=>array('site/dashboard')),
-	array('label'=>'Create City', 'url'=>array('create')),
-	array('label'=>'Update City', 'url'=>array('update', 'id'=>$model->id)),
+// 	array('label'=>'Dashboard', 'url'=>array('site/dashboard')),
+// 	array('label'=>'Create City', 'url'=>array('create')),
+// 	array('label'=>'Update City', 'url'=>array('update', 'id'=>$model->id)),
 	array('label'=>'Delete City', 'url'=>'#', 'visible'=>$model->isDisabled==0, 'linkOptions'=>array('submit'=>array('delete','id'=>$model->id),'confirm'=>'Are you sure you want to delete this city?')),
-	array('label'=>'Restore City', 'url'=>'#', 'visible'=>$model->isDisabled==1, 'linkOptions'=>array('submit'=>array('restore','id'=>$model->id),'confirm'=>'Are you sure you want to restore this city?')),
+// 	array('label'=>'Restore City', 'url'=>'#', 'visible'=>$model->isDisabled==1, 'linkOptions'=>array('submit'=>array('restore','id'=>$model->id),'confirm'=>'Are you sure you want to restore this city?')),
 	array('label'=>'Manage City', 'url'=>array('admin')),
 );
 ?>

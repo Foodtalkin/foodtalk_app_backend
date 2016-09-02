@@ -912,6 +912,9 @@ class UserController extends ServiceBaseController
                     if(isset($_JSON['searchText']) && !empty($_JSON['searchText']))
                         $searchText = filter_var($_JSON['searchText'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
                     
+                    if(isset($_JSON['search']) && !empty($_JSON['search']))
+                    	$searchText = filter_var($_JSON['search'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
+                    
                     $users = User::getUserNames($searchText);
                     
                     $result = array(
