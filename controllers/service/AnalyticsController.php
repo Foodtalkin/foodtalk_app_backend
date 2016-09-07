@@ -36,7 +36,8 @@ class AnalyticsController extends ServiceBaseController
                 	$sql = 'SELECT count(1) cnt FROM `post`, user WHERE post.userId = user.id AND post.isDisabled = 0  AND user.role = "manager"';
                 	$internalPost = Yii::app()->db->createCommand($sql)->queryAll(true);
                 	
-                	$sql = "SELECT DATE_FORMAT(u.createDate,'%Y-%m-%d') as onbord, COUNT(1) as cnt FROM `user` u WHERE createDate >= DATE(NOW()) - INTERVAL 6 DAY and u.userName is not null GROUP BY onbord ORDER BY onbord ASC";                	 
+                	$sql = "SELECT theday as onbord, IFNULL(cnt, 0 ) as cnt FROM ( SELECT DISTINCT DATE_FORMAT(timestamp,'%Y-%m-%d') as theday FROM access_logs WHERE timestamp >= DATE(NOW()) - INTERVAL 6 DAY ) as calander LEFT JOIN 
+                			( SELECT DATE_FORMAT(u.createDate,'%Y-%m-%d') as onbord, COUNT(1) as cnt FROM `user` u WHERE createDate >= DATE(NOW()) - INTERVAL 6 DAY and u.userName is not null GROUP BY onbord ) as tt on tt.onbord = calander.theday ORDER by onbord ASC";                	 
                 	$onbording = Yii::app()->db->createCommand($sql)->queryAll(true);
 
                 	
