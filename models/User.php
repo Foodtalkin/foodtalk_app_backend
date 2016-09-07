@@ -306,10 +306,10 @@ class User extends FoodTalkActiveRecord
         $sql .= ',IFNULL(CONCAT("' . thumbPath('user') . '", u.image, "?type=small"), "") as thumb';
         $sql .= ',IFNULL(u.facebookId, "") as facebookId';
         $sql .= ',IFNULL(u.region, "") as region';
+        $sql .= ',IFNULL(u.email, "") as email';
         
         if($selectAllFields)
         {
-            $sql .= ',IFNULL(u.email, "") as email';
             $sql .= ',IFNULL(u.gender, "") as gender';
             $sql .= ',IFNULL(u.age, "") as age';
             $sql .= ',IFNULL(u.country, "") as country';
