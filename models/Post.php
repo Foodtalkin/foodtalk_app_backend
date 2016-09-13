@@ -231,7 +231,7 @@ class Post extends FoodTalkActiveRecord
     public static function getQuery($userId, $postUserId=0, $includeFollowed=false, $includeCount=false, $latitude=0, $longitude=0)
     {
         $sql = 'SELECT p.id';
-        $sql .= ',p.userId, p.checkinId';
+        $sql .= ',p.userId, IFNULL(p.checkinId, 0) as checkinId';
         $sql .= ',IFNULL(p.checkedInRestaurantId, 0) as checkedInRestaurantId';
         
         $sql .= ',IFNULL(CONCAT(IF(isGif, "http://res.cloudinary.com/digital-food-talk-pvt-ltd/image/upload/q_60/", "' . imagePath('post') . '"), p.image), "") as postImage';
@@ -641,7 +641,7 @@ class Post extends FoodTalkActiveRecord
     
     public static function getDiscoverPosts1($userId, $latitude=0, $longitude=0, $tagId=0, $recordCount=0, $exceptions='', $maxDistance=0, $search='')
     {    	
-		$sql  = 'SELECT p.id,p.userId, p.checkinId';
+		$sql  = 'SELECT p.id,p.userId, IFNULL(p.checkinId, 0) as checkinId';
     	$sql .= ',IFNULL(p.checkedInRestaurantId, 0) as checkedInRestaurantId';
 
     	$sql .= ',IFNULL(CONCAT(IF(isGif, "http://res.cloudinary.com/digital-food-talk-pvt-ltd/image/upload/q_60/", "' . imagePath('post') . '"), p.image), "") as postImage';
@@ -747,7 +747,7 @@ class Post extends FoodTalkActiveRecord
 
     	$pagestart = ($page-1) * $recordCount;
     	
-    	$sql  = 'SELECT p.id,p.userId, p.checkinId';
+    	$sql  = 'SELECT p.id,p.userId, IFNULL(p.checkinId, 0) as checkinId';
     	$sql .= ',IFNULL(p.checkedInRestaurantId, 0) as checkedInRestaurantId';
     	
     	$sql .= ',IFNULL(CONCAT(IF(isGif, "http://res.cloudinary.com/digital-food-talk-pvt-ltd/image/upload/q_60/", "' . imagePath('post') . '"), p.image), "") as postImage';

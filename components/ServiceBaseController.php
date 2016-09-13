@@ -52,6 +52,9 @@ class ServiceBaseController extends Controller
                 'Your session has expired, please login again.', WS_ERR_WONG_SESSION_ID);
         }
         
+//         $session->timestamp = date('Y-m-d H:i:s'); 
+//         $session->save();
+        
         return $session->userId;
     }
 
