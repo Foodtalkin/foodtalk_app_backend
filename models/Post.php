@@ -262,7 +262,10 @@ class Post extends FoodTalkActiveRecord
         $sql .= ',IFNULL(r.area, "") as area';
         $sql .= ',IFNULL(r.region, "") as region';
         
+        $sql .= ',IFNULL(city.cityName, "") as cityName';
+        
         $sql .= ' , IFNULL(r.isActivated, 0) as restaurantIsActive ';
+        
         
         if($latitude && $longitude)
         
@@ -289,6 +292,8 @@ class Post extends FoodTalkActiveRecord
         $sql .= ' INNER JOIN dish d ON d.id = dr.dishId and d.isDisabled=0 ';
         
         $sql .= ' LEFT JOIN restaurant r ON p.checkedInRestaurantId = r.id';
+        $sql .= ' LEFT JOIN city ON r.cityId = city.id';
+        
         $sql .= ' WHERE p.isDisabled = 0';
         $sql .= ' AND u.isDisabled = 0';
         $sql .= ' AND (r.isDisabled is null OR r.isDisabled = 0)';
