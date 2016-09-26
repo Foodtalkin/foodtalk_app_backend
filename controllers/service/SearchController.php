@@ -28,12 +28,16 @@ class SearchController extends ServiceBaseController
 				$indexType = '';
 			
 		}
+		$searchText = trim($searchText);
+		$searchWords = explode(' ', $searchText);
+		
 		
 		$searchurl = '/foodtalkindex'.$indexType.'/_search';
-		$query = '{ "query": { "query_string": { "query": "'
-// 				.$searchText.'* '
-						.$searchText.'", "analyze_wildcard": true } } }';
-		 
+		$query = '{ "query": { "query_string": { "query": "'.
+			end($searchWords).'* '.
+			$searchText.
+		'", "analyze_wildcard": true } } }';
+
 		return es($query, $searchurl);
 	}
 	
@@ -76,19 +80,25 @@ class SearchController extends ServiceBaseController
                     $result = $this->error($apiName, WS_ERR_WONG_USER, 'Please login before using this service.');
                 else
                 {
+                	if(isset($_JSON['searchText']) && strlen(trim($_JSON['searchText'])) > 1){
+                		$searchText = filter_var($_JSON['searchText'], FILTER_SANITIZE_STRING);
+
+                		$type='';
+                		if(isset($_JSON['type']))
+                			$type = filter_var($_JSON['type'], FILTER_SANITIZE_STRING);
+                		 
+                		$result = self::search($searchText, $type);
+                		
+                		$result = array(
+                				'api' => $apiName,
+                				'apiMessage' => 'Tags fetched successfully.',
+                				'status' => 'OK',
+                				'result' => $result
+                		);
+                	}
+                	else 
+                		$result = $this->error($apiName, WS_ERR_POST_PARAM_MISSED, 'No input for search.');
                 	
-                	$searchText = filter_var($_JSON['searchText'], FILTER_SANITIZE_STRING);
-                	 
-                	$type = filter_var($_JSON['type'], FILTER_SANITIZE_STRING);
-                	
-                	$result = self::search($searchText, $type);
-                             	
-                    $result = array(
-                        'api' => $apiName,
-                        'apiMessage' => 'Tags fetched successfully.',
-                        'status' => 'OK',
-                        'result' => $result
-                    );
                 }
             }
         } 
