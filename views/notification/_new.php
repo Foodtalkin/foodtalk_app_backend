@@ -30,23 +30,26 @@
 		<?php echo $form->error($model,'eventType'); ?>
 	</div>
 <div>
+<select style="display:none" name="Event[elementId]" id="Event_elementId">
+</select>
+
 <?php 
-echo CHtml::dropDownList(
-		'Event[elementId]',
-		'',
-		CHtml::listData(
-				Restaurant::model()->findAll(
-						array("condition"=>"isActivated = 1 and isDisabled = 0 and suggested = 1 ",'order'=>'restaurantName', "select"=>"id, CONCAT(restaurantName, ' (', IFNULL(area, IFNULL(address, '') )  , ')', IF(isDisabled = 1, '-DISABLE RESTAURANT', IF(isActivated = 0, '-INACTIVE RESTAURANT', ''))) as restaurantName")
-						),
-				'id',
-				'restaurantName'
-		),
-		array(
-				'empty'=>array('Select a Restaurant'),
-				'style'=>'display:none'
+// echo CHtml::dropDownList(
+// 		'Event[elementId]',
+// 		'',
+// 		CHtml::listData(
+// 				Restaurant::model()->findAll(
+// 						array("condition"=>"isActivated = 1 and isDisabled = 0 and suggested = 1 ",'order'=>'restaurantName', "select"=>"id, CONCAT(restaurantName, ' (', IFNULL(area, IFNULL(address, '') )  , ')', IF(isDisabled = 1, '-DISABLE RESTAURANT', IF(isActivated = 0, '-INACTIVE RESTAURANT', ''))) as restaurantName")
+// 						),
+// 				'id',
+// 				'restaurantName'
+// 		),
+// 		array(
+// 				'empty'=>array('Select a Restaurant'),
+// 				'style'=>'display:none'
 				
-)
-		);
+// )
+// 		);
 ?>
 </div>
 	<div class="row">
@@ -96,6 +99,39 @@ function validateForm(form){
 	
 }
 
+
+$( document ).ready(function() {
+	$('#Event_elementId').selectize({
+	    valueField: 'id',
+	    labelField: 'restaurantName',
+	    searchField: 'restaurantName',
+	    create: false,
+	    render: {
+	        option: function(item, escape) {
+
+	            return '<div>' +
+	                '<span class="title">' +
+	                    '<span class="name">' + escape(item.restaurantName) + '</span>' +
+	                '</span>' +
+	                    '<br><span class="by">' + escape(item.address) +', ('+ escape(item.region) +')</span>' +
+	            '</div>';
+	        }
+	    },
+	    load: function(query, callback) {
+	        if (!query.length) return callback();
+	        $.ajax({
+	        	url: '<?php echo Yii::app()->request->baseUrl; ?>/index.php/service/restaurant/list?sessionId=GUEST&searchText=' + encodeURIComponent(query),
+	            type: 'GET',
+	            error: function() {
+	                callback();
+	            },
+	            success: function(res) {
+	                callback(res.restaurants);
+	            }
+	        });
+	    }
+	});
+	});
 
 	$(document).ready(function(){
 		
