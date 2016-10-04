@@ -28,16 +28,83 @@ class SearchController extends ServiceBaseController
 				$indexType = '';
 			
 		}
+		
 		$searchText = trim($searchText);
-		$searchWords = explode(' ', $searchText);
+		$searchText = trim($searchText, ',');
+		
+		$searchArr = split(',', $searchText, 2);
+		
+		
+		$search = array();
+		
+		$must = array();
+		
+		if(isset($searchArr[1])){
+			
+			$search['query']['bool']['must'][] = array( 'match'=> [ 'restaurantname'=>$searchArr[0] ] );
+			
+			$searchWords = explode(' ', $searchArr[1]);
+			
+			$search['query']['bool']['should'][] = array('wildcard'=> [ 'address'=> end($searchWords).'*' ] );
+			$search['query']['bool']['should'][] = array('match'=> [ 'address'=> $searchArr[1] ] );
+				
+		}else{
+			$searchWords = explode(' ', $searchArr[0]);
+			
+			
+			if(trim(end($searchWords)) == trim($searchArr[0])){
+				$search['query']['bool']['must'][] = array('wildcard'=> [ 'restaurantname'=> end($searchWords).'*' ] );
+				
+			}else{
+				$search['query']['bool']['should'][] = array('wildcard'=> [ 'restaurantname'=> end($searchWords).'*' ] );
+				$search['query']['bool']['must'][] = array('match'=> [ 'restaurantname'=> $searchArr[0] ] );
+			}
+
+		}
+		
+		$search["track_scores"] = true;
+		
+		$search['sort'][] = array( "_score" => "desc" );		
+		
+		if(isset($options['location']) and !empty($options['location'])){
+
+// 			$search['script_fields']['distance'] = array('params'=> $options['location'], 'script'=> "doc[\u0027location\u0027].distanceInKm(lat,lon)");
+			
+// 			"params" : {
+
+// 			},
+// 			"script" : "doc[\u0027location\u0027].distanceInKm(lat,lon)"
+			
+			$search['sort'][] = array("_geo_distance" => array(
+					"location" => $options['location']['lat']. ', '.$options['location']['lon'] ,
+					"order" => "asc",
+					"unit" => "km"
+					
+			));
+		}
+		
+
+// 		{
+// 			"_geo_distance" : {
+// 			"location" : "12.9306888889,77.6135027778",
+// 			"order" : "asc",
+// 			"unit" : "km"
+// 			}
+// 		}
 		
 		
 		$searchurl = '/foodtalkindex'.$indexType.'/_search';
-		$query = '{ "query": { "query_string": { "query": "'.
-			end($searchWords).'* '.
-			$searchText.
-		'", "analyze_wildcard": true } } }';
+// 		$query = '{ "query": { "query_string": { "query": "'.
+// 			end($searchWords).'* '.
+// 			$searchText.
+// 		'", "analyze_wildcard": true } } }';
+		
 
+		$query = json_encode($search);
+// 		echo $query;
+// 		die();
+
+// 		return array('Finalresult'=>es($query, $searchurl), 'query' => $search, 'options'=>$options);
 		return es($query, $searchurl);
 	}
 	
@@ -83,11 +150,22 @@ class SearchController extends ServiceBaseController
                 	if(isset($_JSON['searchText']) && strlen(trim($_JSON['searchText'])) > 1){
                 		$searchText = filter_var($_JSON['searchText'], FILTER_SANITIZE_STRING);
 
+                		$options = array();
+                		
+                		if(isset($_JSON['latitude']) && !empty($_JSON['latitude']))
+                			$options['location']['lat'] = filter_var($_JSON['latitude'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+                		
+                		if(isset($_JSON['longitude']) && !empty($_JSON['longitude']))
+                			$options['location']['lon'] = filter_var($_JSON['longitude'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+                		
+                		
+                		
+                		
                 		$type='';
                 		if(isset($_JSON['type']))
                 			$type = filter_var($_JSON['type'], FILTER_SANITIZE_STRING);
                 		 
-                		$result = self::search($searchText, $type);
+                		$result = self::search($searchText, $type, $options);
                 		
                 		$result = array(
                 				'api' => $apiName,
