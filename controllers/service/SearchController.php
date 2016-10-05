@@ -83,6 +83,7 @@ class SearchController extends ServiceBaseController
 			));
 		}
 		
+		$search['sort'][] = array("popularity" => "desc");
 
 // 		{
 // 			"_geo_distance" : {
