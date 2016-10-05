@@ -148,9 +148,12 @@ class SearchController extends ServiceBaseController
                     $result = $this->error($apiName, WS_ERR_WONG_USER, 'Please login before using this service.');
                 else
                 {
-                	if(isset($_JSON['searchText']) && strlen(trim($_JSON['searchText'])) > 1){
+//                 	if(isset($_JSON['searchText']) && strlen(trim($_JSON['searchText'])) > 1){
+                	if(isset($_JSON['searchText']) && !empty($_JSON['searchText']))
+                		 
                 		$searchText = filter_var($_JSON['searchText'], FILTER_SANITIZE_STRING);
-
+					else 
+						$searchText ='';
                 		$options = array();
                 		
                 		if(isset($_JSON['latitude']) && !empty($_JSON['latitude']))
@@ -174,9 +177,9 @@ class SearchController extends ServiceBaseController
                 				'status' => 'OK',
                 				'result' => $result
                 		);
-                	}
-                	else 
-                		$result = $this->error($apiName, WS_ERR_POST_PARAM_MISSED, 'No input for search.');
+//                 	}
+//                 	else 
+//                 		$result = $this->error($apiName, WS_ERR_POST_PARAM_MISSED, 'No input for search.');
                 	
                 }
             }
