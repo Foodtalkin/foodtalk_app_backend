@@ -59,21 +59,32 @@ WHERE l.timestamp >= DATE(NOW()) - INTERVAL 6 DAY and u.userName is NOT null and
 ORDER by acitve_on ASC";
              		$weeklyactiveuser = Yii::app()->db->createCommand($sql)->queryAll(true);
                 	
-                	
-             		$sql= "SELECT DATE_FORMAT(post.createDate,'%Y-%m-%d') as createon , count(1) cnt FROM `post`, user WHERE post.userId = user.id AND post.isDisabled = 0 and post.createDate >= DATE(NOW()) - INTERVAL 6 DAY GROUP BY createon ORDER BY `createon` ASC";
+             		$sql= "SELECT theday as createon, IFNULL(cnt, 0 ) as cnt FROM ( SELECT DISTINCT DATE_FORMAT(timestamp,'%Y-%m-%d') as theday
+FROM access_logs WHERE timestamp >= DATE(NOW()) - INTERVAL 6 DAY ) as calander
+LEFT JOIN (SELECT DATE_FORMAT(post.createDate,'%Y-%m-%d') as createon , count(1) cnt FROM `post`, user WHERE post.userId = user.id AND post.isDisabled = 0 and post.createDate >= DATE(NOW()) - INTERVAL 6 DAY GROUP BY createon) as tt on tt.createon = calander.theday  ORDER BY `createon` ASC";
+//              		$sql= "SELECT DATE_FORMAT(post.createDate,'%Y-%m-%d') as createon , count(1) cnt FROM `post`, user WHERE post.userId = user.id AND post.isDisabled = 0 and post.createDate >= DATE(NOW()) - INTERVAL 6 DAY GROUP BY createon ORDER BY `createon` ASC";
              		$weeklyPosts = Yii::app()->db->createCommand($sql)->queryAll(true);
 
              		
-             		$sql= "SELECT DATE_FORMAT(like.createDate,'%Y-%m-%d') as createon , count(1) cnt FROM `like`, user WHERE like.userId = user.id AND like.isDisabled = 0 and like.createDate >= DATE(NOW()) - INTERVAL 6 DAY GROUP BY createon ORDER BY `createon` ASC";
+             		$sql= "SELECT theday as createon, IFNULL(cnt, 0 ) as cnt FROM ( SELECT DISTINCT DATE_FORMAT(timestamp,'%Y-%m-%d') as theday
+FROM access_logs WHERE timestamp >= DATE(NOW()) - INTERVAL 6 DAY ) as calander LEFT JOIN
+(SELECT DATE_FORMAT(like.createDate,'%Y-%m-%d') as createon , count(1) cnt FROM `like`, user WHERE like.userId = user.id AND like.isDisabled = 0 and like.createDate >= DATE(NOW()) - INTERVAL 6 DAY GROUP BY createon ) as tt on tt.createon = calander.theday ORDER BY `createon` ASC";
              		$weeklylikes = Yii::app()->db->createCommand($sql)->queryAll(true);
              		 
-             		$sql= "SELECT DATE_FORMAT(comment.createDate,'%Y-%m-%d') as createon , count(1) cnt FROM `comment`, user WHERE comment.userId = user.id AND comment.isDisabled = 0 and comment.createDate >= DATE(NOW()) - INTERVAL 6 DAY GROUP BY createon ORDER BY `createon` ASC";
+             		$sql= "SELECT theday as createon, IFNULL(cnt, 0 ) as cnt FROM ( SELECT DISTINCT DATE_FORMAT(timestamp,'%Y-%m-%d') as theday
+FROM access_logs WHERE timestamp >= DATE(NOW()) - INTERVAL 6 DAY ) as calander
+LEFT JOIN (SELECT DATE_FORMAT(comment.createDate,'%Y-%m-%d') as createon , count(1) cnt FROM `comment`, user WHERE comment.userId = user.id AND comment.isDisabled = 0 and comment.createDate >= DATE(NOW()) - INTERVAL 6 DAY GROUP BY createon ) tt on tt.createon = calander.theday ORDER BY `createon` ASC";
              		$weeklycomments = Yii::app()->db->createCommand($sql)->queryAll(true);
              		 
-             		$sql = "SELECT DATE_FORMAT(bookmark.createDate,'%Y-%m-%d') as createon , count(1) cnt FROM `bookmark`, user WHERE bookmark.userId = user.id AND bookmark.isDisabled = 0 and bookmark.createDate >= DATE(NOW()) - INTERVAL 6 DAY GROUP BY createon ORDER BY `createon` ASC";
+             		$sql = "SELECT theday as createon, IFNULL(cnt, 0 ) as cnt FROM ( SELECT DISTINCT DATE_FORMAT(timestamp,'%Y-%m-%d') as theday
+FROM access_logs WHERE timestamp >= DATE(NOW()) - INTERVAL 6 DAY ) as calander
+LEFT JOIN (SELECT DATE_FORMAT(bookmark.createDate,'%Y-%m-%d') as createon , count(1) cnt FROM `bookmark`, user WHERE bookmark.userId = user.id AND bookmark.isDisabled = 0 and bookmark.createDate >= DATE(NOW()) - INTERVAL 6 DAY GROUP BY createon ) as tt on tt.createon = calander.theday  ORDER BY `createon` ASC";
              		$weeklyBookmark = Yii::app()->db->createCommand($sql)->queryAll(true);
              		
-             		$sql = "SELECT DATE_FORMAT(userMentioned.createDate,'%Y-%m-%d') as createon , count(1) cnt FROM `userMentioned`, user WHERE userMentioned.userId = user.id AND  userMentioned.createDate >= DATE(NOW()) - INTERVAL 6 DAY GROUP BY createon ORDER BY `createon` ASC";
+             		$sql = "SELECT theday as createon, IFNULL(cnt, 0 ) as cnt FROM ( SELECT DISTINCT DATE_FORMAT(timestamp,'%Y-%m-%d') as theday
+FROM access_logs WHERE timestamp >= DATE(NOW()) - INTERVAL 6 DAY ) as calander
+LEFT JOIN (SELECT DATE_FORMAT(userMentioned.createDate,'%Y-%m-%d') as createon , count(1) cnt FROM `userMentioned`, user WHERE userMentioned.userId = user.id AND  userMentioned.createDate >= DATE(NOW()) - INTERVAL 6 DAY GROUP BY createon ) as tt on tt.createon = calander.theday 
+ORDER BY `createon` ASC";
              		$weeklyuserMentioned = Yii::app()->db->createCommand($sql)->queryAll(true);
              		
                 			
