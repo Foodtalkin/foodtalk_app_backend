@@ -11,69 +11,102 @@ class SearchController extends ServiceBaseController
 		$curl = curl_init();
 		$elasticUrl = 'http://localhost:9200';
 		$port = '9200';
+
+		$searchText = trim($searchText);
+		$searchText = trim($searchText, ',');
+		$searchText = strtolower($searchText);
+		
+		$searchArr = split(',', $searchText, 2);
+		$search = array();
 		
 		switch ($entity){
 			case 'restaurant':
+				
 				$indexType = '/restaurant';
+				
+				if(isset($searchArr[1])){
+						
+					$search['query']['bool']['must'][] = array( 'match'=> [ 'restaurantname'=>$searchArr[0] ] );
+						
+					$searchWords = explode(' ', $searchArr[1]);
+						
+					$search['query']['bool']['should'][] = array('wildcard'=> [ 'address'=> end($searchWords).'*' ] );
+					$search['query']['bool']['should'][] = array('match'=> [ 'address'=> $searchArr[1] ] );
+				
+				}else{
+						
+					$searchWords = explode(' ', $searchArr[0]);
+						
+					if(trim(end($searchWords)) == trim($searchArr[0]))
+						$search['query']['bool']['must'][] = array('wildcard'=> [ 'restaurantname'=> end($searchWords).'*' ] );
+					else{
+						$search['query']['bool']['should'][] = array('wildcard'=> [ 'restaurantname'=> end($searchWords).'*' ] );
+						$search['query']['bool']['must'][] = array('match'=> [ 'restaurantname'=> $searchArr[0] ] );
+					}
+				}
 				break;
 			
 			case 'user':
 				$indexType = '/user';
+				
+					$searchWords = explode(' ', $searchText);
+				
+					if(count($searchWords) == 1){
+						$search['query']['bool']['should'][] = array('wildcard'=> [ 'username'=> end($searchWords).'*' ] );
+						$search['query']['bool']['should'][] = array('wildcard'=> [ 'fullname'=> end($searchWords).'*' ] );
+					}
+					else{
+						
+// 						match users with all characters joined togather
+						$search['query']['bool']['should'][] = array('wildcard'=> [ 'username'=> implode('', $searchWords).'*' ] );
+						$search['query']['bool']['should'][] = array('wildcard'=> [ 'fullname'=> implode('', $searchWords).'*' ] );
+						
+// 						matches end string 
+						$search['query']['bool']['should'][] = array('wildcard'=> [ 'username'=> end($searchWords).'*' ] );
+						$search['query']['bool']['should'][] = array('wildcard'=> [ 'fullname'=> end($searchWords).'*' ] );
+						
+						
+						$search['query']['bool']['should'][] = array('match'=> [ 'username'=> $searchText ] );
+						$search['query']['bool']['should'][] = array('match'=> [ 'fullname'=> $searchText ] );
+						
+// 						$search['query']['bool']['should'][] = array('wildcard'=> [ 'cityname'=> end($searchWords).'*' ] );
+// 						$search['query']['bool']['should'][] = array('wildcard'=> [ 'cityname'=> end($searchWords).'*' ] );
+						
+						
+					}
 				break;
 				
 			case 'dish':
 				$indexType = '/dish';
+				
+				$searchWords = explode(' ', $searchText);
+				
+				$search['query']['bool']['should'][] = array('wildcard'=> [ 'dishname'=> implode('', $searchWords).'*' ] );
+				$search['query']['bool']['should'][] = array('wildcard'=> [ 'dishname'=> end($searchWords).'*' ] );
+				$search['query']['bool']['should'][] = array('match'=> [ 'dishname'=> $searchText ] );
+				
+				
 				break;
 			default:
 				$indexType = '';
+				$searchWords = explode(' ', $searchText);
+						$query = '{ "query": { "query_string": { "query": "'.
+							end($searchWords).'* '.
+							$searchText.
+						'", "analyze_wildcard": true } } }';
+						
+						$search = json_decode($query, true);
 			
 		}
-		
-		$searchText = trim($searchText);
-		$searchText = trim($searchText, ',');
-		
-		$searchArr = split(',', $searchText, 2);
-		
-		
-		$search = array();
-		
-		$must = array();
-		
-		if(isset($searchArr[1])){
-			
-			$search['query']['bool']['must'][] = array( 'match'=> [ 'restaurantname'=>$searchArr[0] ] );
-			
-			$searchWords = explode(' ', $searchArr[1]);
-			
-			$search['query']['bool']['should'][] = array('wildcard'=> [ 'address'=> end($searchWords).'*' ] );
-			$search['query']['bool']['should'][] = array('match'=> [ 'address'=> $searchArr[1] ] );
 				
-		}else{
-			$searchWords = explode(' ', $searchArr[0]);
-			
-			
-			if(trim(end($searchWords)) == trim($searchArr[0])){
-				$search['query']['bool']['must'][] = array('wildcard'=> [ 'restaurantname'=> end($searchWords).'*' ] );
-				
-			}else{
-				$search['query']['bool']['should'][] = array('wildcard'=> [ 'restaurantname'=> end($searchWords).'*' ] );
-				$search['query']['bool']['must'][] = array('match'=> [ 'restaurantname'=> $searchArr[0] ] );
-			}
+		
 
-		}
 		
 		$search["track_scores"] = true;
 		
 		$search['sort'][] = array( "_score" => "desc" );		
 		
 		if(isset($options['location']) and !empty($options['location'])){
-
-// 			$search['script_fields']['distance'] = array('params'=> $options['location'], 'script'=> "doc[\u0027location\u0027].distanceInKm(lat,lon)");
-			
-// 			"params" : {
-
-// 			},
-// 			"script" : "doc[\u0027location\u0027].distanceInKm(lat,lon)"
 			
 			$search['sort'][] = array("_geo_distance" => array(
 					"location" => $options['location']['lat']. ', '.$options['location']['lon'] ,
@@ -83,7 +116,7 @@ class SearchController extends ServiceBaseController
 			));
 		}
 		
-		$search['sort'][] = array("popularity" => "desc");
+// 		$search['sort'][] = array("popularity" => "desc");
 
 // 		{
 // 			"_geo_distance" : {
