@@ -327,9 +327,11 @@ class Post extends FoodTalkActiveRecord
     			.'(SELECT COUNT(*) FROM `like` l2 WHERE l2.postId=p.id AND l2.isDisabled=0 AND l2.userId='.$userId.') as iLikedIt, p.createDate, NOW() as currentDate '.
     			', IFNULL(CONCAT("' . imagePath('user') . '", u.image, "?type=large"), "") as userImage '.
     			', IFNULL(CONCAT("' . thumbPath('user') . '", u.image), "") as userThumb, IFNULL(r.region,"") as restaurantRegion, IFNULL(r.restaurantName, "") as restaurantName'
-    			.' , IFNULL(r.isActivated, 0) as restaurantIsActive '    					
+    			.', IFNULL(c.cityName,"") as cityName, c.id as cityId, c.regionId as regionId, IFNULL(r.isActivated, 0) as restaurantIsActive '    					
 			.', u.region , (SELECT COUNT(*) FROM `like` l, user u WHERE l.userId = u.id and u.isDisabled=0 and l.postId=p.id AND l.isDisabled=0) as like_count,  (SELECT COUNT(*) FROM comment c, user u WHERE c.userId = u.id and u.isDisabled=0 and c.postId=p.id AND c.isDisabled=0) as comment_count '
-			.' FROM `post` p INNER JOIN user u on p.userId = u.id AND u.isDisabled=0 LEFT JOIN restaurant r on p.checkedInRestaurantId = r.id 
+			.' FROM `post` p INNER JOIN user u on p.userId = u.id AND u.isDisabled=0 
+					LEFT JOIN restaurant r on p.checkedInRestaurantId = r.id 
+					LEFT JOIN city c on r.cityId = c.id
 					INNER JOIN dishReview dr on p.id = dr.postId INNER JOIN dish d on d.id = dr.dishId and d.isDisabled = 0
 					WHERE p.isDisabled = 0 ';
      	if($postId)
