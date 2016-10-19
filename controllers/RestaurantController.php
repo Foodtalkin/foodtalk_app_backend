@@ -133,12 +133,19 @@ class RestaurantController extends SiteBaseController
         // $this->performAjaxValidation($model);
 
 //         echo "<h1>ASDASD</h1>";
+
+        
+
         
         if(isset($_POST['Restaurant']))
         {
         	
             $model->attributes = array_map('trim', $_POST['Restaurant']);
             
+//             var_dump($_POST['Restaurant']);
+            
+//         	var_dump($model->attributes);
+//         	die('DAED');
             $image=CUploadedFile::getInstance($model,'image');
             //set image name to current timestamp
             if($image !== null)

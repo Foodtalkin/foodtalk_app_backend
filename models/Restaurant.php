@@ -13,7 +13,7 @@
  * @property string $contactName
  * @property string $country
  * @property string $state
- * @property string $city
+ * @property string $cityId
  * @property string $area
  * @property string $region
  * @property string $address
@@ -63,9 +63,10 @@
  * @property string $updateDate
  * @property string $createId
  * @property string $updateId
- * @property string $region
+ * @property string $regions
  *
  * The followings are the available model relations:
+ * @property City $city
  * @property Favourite[] $favourites
  * @property Post[] $posts
  * @property RestaurantCuisine[] $restaurantCuisines
@@ -75,10 +76,11 @@ class Restaurant extends FoodTalkActiveRecord
     /**
      * @return string the associated database table name
      */
-    public function tableName()
-    {
-        return 'restaurant';
-    }
+	public function tableName()
+	{
+		return 'restaurant';
+	}
+	
 
     /**
      * @return array validation rules for model attributes.
@@ -88,12 +90,12 @@ class Restaurant extends FoodTalkActiveRecord
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('homeDelivery, veg, nonVeg, dineIn, seating, suggested, outdoorSeating, airConditioned, lounge, serveAlcohol, microbrewery, fullBar, pub, nightClub, smokingZone, sheesha, wifi, liveMusic, entryFee, isActivated, isDisabled', 'numerical', 'integerOnly'=>true),
+            array('cityId, homeDelivery, veg, nonVeg, dineIn, seating, suggested, outdoorSeating, airConditioned, lounge, serveAlcohol, microbrewery, fullBar, pub, nightClub, smokingZone, sheesha, wifi, liveMusic, entryFee, isActivated, isDisabled', 'numerical', 'integerOnly'=>true),
             array('latitude, longitude', 'numerical'),
             array('role', 'length', 'max'=>16),
             array('restaurantName, email, contactName, area, address, image, disableReason, timing', 'length', 'max'=>128),
             array('password', 'length', 'max'=>40),
-            array('country, state, city, priceRange', 'length', 'max'=>50),
+            array('country, state, priceRange', 'length', 'max'=>50),
             array('region, postcode, phone1, phone2', 'length', 'max'=>20),
             array('highlights', 'length', 'max'=>500),
             array('facebookId, facebookLink', 'length', 'max'=>32),
@@ -107,7 +109,7 @@ class Restaurant extends FoodTalkActiveRecord
             
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, role, restaurantName, email, password, contactName, country, state, city, area, address, postcode, latitude, longitude, phone1, phone2, highlights, priceRange, timing, image, facebookId, twitterId, googleId, linkedinId, facebookLink, twitterLink, googleLink, linkedinLink, webAddress, activationCode, isActivated, isDisabled, disableReason, createDate, updateDate, createId, updateId', 'safe', 'on'=>'search'),
+            array('id, role, restaurantName, email, password, contactName, country, state, cityId area, address, postcode, latitude, longitude, phone1, phone2, highlights, priceRange, timing, image, facebookId, twitterId, googleId, linkedinId, facebookLink, twitterLink, googleLink, linkedinLink, webAddress, activationCode, isActivated, isDisabled, disableReason, createDate, updateDate, createId, updateId', 'safe', 'on'=>'search'),
         );
     }
 
@@ -119,6 +121,7 @@ class Restaurant extends FoodTalkActiveRecord
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+			'city' => array(self::BELONGS_TO, 'City', 'cityId'),
             'favourites' => array(self::HAS_MANY, 'Favourite', 'restaurantId'),
             'posts' => array(self::HAS_MANY, 'Post', 'checkedInRestaurantId'),
             'restaurantCuisines' => array(self::HAS_MANY, 'RestaurantCuisine', 'restaurantId'),
@@ -132,65 +135,65 @@ class Restaurant extends FoodTalkActiveRecord
      */
     public function attributeLabels()
     {
-        return array(
-            'id' => 'ID',
-            'role' => 'Role',
-            'restaurantName' => 'Restaurant Name',
-            'email' => 'Email',
-            'password' => 'Password',
-            'contactName' => 'Contact Name',
-            'country' => 'Country',
-            'state' => 'State',
-            'city' => 'City',
-            'area' => 'Area',
-        	'region' => 'Region',
-        	'suggested' => 'Suggested',	        		
-            'address' => 'Address',
-            'postcode' => 'Postcode',
-            'latitude' => 'Latitude',
-            'longitude' => 'Longitude',
-            'phone1' => 'Phone1',
-            'phone2' => 'Phone2',
-            'highlights' => 'Highlights',
-            'homeDelivery' => 'Home Delivery',
-            'veg' => 'Veg',
-            'nonVeg' => 'Non Veg',
-            'dineIn' => 'Dine In',
-            'seating' => 'Seating',
-            'outdoorSeating' => 'Outdoor Seating',
-            'airConditioned' => 'Air Conditioned',
-            'lounge' => 'Lounge',
-            'serveAlcohol' => 'Serve Alcohol',
-            'microbrewery' => 'Microbrewery',
-            'fullBar' => 'Full Bar',
-            'pub' => 'Pub',
-            'nightClub' => 'Night Club',
-            'smokingZone' => 'Smoking Zone',
-            'sheesha' => 'Sheesha',
-            'wifi' => 'Wifi',
-            'liveMusic' => 'Live Music',
-            'entryFee' => 'Entry Fee',
-            'priceRange' => 'Price Range',
-            'timing' => 'Timing',
-            'image' => 'Image',
-            'facebookId' => 'Facebook',
-            'twitterId' => 'Twitter',
-            'googleId' => 'Google',
-            'linkedinId' => 'Linkedin',
-            'facebookLink' => 'Facebook Link',
-            'twitterLink' => 'Twitter Link',
-            'googleLink' => 'Google Link',
-            'linkedinLink' => 'Linkedin Link',
-            'webAddress' => 'Web Address',
-            'activationCode' => 'Activation Code',
-            'isActivated' => 'Is Activated',
-            'isDisabled' => 'Is Disabled',
-            'disableReason' => 'Disable Reason',
-            'createDate' => 'Create Date',
-            'updateDate' => 'Update Date',
-            'createId' => 'Create',
-            'updateId' => 'Update',
-        );
+	        return array(
+	            'id' => 'ID',
+	            'role' => 'Role',
+	            'restaurantName' => 'Restaurant Name',
+	            'email' => 'Email',
+	            'password' => 'Password',
+	            'contactName' => 'Contact Name',
+	            'country' => 'Country',
+	            'state' => 'State',
+				'cityId' => 'City',       		
+	            'area' => 'Area',
+	        	'region' => 'Region',
+	        	'suggested' => 'Suggested',	        		
+	            'address' => 'Address',
+	            'postcode' => 'Postcode',
+	            'latitude' => 'Latitude',
+	            'longitude' => 'Longitude',
+	            'phone1' => 'Phone1',
+	            'phone2' => 'Phone2',
+	            'highlights' => 'Highlights',
+	            'homeDelivery' => 'Home Delivery',
+	            'veg' => 'Veg',
+	            'nonVeg' => 'Non Veg',
+	            'dineIn' => 'Dine In',
+	            'seating' => 'Seating',
+	            'outdoorSeating' => 'Outdoor Seating',
+	            'airConditioned' => 'Air Conditioned',
+	            'lounge' => 'Lounge',
+	            'serveAlcohol' => 'Serve Alcohol',
+	            'microbrewery' => 'Microbrewery',
+	            'fullBar' => 'Full Bar',
+	            'pub' => 'Pub',
+	            'nightClub' => 'Night Club',
+	            'smokingZone' => 'Smoking Zone',
+	            'sheesha' => 'Sheesha',
+	            'wifi' => 'Wifi',
+	            'liveMusic' => 'Live Music',
+	            'entryFee' => 'Entry Fee',
+	            'priceRange' => 'Price Range',
+	            'timing' => 'Timing',
+	            'image' => 'Image',
+	            'facebookId' => 'Facebook',
+	            'twitterId' => 'Twitter',
+	            'googleId' => 'Google',
+	            'linkedinId' => 'Linkedin',
+	            'facebookLink' => 'Facebook Link',
+	            'twitterLink' => 'Twitter Link',
+	            'googleLink' => 'Google Link',
+	            'linkedinLink' => 'Linkedin Link',
+	            'webAddress' => 'Web Address',
+	            'activationCode' => 'Activation Code',
+	            'isActivated' => 'Is Activated',
+	            'isDisabled' => 'Is Disabled',
+	            'disableReason' => 'Disable Reason',
+	            'createDate' => 'Create Date',
+	            'updateDate' => 'Update Date',
+	            'createId' => 'Create',
+	            'updateId' => 'Update',
+	        );
     }
 
     /**

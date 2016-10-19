@@ -3,7 +3,7 @@
 /* @var $model Restaurant */
 /* @var $form CActiveForm */
 ?>
-
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/themes/abound/js/selectize.js"></script>
 <div class="form">
 
 <?php $form=$this->beginWidget('CActiveForm', array(
@@ -38,31 +38,51 @@
 		<?php echo $form->error($model,'contactName'); ?>
 	</div>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'country'); ?>
-		<?php echo $form->textField($model,'country',array('size'=>50,'maxlength'=>50)); ?>
-		<?php echo $form->error($model,'country'); ?>
-	</div>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'state'); ?>
-		<?php echo $form->textField($model,'state',array('size'=>50,'maxlength'=>50)); ?>
-		<?php echo $form->error($model,'state'); ?>
-	</div>
-	
-	
-	<div class="row">
-		<?php
-		$model->region = isset($_SESSION['region'])? $_SESSION['region'] : '';
-		echo $form->labelEx($model,'region'); ?>
-		<?php echo $form->dropDownList($model, 'region', CHtml::listData(Region::model()->findAll(), 'name', 'name'), array('empty'=>'Select a Region'));
-		echo $form->error($model,'region'); ?>
-	</div>
 
+<script>
+$( document ).ready(function() {
+$('#Restaurant_cityId').width('220px');	
+$('#Restaurant_cityId').selectize({
+    valueField: 'id',
+    labelField: 'cityName',
+    searchField: 'cityName',
+    create: false,
+    render: {
+        option: function(item, escape) {
+
+            return '<div>' +
+                '<span class="title">' +
+                    '<span class="name">' + escape(item.cityName) + '</span>' +
+                '</span>' +
+                    '<br><span class="by">' + escape(item.stateName) +', ('+ escape(item.countryName) + ' - ' + escape(item.countryId) + ')</span>' +
+            '</div>';
+        }
+    },
+    load: function(query, callback) {
+        if (!query.length) return callback();
+        $.ajax({
+        	url: '<?php echo Yii::app()->request->baseUrl; ?>/index.php/service/city/list?sessionId=GUEST&searchText=' + encodeURIComponent(query),
+            type: 'GET',
+            error: function() {
+                callback();
+            },
+            success: function(res) {
+                callback(res.cities);
+            }
+        });
+    }
+});
+});
+
+</script>
 	<div class="row">
-		<?php echo $form->labelEx($model,'city'); ?>
-		<?php echo $form->textField($model,'city',array('size'=>50,'maxlength'=>50)); ?>
-		<?php echo $form->error($model,'city'); ?>
+		<label for="Restaurant_cityId">City</label>
+<!-- 		<select name="Restaurant[cityId]" id="Restaurant_cityId"></select> -->
+
+		
+		<?php  echo $form->dropDownList($model,'cityId',CHtml::listData(City::model()->findAll( array("select"=>"id, CONCAT(cityName, ' - ', countryId) as cityName", "condition"=>"id = ".$model->cityId, 'order' => 'cityName ASC')), 'id', 'cityName'), array('empty'=>'Select location')); ?>
+		<?php  echo $form->error($model,'cityId'); ?>
 	</div>
 
 	<div class="row">

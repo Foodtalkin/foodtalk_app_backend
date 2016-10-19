@@ -35,6 +35,19 @@ class City extends FoodTalkActiveRecord
 		return 'city';
 	}	
 	
+	public static function getCities($searchText = '')
+	{
+		$sql = 'select city.id, cityName, ifnull(s.stateName, "") as stateName, c.countryName, c.id as countryId from city INNER JOIN country c on city.countryId = c.id left join state s on city.stateId = s.id WHERE city.isDisabled = 0 ';
+		
+		if(!empty($searchText))
+			$sql .= 'and city.cityName LIKE "%' .$searchText. '%"';
+		else 
+			$sql .= ' LIMIT 20';
+		
+		$restaurants = Yii::app()->db->createCommand($sql)->queryAll(true);
+		return $restaurants;
+	}
+	
 	public static function getAddressFromGoogle($google_place_id, $create = true){
 		
 		return self::getCityFromGoogle($google_place_id, $create, true);

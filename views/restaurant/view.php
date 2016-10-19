@@ -51,7 +51,7 @@ else{
 
 
 
-echo Yii::app()->request->baseUrl."<br/>" ;
+// echo Yii::app()->request->baseUrl."<br/>" ;
 ?>
 
 <!-- 						<select id="select-repo" class="repositories" placeholder="Pick a repository..."> -->
@@ -232,10 +232,28 @@ function validate_frm(form){
 		'restaurantName',
 		'email',
 		'contactName',
-		'country',
-		'state',
-		'city',
-		'region',
+		array(
+				'name' => 'city',
+				'type' => 'raw',
+				'value' => (isset($model->city->cityName))? $model->city->cityName :"" 
+		),
+		array(
+				'name' => 'country',
+				'type' => 'raw',
+				'value' => (isset($model->city->cityName))? $model->city->country->countryName :""
+		),
+		array(
+				'name' => 'state',
+				'type' => 'raw',
+				'value' => (isset($model->city->stateId))? $model->city->state->stateName :""
+		),			
+		array(
+				'name' => 'region',
+				'type' => 'raw',
+				'value' => (isset($model->city->regionId))? $model->city->region->name :""
+		),
+// 		'city',
+// 		'region',
 		'area',
 		'address',
 		'postcode',
