@@ -3,7 +3,8 @@
 /* @var $model Restaurant */
 /* @var $form CActiveForm */
 ?>
-<script src="<?php echo Yii::app()->request->baseUrl; ?>/themes/abound/js/selectize.js"></script>
+<script
+	src="<?php echo Yii::app()->request->baseUrl; ?>/themes/abound/js/selectize.js"></script>
 <div class="form">
 
 <?php $form=$this->beginWidget('CActiveForm', array(
@@ -16,7 +17,9 @@
         'htmlOptions'=>array('enctype'=>'multipart/form-data'),
 )); ?>
 
-	<p class="note">Fields with <span class="required">*</span> are required.</p>
+	<p class="note">
+		Fields with <span class="required">*</span> are required.
+	</p>
 
 	<?php echo $form->errorSummary($model); ?>
 
@@ -40,9 +43,9 @@
 
 
 
-<script>
+	<script>
 $( document ).ready(function() {
-$('#Restaurant_cityId').width('220px');	
+$('#Restaurant_cityId').width('207px');	
 $('#Restaurant_cityId').selectize({
     valueField: 'id',
     labelField: 'cityName',
@@ -78,10 +81,31 @@ $('#Restaurant_cityId').selectize({
 </script>
 	<div class="row">
 		<label for="Restaurant_cityId">City</label>
-<!-- 		<select name="Restaurant[cityId]" id="Restaurant_cityId"></select> -->
+		<!-- 		<select name="Restaurant[cityId]" id="Restaurant_cityId"></select> -->
 
 		
-		<?php  echo $form->dropDownList($model,'cityId',CHtml::listData(City::model()->findAll( array("select"=>"id, CONCAT(cityName, ' - ', countryId) as cityName", "condition"=>"id = ".$model->cityId, 'order' => 'cityName ASC')), 'id', 'cityName'), array('empty'=>'Select location')); ?>
+		<?php  echo $form->dropDownList ( 
+				$model, 
+				'cityId',
+				isset($model->cityId)?
+				CHtml::listData ( 
+						City::model ()->findAll ( 
+								array (
+									"select" => "id, CONCAT(cityName, IFNULL((select CONCAT(', ', stateName) from state s where s.id = stateId), ''), ', (',  ifnull((select countryName from country c where c.id = countryId),'') , ' - ', countryId, ')') as cityName",
+									"condition" => "id = " . $model->cityId,
+									'order' => 'cityName ASC' 
+								)
+							), 
+							'id', 
+							'cityName' 
+				):array()
+				
+				, 
+				array()
+				); 
+		
+		
+		?>
 		<?php  echo $form->error($model,'cityId'); ?>
 	</div>
 
@@ -188,8 +212,8 @@ $('#Restaurant_cityId').selectize({
 		<?php echo $form->textField($model,'timing',array('size'=>100,'maxlength'=>100)); ?>
 		<?php echo $form->error($model,'timing'); ?>
 	</div>
-        
-        <div class="row">
+
+	<div class="row">
 		<?php echo $form->labelEx($model,'webAddress'); ?>
 		<?php echo $form->textField($model,'webAddress',array('size'=>60,'maxlength'=>250)); ?>
 		<?php echo $form->error($model,'webAddress'); ?>
@@ -216,4 +240,5 @@ $('#Restaurant_cityId').selectize({
 
 <?php $this->endWidget(); ?>
 
-</div><!-- form -->
+</div>
+<!-- form -->

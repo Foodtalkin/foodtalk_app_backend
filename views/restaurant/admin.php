@@ -82,11 +82,21 @@ if(Yii::app()->controller->action->id=='suggestion'){
 	$columns[]='phoneNo';
 }else{
 	
-	$columns[]='region';
+// 	$columns[]='region';
 	$columns[]='area';
 	$columns[]='latitude';
 // 	$columns[]='suggested';
 }
+
+$columns[] = array(
+
+		'name'=>'city',
+		'value'=>'(isset($data->city->cityName))?$data->city->cityName : ""',
+		// 		'value'=>'CHtml::checkBox("cid[]",$data->suggested?true:false,array("onclick"=>"suggestedResturant(this)", "value"=>$data->id,"id"=>"cid_".$data->id))',
+		'type'=>'raw',
+
+);
+
 $columns[] = array(
 		
 				'name'=>'suggested',
@@ -96,6 +106,7 @@ $columns[] = array(
 				//'visible'=>false,
 		
 );
+
 
 
 $columns[] = array(
