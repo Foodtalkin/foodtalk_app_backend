@@ -222,7 +222,7 @@ class Restaurant extends FoodTalkActiveRecord
         $criteria->compare('contactName',$this->contactName,true);
         $criteria->compare('country',$this->country,true);
         $criteria->compare('state',$this->state,true);
-        $criteria->compare('city',$this->city,true);
+//         $criteria->compare('city',$this->city,true);
         $criteria->compare('area',$this->area,true);
         $criteria->compare('region',$this->region,true);
         
@@ -392,7 +392,7 @@ class Restaurant extends FoodTalkActiveRecord
         $sql .= ',IFNULL(r.contactName, "") as contactName';
         $sql .= ',IFNULL(r.country, "") as country';
         $sql .= ',IFNULL(r.state, "") as state';
-        $sql .= ',IFNULL(r.city, "") as city';
+//         $sql .= ',IFNULL(r.city, "") as city';
         $sql .= ',IFNULL(r.area, "") as area';
         $sql .= ',IFNULL(r.region, "") as region';
         $sql .= ',IFNULL(r.address, "") as address';
