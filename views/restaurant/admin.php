@@ -94,8 +94,8 @@ $columns[] = array(
 		
 // 		'value'=>'(isset($data->city->cityName))?$data->city->cityName : ""',
 		
-		'value'=>'$data->cityId > 0 ? CHtml::link($data->city->cityName, array("city/".$data->cityId)) : "N/A" ', // link version
-// 		'value'=>'isset($data->city) ? CHtml::link($data->city->cityName, array("city/".$data->cityId)) : ""', // link version
+// 		'value'=>'$data->cityId > 0 ? CHtml::link($data->city->cityName, array("city/".$data->cityId)) : "N/A" ', // link version
+		'value'=>'isset($data->city) ? CHtml::link($data->city->cityName, array("city/".$data->cityId)) : "n/a"', // link version
 		
 // 		'value'=>'(isset($data->dishReview))? CHtml::link($data->dishReview->dish->dishName,array("dish/".$data->dishReview->dishId)):""', // link version
 		
