@@ -50,11 +50,14 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 	'dataProvider'=>$model->search(),
 	'filter'=>$model,
 	'columns'=>array(
-		'id',
+// 		'id',
 		'cityName',
-		'stateId',
+		'state.stateName',
 		'countryId',
-		'regionId',
+		'country.countryName',
+		'region.name',
+		'resturantCount',
+		'userCount',	
 		array(
                     'class'=>'CButtonColumn',
                     'template' => '{view} {update} {delete} {restore}',

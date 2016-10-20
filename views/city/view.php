@@ -26,7 +26,11 @@ $this->menu=array(
 		'cityName',
 // 		'shortName',
 		'stateId',
+		'state.stateName',
 		'countryId',
-		'regionId'	
+		'country.countryName',	
+		'regionId',
+		'resturantCount',			
+		'userCount'
 	),
 )); ?>

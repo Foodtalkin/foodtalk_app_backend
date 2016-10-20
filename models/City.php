@@ -197,6 +197,8 @@ class City extends FoodTalkActiveRecord
 			'region' => array(self::BELONGS_TO, 'Region', 'regionId'),
 			'country' => array(self::BELONGS_TO, 'Country', 'countryId'),
 			'state' => array(self::BELONGS_TO, 'State', 'stateId'),
+			'resturantCount' => array(self::STAT, 'Restaurant', 'cityId'),
+			'userCount' => array(self::STAT, 'User', 'cityId'),
 		);
 	}
 
