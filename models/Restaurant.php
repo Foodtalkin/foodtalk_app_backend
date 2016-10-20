@@ -283,8 +283,8 @@ class Restaurant extends FoodTalkActiveRecord
 //         'restaurant.disabled',
 
         
-        if(isset($_SESSION['region']))
-        	$criteria->addCondition("t.region = '".$_SESSION['region']."'");        
+//         if(isset($_SESSION['region']))
+//         	$criteria->addCondition("t.region = '".$_SESSION['region']."'");        
         
         
         switch (Yii::app()->controller->action->id){
@@ -484,8 +484,8 @@ class Restaurant extends FoodTalkActiveRecord
         if(!empty($searchText))
             $sql .= ' AND r.restaurantName LIKE "%' .$searchText. '%"';
         
-        if(!empty($region))
-        	$sql .= ' AND r.region = "' .$region. '"';
+//         if(!empty($region))
+//         	$sql .= ' AND r.region = "' .$region. '"';
         
         if($exceptions)
             $sql .= ' AND r.id NOT IN (' .$exceptions. ')';
