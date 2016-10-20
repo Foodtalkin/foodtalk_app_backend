@@ -1,4 +1,8 @@
 <?php
+Yii::app()->db->schema->getTables();
+// clear the cache of all loaded tables
+Yii::app()->db->schema->refresh();
+
 /* @var $this RestaurantController */
 /* @var $model Restaurant */
 
