@@ -1,8 +1,4 @@
 <?php
-Yii::app()->db->schema->getTables();
-// clear the cache of all loaded tables
-Yii::app()->db->schema->refresh();
-
 /* @var $this RestaurantController */
 /* @var $model Restaurant */
 
@@ -99,7 +95,7 @@ $columns[] = array(
 // 		'value'=>'(isset($data->city->cityName))?$data->city->cityName : ""',
 		
 // 		'value'=>'$data->cityId > 0 ? CHtml::link($data->city->cityName, array("city/".$data->cityId)) : "N/A" ', // link version
-		'value'=>'isset($data->city) ? CHtml::link($data->city->cityName, array("city/".$data->cityId)) : "n/a"', // link version
+		'value'=>'isset($data->city->cityName) ? CHtml::link($data->city->cityName, array("city/".$data->cityId)) : "n/a"', // link version
 		
 // 		'value'=>'(isset($data->dishReview))? CHtml::link($data->dishReview->dish->dishName,array("dish/".$data->dishReview->dishId)):""', // link version
 		
