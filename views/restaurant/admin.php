@@ -88,19 +88,21 @@ if(Yii::app()->controller->action->id=='suggestion'){
 // 	$columns[]='suggested';
 }
 
-// $columns[] = array(
+$columns[] = array(
 
-// 		'name'=>'city',
-// // 		'value'=>'(isset($data->city->cityName))?$data->city->cityName : ""',
+		'name'=>'city',
 		
-// 		'value'=>'isset($data->city) ? CHtml::link($data->city->cityName,array("city/".$data->cityId)):""', // link version
+// 		'value'=>'(isset($data->city->cityName))?$data->city->cityName : ""',
 		
-// // 		'value'=>'(isset($data->dishReview))? CHtml::link($data->dishReview->dish->dishName,array("dish/".$data->dishReview->dishId)):""', // link version
+		'value'=>'CHtml::link($data->cityId, array("city/".$data->cityId))', // link version
+// 		'value'=>'isset($data->city) ? CHtml::link($data->city->cityName, array("city/".$data->cityId)) : ""', // link version
 		
-// 		// 		'value'=>'CHtml::checkBox("cid[]",$data->suggested?true:false,array("onclick"=>"suggestedResturant(this)", "value"=>$data->id,"id"=>"cid_".$data->id))',
-// 		'type'=>'raw',
+// 		'value'=>'(isset($data->dishReview))? CHtml::link($data->dishReview->dish->dishName,array("dish/".$data->dishReview->dishId)):""', // link version
+		
+		// 		'value'=>'CHtml::checkBox("cid[]",$data->suggested?true:false,array("onclick"=>"suggestedResturant(this)", "value"=>$data->id,"id"=>"cid_".$data->id))',
+		'type'=>'raw',
 
-// );
+);
 
 $columns[] = array(
 		
