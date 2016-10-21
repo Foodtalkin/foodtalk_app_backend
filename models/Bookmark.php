@@ -111,6 +111,34 @@ class Bookmark extends FoodTalkActiveRecord
 		));
 	}
 
+	public static function getQuery($postId, $userId)
+	{
+		$sql = "SELECT u.id";
+		$sql .= ",IFNULL(u.userName, '') as 'userName'";
+		$sql .= ",IFNULL(u.email, '') as 'email'";
+		$sql .= ",IFNULL(u.fullName, '') as 'fullName'";
+		$sql .= ",IFNULL(u.gender, '') as 'gender'";
+		$sql .= ",IFNULL(u.age, '') as 'age'";
+		$sql .= ",IFNULL(u.address, '') as 'address'";
+		$sql .= ",IFNULL(u.postcode, '') as 'postcode'";
+		$sql .= ",IFNULL(u.latitude, 0) as 'latitude'";
+		$sql .= ",IFNULL(u.longitude, 0) as 'longitude'";
+		$sql .= ",IFNULL(u.phone, '') as 'phone'";
+		$sql .= ",IFNULL(u.aboutMe, '') as 'aboutMe'";
+		$sql .= ',IFNULL(CONCAT("' . imagePath('user') . '", u.image, "?type=large"), "") as image';
+		$sql .= ',IFNULL(CONCAT("' . thumbPath('user') . '", u.image, "?type=small"), "") as thumb';
+		$sql .= ",b.createDate";
+		$sql .= ",(SELECT COUNT(*) FROM `follower` f WHERE f.followedUserId=u.id AND f.followerUserId=$userId) as 'iFollowIt'";
+		
+		$sql .= " FROM user u JOIN `bookmark` b ON u.id = b.userId";
+		$sql .= " LEFT JOIN session s ON s.userId = u.id";
+		$sql .= " WHERE b.postId = $postId";
+	
+		return $sql;
+	}
+	
+	
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
