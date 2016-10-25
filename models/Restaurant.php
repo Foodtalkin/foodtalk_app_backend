@@ -286,6 +286,15 @@ class Restaurant extends FoodTalkActiveRecord
 //         if(isset($_SESSION['region']))
 //         	$criteria->addCondition("t.region = '".$_SESSION['region']."'");        
         
+		if(isset($_SESSION['region'])){
+        	if ($_SESSION['region']['id']=='rest'){
+        		$criteria->join =" left JOIN city ct ON ct.id = t.cityId ";
+        		$criteria->addCondition("ct.regionId is null or ct.id is null");
+        	}
+        	else 
+        		$criteria->join =" Inner JOIN city ct ON ct.id = t.cityId and ct.regionId = ".$_SESSION['region']['id'];
+        }
+        
         
         switch (Yii::app()->controller->action->id){
         	case 'disabled':

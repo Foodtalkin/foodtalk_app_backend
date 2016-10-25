@@ -240,8 +240,17 @@ class User extends FoodTalkActiveRecord
         $criteria->compare('createId',$this->createId,true);
         $criteria->compare('updateId',$this->updateId,true);
 
-        if(isset($_SESSION['region']))
-        	$criteria->addCondition("t.region = '".$_SESSION['region']."'");
+        
+//         echo $_SESSION['region'];
+        
+		if(isset($_SESSION['region'])){
+        	if ($_SESSION['region']['id']=='rest'){
+        		$criteria->join =" left JOIN city ct ON ct.id = t.cityId ";
+        		$criteria->addCondition("ct.regionId is null or ct.id is null");
+        	}
+        	else 
+        		$criteria->join =" Inner JOIN city ct ON ct.id = t.cityId and ct.regionId = ".$_SESSION['region']['id'];
+        }
         
         $action = Yii::app()->controller->action->id;
         

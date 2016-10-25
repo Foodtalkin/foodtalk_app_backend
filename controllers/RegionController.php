@@ -11,16 +11,33 @@ class RegionController extends SiteBaseController
 		$this->redirect($referral_url);
 		
 	}
+	
+	public function actionRest()
+	{
+		unset($_SESSION['region']);
+	
+		$referral_url = isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : array('user/admin') ;
+		$this->redirect($referral_url);
+	
+	}
 
 	public function actionView($id=false)
 	{
 		
-		$region = Region::model()->findByPk($id);
+		if ($id=='rest'){
+			$_SESSION['region']['id'] = $id;
+			$_SESSION['region']['name'] = $id;
+		}else{
 		
-		if($region)
-			$_SESSION['region'] = $region->name; 
-		else 
-			unset($_SESSION['region']);
+			$region = Region::model()->findByPk($id);
+			
+			if($region){
+				$_SESSION['region']['id'] = $region->id;
+				$_SESSION['region']['name'] = $region->name;			
+			}
+			else
+				unset($_SESSION['region']);
+		}
 // http://localhost/foodtalk/index.php/region/view/id/delhisas
 		$referral_url = isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : array('user/admin') ;		
 		$this->redirect($referral_url);
