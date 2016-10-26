@@ -94,6 +94,8 @@ $type = Yii::app()->request->getParam('type',false);
 					'value' => '(!empty($data->image))? CHtml::image(thumbPath("post") . $data->image, "") : " "',
 					'filter' => false
 			),
+		array('name'=>'checkedInRestaurant.city.cityName', 'value'=>'isset($data->checkedInRestaurant->city->cityName)? $data->checkedInRestaurant->city->cityName : (isset($data->user->userCity->cityName) ? $data->user->userCity->cityName : "")'  ),	
+// 		'checkedInRestaurant.city.cityName',	
 		'tip',
 		array(
                     'class'=>'CButtonColumn',

@@ -142,28 +142,15 @@ class Post extends FoodTalkActiveRecord
         $criteria->compare("user.userName",$this->userId);
         
 		$criteria->with[]='checkedInRestaurant';
-
-//         $criteria->join =" inner JOIN city as ct ON ct.id = checkedInRestaurant.cityId and ct.regionId = ".$_SESSION['region']['id'];
-        
-//         $criteria->join =" left JOIN city as uct ON uct.id = user.cityId and uct.regionId =".$_SESSION['region']['id'];
-        
-// 		$criteria->addCondition("checkedInRestaurant.city = ".$_SESSION['region']['id']);
-//         if(isset($_SESSION['region']))
-//         	$criteria->addCondition("(ct.regionId = ".$_SESSION['region']['id']." or ( checkedInRestaurantId IS NULL and uct.regionId =".$_SESSION['region']['id']." )) ");
-        
-        	
-//         if(isset($_SESSION['region'])){
-//         	if ($_SESSION['region']['id']=='rest'){
-//         		$criteria->join =" left JOIN city ct ON ct.id = t.cityId ";
-//         		$criteria->addCondition("ct.regionId is null or ct.id is null");
-//         	}
-//         	else{
-        		
-//         		$criteria->join =" Inner JOIN city ct ON ct.id = t.cityId and ct.regionId = ".$_SESSION['region']['id'];
-//         		$criteria->join =" Inner JOIN city ct ON ct.id = t.cityId and ct.regionId = ".$_SESSION['region']['id'];
-//         	}
-//         }
-        
+		$criteria->with[]='checkedInRestaurant.city';
+		$criteria->with[]='user.userCity';
+		
+		if(isset($_SESSION['region']))
+			if ($_SESSION['region']['id']=='rest')
+				$criteria->addCondition("(city.regionId is null and city.id is not null ) or ( userCity.regionId is null and city.id is null )" );
+			else
+				$criteria->addCondition("(city.regionId =".$_SESSION['region']['id'].") or (userCity.regionId =".$_SESSION['region']['id']." and city.id is null )" );
+                
         
  		if(Yii::app()->controller->action->id=='disabled')
  			$criteria->addCondition("t.isDisabled = 1");
