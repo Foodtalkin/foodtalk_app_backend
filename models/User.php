@@ -7,6 +7,7 @@
  * @property string $id
  * @property string $role
  * @property string $userName
+ * @property string $referral
  * @property string $email
  * @property string $password
  * @property string $fullName
@@ -16,6 +17,7 @@
  * @property string $country
  * @property string $state
  * @property string $city
+ * @property string $cityId
  * @property string $region
  * @property string $address
  * @property string $postcode
@@ -58,6 +60,8 @@
  * @property Session[] $sessions
  * @property Subscription[] $subscriptions
  * @property UserCuisine[] $userCuisines
+ * @property City $userCity
+ * 
  */
 class User extends FoodTalkActiveRecord
 {
@@ -129,6 +133,8 @@ class User extends FoodTalkActiveRecord
             'subscriptions' => array(self::HAS_MANY, 'Subscription', 'userId'),
             'userCuisines' => array(self::HAS_MANY, 'UserCuisine', 'userId'),
         	'reportedCount' => array(self::STAT, 'Flag', 'postUserId'),
+        	'userCity' => array(self::BELONGS_TO, 'City', 'cityId'),
+        		
         );
     }
 

@@ -45,9 +45,15 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
     'filter'=>$model,
     'columns'=>array(
         'id',
-        'userName',
+    	array(
+    		'name'=>'userName',
+    		'value'=>'isset($data->userName) ? "<a target=\"_blank\" href= \"http://foodtalk.in/$data->userName\">$data->userName<a> ":""',
+    		'type'  => 'raw',
+//     		'filter' => false
+		),	
         'email',
     	'gender',
+    	array('name'=>'city', 'value'=>'$data->cityId > 0? $data->userCity->cityName:""'),	
     		array(
 //     				CHtml::link($data->fullName,array("http://www.facebook.com/".$data->facebookId))
     				
@@ -55,7 +61,7 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
     				'value'=>'(isset($data->facebookId))? "<a target=\"_blank\" href= \"http://www.facebook.com/$data->facebookId\">$data->fullName<a> ":""', // link version
     				// 			'filter' => CHtml::listData(Restaurant::model()->findAll(), 'id', 'restaurantName'), // fields from country table
     				'type'  => 'raw',
-    				'filter' => false
+//     				'filter' => false
     				),
 //         'fullName',
     	'createDate',
