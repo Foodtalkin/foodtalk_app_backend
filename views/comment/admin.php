@@ -36,7 +36,19 @@ $type = Yii::app()->request->getParam('type',false);
 	  <li<?php if($action=='disabled') { ?> class="active"<?php } ?>><a href="<?php echo Yii::app()->createAbsoluteUrl("comment/disabled"); ?>">Disabled</a></li>
 
 	</ul>
+	
+<?php if($action=='reported') { 
+$status = Yii::app()->request->getParam('status',false);
+?>
 
+	
+	<ul class="nav nav-tabs">
+	  <li<?php if(!$status) { ?> class="active"<?php } ?>><a href="<?php echo Yii::app()->createAbsoluteUrl("comment/reported"); ?>">Pending</a></li>
+	  <li<?php if($status=='approved') { ?> class="active"<?php } ?>><a href="<?php echo Yii::app()->createAbsoluteUrl("comment/reported/status/approved"); ?>">Approved</a></li>
+	  <li<?php if($status=='rejected') { ?> class="active"<?php } ?>><a href="<?php echo Yii::app()->createAbsoluteUrl("comment/reported/status/rejected"); ?>">Rejected</a></li>
+
+	</ul>
+<?php }?>	
 
 <?php
 // echo CHtml::link('Advanced Search','#',array('class'=>'search-button')); ?>
@@ -86,7 +98,8 @@ $type = Yii::app()->request->getParam('type',false);
 				
 // 		'postUserId',
 		'comment',
-		'isDisabled',
+// 		'isDisabled',
+			array('name'=>'isDisabled', 'value'=>' $data->isDisabled > 0 ? "Yes" : "No" '),
 		/*
 		'disableReason',
 		'createDate',
@@ -109,11 +122,11 @@ $type = Yii::app()->request->getParam('type',false);
 // 								'visible'=>'$data->reportedCount',
 								'click'=>"function(){
                                 if(!confirm('Approve this Comment ?')) return false;
-                                $.fn.yiiGridView.update('post-grid', {
+                                $.fn.yiiGridView.update('comment-grid', {
                                     type:'POST',
                                     url:$(this).attr('href'),
                                     success:function(data) {
-                                        $.fn.yiiGridView.update('post-grid');
+                                        $.fn.yiiGridView.update('comment-grid');
                                     }
                                 })
                                 return false;

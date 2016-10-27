@@ -7,8 +7,10 @@
  * @property string $id
  * @property string $userId
  * @property string $postId
+ * @property integer $commentId
  * @property string $postUserId
  * @property integer $isDisabled
+ * @property integer $status
  * @property string $disableReason
  * @property string $createDate
  * @property string $updateDate
@@ -39,7 +41,7 @@ class Flag extends FoodTalkActiveRecord
         // will receive user inputs.
         return array(
             array('userId', 'required'),
-            array('isDisabled', 'numerical', 'integerOnly'=>true),
+            array('commentId, isDisabled, status', 'numerical', 'integerOnly'=>true),
             array('userId, postId, postUserId, createId, updateId', 'length', 'max'=>10),
             array('disableReason', 'length', 'max'=>128),
             array('updateDate', 'safe'),
@@ -72,8 +74,10 @@ class Flag extends FoodTalkActiveRecord
             'id' => 'ID',
             'userId' => 'User',
             'postId' => 'Post',
+        	'commentId' => 'Comment',
             'postUserId' => 'Post User',
             'isDisabled' => 'Is Disabled',
+        	'status' => 'Status',
             'disableReason' => 'Disable Reason',
             'createDate' => 'Create Date',
             'updateDate' => 'Update Date',
@@ -103,8 +107,10 @@ class Flag extends FoodTalkActiveRecord
         $criteria->compare('id',$this->id,true);
         $criteria->compare('userId',$this->userId,true);
         $criteria->compare('postId',$this->postId,true);
+		$criteria->compare('commentId',$this->commentId);
         $criteria->compare('postUserId',$this->postUserId,true);
         $criteria->compare('isDisabled',$this->isDisabled);
+		$criteria->compare('status',$this->status);
         $criteria->compare('disableReason',$this->disableReason,true);
         $criteria->compare('createDate',$this->createDate,true);
         $criteria->compare('updateDate',$this->updateDate,true);

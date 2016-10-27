@@ -46,7 +46,9 @@ class CommentController extends SiteBaseController
 	{
 		// 		$this->loadModel($id)->delete();
 	
-		$flags = Flag::model()->deleteAllByAttributes(array('commentId'=>$id));
+		$flags = Flag::model()->updateAll(array('status'=>'1'), 'commentId = '.$id );
+		
+// 		deleteAllByAttributes(array('commentId'=>$id));
 	
 		// 		$model=$this->loadModel($id);
 		// 		$model->isDisabled = 1;
@@ -93,6 +95,8 @@ class CommentController extends SiteBaseController
 		$model=$this->loadModel($id);
 		$model->isDisabled = 1;
 		$model->save();
+		
+		$flags = Flag::model()->updateAll(array('status'=>'-1'), 'commentId = '.$id );
 		
 		
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser

@@ -120,7 +120,25 @@ class Comment extends FoodTalkActiveRecord
         
         if($action=='disabled')
         	$criteria->addCondition("t.isDisabled = 1");
-        else
+        else if($action=='reported'){
+        	 
+        	$statusText = Yii::app()->request->getParam('status',false);
+        	 
+        	switch ($statusText){
+        		case 'approved':
+        			$status = 1;
+        			break;
+        		case 'rejected':
+        			$status = -1;
+        			break;
+        		default:
+        			$status = 0;
+        			 
+        	}
+        	$criteria->join =" Inner JOIN flag f ON f.commentId = t.id and f.status = $status";
+        	$order = 'f.createDate desc';
+        	 
+        }else
         	$criteria->addCondition("t.isDisabled = 0");
 
 //         if($action=='reported')
@@ -137,10 +155,7 @@ class Comment extends FoodTalkActiveRecord
 //         	$criteria->compare("pu userName usrName",$this->postUserId);
 //         }
         
-        if($action=='reported'){
-        	$criteria->join =" Inner JOIN flag f ON f.commentId = t.id ";
-        	$order = 'f.createDate desc';
-        }
+
         
         return new CActiveDataProvider($this, array(
                 'criteria'=>$criteria,
