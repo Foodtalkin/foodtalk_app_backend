@@ -59,7 +59,7 @@ class PostController extends ServiceBaseController
                     
                     if(isset($_JSON['tip']))
                     {
-                        $post->tip = mb_convert_encoding( $_JSON['tip'], "UTF-8", "BASE64" );
+                        $post->tip = trim(mb_convert_encoding( $_JSON['tip'], "UTF-8", "BASE64" ));
                         //$post->tip = base64_decode($_JSON['tip']);
                         //$post->tip = filter_var(base64_decode($_JSON['tip']), FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
                         //$post->tip = filter_var($_JSON['tip'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
