@@ -258,6 +258,7 @@ class PostController extends SiteBaseController
 		$model->save();
 		Checkins::model()->clean($model, 'disabled');
 		
+		$flags = Flag::model()->updateAll( array('status'=>'-1'), 'postId = '.$id  );
 		
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 		if(!isset($_GET['ajax']))
@@ -268,11 +269,13 @@ class PostController extends SiteBaseController
 	{
 		// 		$this->loadModel($id)->delete();
 
-		$flags = Flag::model()->deleteAllByAttributes(array('postId'=>$id));
+// 		$flags = Flag::model()->deleteAllByAttributes(array('postId'=>$id));
+		$flags = Flag::model()->updateAll(array('status'=>'1'), 'postId = '.$id );
 		
-// 		$model=$this->loadModel($id);
-// 		$model->isDisabled = 1;
-// 		$model->save();
+		
+		$model=$this->loadModel($id);
+		$model->isDisabled = 0;
+		$model->save();
 	
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 		if(!isset($_GET['ajax']))

@@ -20,6 +20,7 @@
  * @property User $user
  * @property Post $post
  * @property User $postUser
+ * @property Flag[] $flags
  */
 class Comment extends FoodTalkActiveRecord
 {
@@ -62,6 +63,7 @@ class Comment extends FoodTalkActiveRecord
             'user' => array(self::BELONGS_TO, 'User', 'userId'),
             'post' => array(self::BELONGS_TO, 'Post', 'postId'),
             'postUser' => array(self::BELONGS_TO, 'User', 'postUserId'),
+        	'flags' => array(self::HAS_MANY, 'Flag', 'commentId'),
         );
     }
 

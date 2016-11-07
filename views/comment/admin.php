@@ -95,9 +95,16 @@ $status = Yii::app()->request->getParam('status',false);
 					'type'  => 'raw',
 					'filter' => false
 			),
-				
+// 			array(
+// 					'name'=>'postUserId',
+// 					'value'=>'print_r($data)',
+// 					'type'  => 'raw',
+// 					'filter' => false
+					
+// )	,
 // 		'postUserId',
 		'comment',
+// 		'flags.user.userName',	
 // 		'isDisabled',
 			array('name'=>'isDisabled', 'value'=>' $data->isDisabled > 0 ? "Yes" : "No" '),
 		/*

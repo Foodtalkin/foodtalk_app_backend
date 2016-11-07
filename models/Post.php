@@ -154,6 +154,25 @@ class Post extends FoodTalkActiveRecord
         
  		if(Yii::app()->controller->action->id=='disabled')
  			$criteria->addCondition("t.isDisabled = 1");
+ 		elseif($type=='reported'){
+ 			
+ 			$statusText = Yii::app()->request->getParam('status',false);
+ 			switch ($statusText){
+ 				case 'approved':
+ 					$status = 1;
+ 					break;
+ 				case 'rejected':
+ 					$status = -1;
+ 					break;
+ 				default:
+ 					$status = 0;
+ 			
+ 			}
+ 			$criteria->join =" Inner JOIN flag f ON f.postId = t.id and f.status = $status";
+//  			$criteria->join .=" Inner JOIN flag f ON f.postId = t.id ";
+ 			$order = 'f.createDate desc';
+ 			
+ 		}
  		else
 	        $criteria->addCondition("t.isDisabled = 0");
         
@@ -201,10 +220,7 @@ class Post extends FoodTalkActiveRecord
 	        	$criteria->addCondition("t.image IS NOT NULL");
 	        }
 	        
-	        if($type=='reported'){
-	        	$criteria->join .=" Inner JOIN flag f ON f.postId = t.id ";
-	        	$order = 'f.createDate desc';
-	        }
+
 	        
 		}
 

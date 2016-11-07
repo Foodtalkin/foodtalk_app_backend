@@ -47,6 +47,18 @@ $type = Yii::app()->request->getParam('type',false);
   <li<?php if($type=='reported') { ?> class="active"<?php } ?>><a href="<?php echo Yii::app()->createAbsoluteUrl("post/".$action."?type=reported"); ?>">Reported</a></li>
   
 </ul>
+<?php if($type=='reported') { 
+$status = Yii::app()->request->getParam('status',false);
+?>
+
+	
+	<ul class="nav nav-tabs">
+	  <li<?php if(!$status) { ?> class="active"<?php } ?>><a href="<?php echo Yii::app()->createAbsoluteUrl("post/".$action."?type=reported"); ?>">Pending</a></li>
+	  <li<?php if($status=='approved') { ?> class="active"<?php } ?>><a href="<?php echo Yii::app()->createAbsoluteUrl("post/".$action."?type=reported&status=approved"); ?>">Approved</a></li>
+	  <li<?php if($status=='rejected') { ?> class="active"<?php } ?>><a href="<?php echo Yii::app()->createAbsoluteUrl("post/".$action."?type=reported&status=rejected"); ?>">Rejected</a></li>
+
+	</ul>
+<?php }?>	
 <?php
 // Yii::app()->createUrl("user/".$data->userId)
 
@@ -99,7 +111,8 @@ $type = Yii::app()->request->getParam('type',false);
 		'tip',
 		array(
                     'class'=>'CButtonColumn',
-                    'template' => '{view} {delete} {restore} {approve}',
+//                     'template' => '{view} {delete} {restore} {approve}',
+					'template' => '{view} {delete} {approve}',
                     'buttons'=>array(
                         'delete' => array(
                             'visible'=>'!$data->isDisabled',
