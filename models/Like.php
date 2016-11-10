@@ -166,7 +166,7 @@ class Like extends FoodTalkActiveRecord
         $sql .= ",(SELECT COUNT(*) FROM `follower` f WHERE f.followedUserId=u.id AND f.followerUserId=$userId) as 'iFollowIt'";
         $sql .= " FROM user u JOIN `like` l ON u.id = l.userId";
         $sql .= " LEFT JOIN session s ON s.userId = u.id";
-        $sql .= " WHERE l.postId = $postId and l.isDisabled ";
+        $sql .= " WHERE l.postId = $postId and l.isDisabled = 1";
         
         return $sql;
     }
