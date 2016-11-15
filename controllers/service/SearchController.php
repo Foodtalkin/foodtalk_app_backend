@@ -143,8 +143,6 @@ class SearchController extends ServiceBaseController
 	}
 	
 	private function esGET(){
-	
-		
 		
 	}
 	

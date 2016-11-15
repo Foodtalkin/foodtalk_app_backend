@@ -82,6 +82,14 @@ class Restaurant extends FoodTalkActiveRecord
 	}
 	
 
+	protected function afterSave()
+	{		 
+		if(isset($this->isDisabled) && $this->isDisabled==1)
+			es('/foodtalkindex/restaurant/'.$this->id ,'DELETE');
+		 
+		return parent::afterSave();
+	}
+	
     /**
      * @return array validation rules for model attributes.
      */
