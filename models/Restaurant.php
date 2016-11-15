@@ -84,8 +84,10 @@ class Restaurant extends FoodTalkActiveRecord
 
 	protected function afterSave()
 	{		 
-		if(isset($this->isDisabled) && $this->isDisabled==1)
-			es('/foodtalkindex/restaurant/'.$this->id ,'DELETE');
+		if(isset($this->isDisabled) && $this->isDisabled==1){
+			es('','/foodtalkindex/restaurant/'.$this->id ,'DELETE');
+			echo 'DEAD';
+		}
 		 
 		return parent::afterSave();
 	}

@@ -157,6 +157,16 @@ class SearchController extends ServiceBaseController
 	private function esDELETE(){
 	
 	}
+	
+	public function  actionDelete(){
+		
+		
+// 		$dd = es('', '/foodtalkindex/restaurant/46450' ,'DELETE');
+// 		var_dump($dd);
+		echo 'TEST';
+		
+	}
+	
 		
     public function actionEs()
     {
