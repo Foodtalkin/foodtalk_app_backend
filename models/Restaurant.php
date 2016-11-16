@@ -86,7 +86,28 @@ class Restaurant extends FoodTalkActiveRecord
 	{		 
 		if(isset($this->isDisabled) && $this->isDisabled==1){
 			es('','/foodtalkindex/restaurant/'.$this->id ,'DELETE');
-			echo 'DEAD';
+		}elseif($this->isNewRecord){
+			
+			$esRestaurant = array(
+					"role" => "restaurant",
+					"restaurantname" => $this->restaurantName,
+					"cityid" => $this->cityId,
+					"cityname" => $this->city->cityName,
+					"stateid" => $this->city->stateId,
+					"countryid" => $this->city->countryId,
+					"address" =>$this->address,
+					"area" =>$this->area,
+					"location" => $this->latitude.", ".$this->longitude,
+					"regionid" => $this->city->regionId,
+					"regionname" => $this->city->region->name,
+					"isactivated" => $this->isActivated,
+					"suggested" => $this->suggested,
+					"timing" => $this->timing,
+					"pricerange" => $this->priceRange,
+					"popularity"=> 0
+			);
+			
+			es(json_encode($esRestaurant),'/foodtalkindex/restaurant/'.$this->id ,'POST');
 		}
 		 
 		return parent::afterSave();
