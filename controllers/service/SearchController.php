@@ -44,6 +44,10 @@ class SearchController extends ServiceBaseController
 						$search['query']['bool']['must'][] = array('match'=> [ 'restaurantname'=> $searchArr[0] ] );
 					}
 				}
+				
+				if(isset($options['isactivated']) and $options['isactivated'])
+				$search['query']['bool']['must'][] = array('match'=> [ 'isactivated'=> true ] );
+				
 				break;
 			
 			case 'user':
@@ -203,8 +207,8 @@ class SearchController extends ServiceBaseController
                 		if(isset($_JSON['longitude']) && !empty($_JSON['longitude']))
                 			$options['location']['lon'] = filter_var($_JSON['longitude'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
                 		
-                		
-                		
+                		if(isset($_JSON['isactivated']) && !empty($_JSON['isactivated']))
+                			$options['isactivated'] = true ;
                 		
                 		$type='';
                 		if(isset($_JSON['type']))
