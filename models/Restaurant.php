@@ -92,6 +92,7 @@ class Restaurant extends FoodTalkActiveRecord
 		if($this->isNewRecord){
 			
 			$esRestaurant = array(
+					"id" => $this->id,
 					"role" => "restaurant",
 					"restaurantname" => $this->restaurantName,
 					"cityid" => $this->cityId,
@@ -103,10 +104,10 @@ class Restaurant extends FoodTalkActiveRecord
 
 					"regionid" => $this->city->regionId,
 					"regionname" => $this->city->region->name,
-					"isactivated" => $this->isActivated,
-					"suggested" => $this->suggested,
-					"timing" => $this->timing,
-					"pricerange" => $this->priceRange,
+					"isactivated" => false,
+					"suggested" => false,
+					"timing" => '',
+					"pricerange" => '',
 					"popularity"=> 0
 			);
 			
