@@ -797,9 +797,9 @@ class Post extends FoodTalkActiveRecord
     	$sql .= ',IFNULL(CONCAT("' . imagePath('user') . '", u.image), "") as userImage';
     	$sql .= ',IFNULL(CONCAT("' . thumbPath('user') . '", u.image), "") as userThumb';
     	$sql .= ',IFNULL(u.facebookId, "") as facebookId,IFNULL(r.restaurantName, "") as restaurantName';
+    	$sql .= ',IFNULL(city.cityName, "") as cityName';
     	
     	$sql .= ' , IFNULL(r.isActivated, 0) as restaurantIsActive ';
-    	
     	$sql .= ",DEGREES(ACOS(SIN(RADIANS($latitude)) * SIN(RADIANS(r.latitude)) + COS(RADIANS($latitude)) * COS(RADIANS(r.latitude)) * COS(RADIANS($longitude - r.longitude)))) * 111189.3006 as restaurantDistance";
 //     	$sql .= ',(SELECT COUNT(*) FROM `like` l WHERE l.postId=p.id AND l.isDisabled=0) as likeCount';
     	
@@ -858,6 +858,7 @@ class Post extends FoodTalkActiveRecord
     	
     	$sql .= ' INNER JOIN user u on u.id = p.userId AND u.isDisabled = 0 AND u.isActivated = 1';
     	$sql .= ' INNER JOIN restaurant r on r.id = p.checkedInRestaurantId AND r.isDisabled = 0 AND r.isActivated = 1';
+    	$sql .= ' LEFT JOIN city ON r.cityId = city.id';
     	$sql .= ' INNER JOIN dishReview dr on p.id = dr.postId AND dr.rating is not null';
     	$sql .= ' INNER JOIN dish d on d.id = dr.dishId AND d.isDisabled = 0';
 
