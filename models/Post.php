@@ -799,7 +799,7 @@ class Post extends FoodTalkActiveRecord
     	$sql .= ',IFNULL(u.facebookId, "") as facebookId,IFNULL(r.restaurantName, "") as restaurantName';
     	
     	$sql .= ' , IFNULL(r.isActivated, 0) as restaurantIsActive ';
-    	
+    	$sql .= ',IFNULL(city.cityName, "") as cityName';
     	$sql .= ",DEGREES(ACOS(SIN(RADIANS($latitude)) * SIN(RADIANS(r.latitude)) + COS(RADIANS($latitude)) * COS(RADIANS(r.latitude)) * COS(RADIANS($longitude - r.longitude)))) * 111189.3006 as restaurantDistance";
 //     	$sql .= ',(SELECT COUNT(*) FROM `like` l WHERE l.postId=p.id AND l.isDisabled=0) as likeCount';
     	
@@ -827,6 +827,7 @@ class Post extends FoodTalkActiveRecord
     	$sql .= ' FROM post p';
     	$sql .= ' INNER JOIN user u on u.id = p.userId AND u.isDisabled = 0 AND u.isActivated = 1 AND u.id !='.$userId;
     	$sql .= ' INNER JOIN restaurant r on r.id = p.checkedInRestaurantId AND r.isDisabled = 0 AND r.isActivated = 1';
+    	$sql .= ' LEFT JOIN city ON r.cityId = city.id';
     	$sql .= ' INNER JOIN dishReview dr on p.id = dr.postId';
     	$sql .= ' INNER JOIN dish d on d.id = dr.dishId AND d.isDisabled = 0';
     	$sql .= ' WHERE p.isDisabled = 0 ';
