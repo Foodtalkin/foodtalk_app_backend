@@ -39,7 +39,9 @@ class CommentController extends ServiceBaseController
                         $comment->userId = $userId;
                         $comment->postId = $postId;
                         $comment->postUserId = $post->userId;
-                        $comment->comment = filter_var(base64_decode($_JSON['comment']), FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
+                        $comment->comment = trim(mb_convert_encoding( $_JSON['comment'], "UTF-8", "BASE64" ));
+                        
+//                         $comment->comment = filter_var(base64_decode($_JSON['comment']), FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
 //                         $comment->comment = $_JSON['comment'];
                         //$comment->comment = filter_var($_JSON['comment'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
                         //save record
