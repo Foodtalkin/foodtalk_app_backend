@@ -53,8 +53,9 @@ class NewsController extends ServiceBaseController
                 	if(isset($_JSON['startDate']) && !empty($_JSON['startDate']))
                 		$news->startDate = filter_var($_JSON['startDate'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
                 	
-                	if(isset($_JSON['isDisabled']) && !empty($_JSON['isDisabled']))
-                		$news->isDisabled = filter_var($_JSON['isDisabled'], FILTER_SANITIZE_NUMBER_INT);
+                	if(isset($_JSON['isDisabled'])){
+                		$news->isDisabled = $_JSON['isDisabled'];
+                	}
                 	
                 	if(isset($_JSON['disableReason']) && !empty($_JSON['disableReason']))
                 		$news->disableReason = filter_var($_JSON['disableReason'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);                	
