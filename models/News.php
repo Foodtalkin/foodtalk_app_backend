@@ -142,8 +142,6 @@ class News extends CActiveRecord
 	
 		$sql = self::getQuery();
 	
-		echo $status;
-		
 		if($status != 'all'){
 // 			$sql .= ' WHERE startDate < now() ';
 			$sql .= ' WHERE isDisabled = 0 ';
@@ -153,8 +151,6 @@ class News extends CActiveRecord
 	
 		$sql .= ' LIMIT '. $pagestart .', '. $recordCount;
 	
-		echo $sql;
-		
 		$result = Yii::app()->db->createCommand($sql)->queryAll(true);
 		return $result;
 	
