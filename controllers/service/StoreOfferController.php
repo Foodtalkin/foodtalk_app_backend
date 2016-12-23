@@ -96,7 +96,7 @@ class StoreOfferController extends ServiceBaseController
                 		$StoreItem->costPoints = trim(filter_var($_JSON['costPoints'], FILTER_SANITIZE_NUMBER_INT));
                 	
                 	if(isset($_JSON['termConditionsLink']) && !empty ($_JSON['termConditionsLink']))
-                		$StoreItem->cardImage = filter_var($_JSON['termConditionsLink'], FILTER_SANITIZE_STRING);
+                		$StoreItem->termConditionsLink = filter_var($_JSON['termConditionsLink'], FILTER_SANITIZE_STRING);
                 	
                 	if(isset($_JSON['thankYouText']) && !empty ($_JSON['thankYouText']))
                 		$StoreItem->thankYouText = trim(filter_var($_JSON['thankYouText'], FILTER_SANITIZE_STRING));
