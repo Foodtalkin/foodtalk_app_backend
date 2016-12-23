@@ -76,8 +76,15 @@ class StoreOfferController extends ServiceBaseController
                 	if(isset($_JSON['actionButtonText']) && !empty ($_JSON['actionButtonText']))
 	                	$StoreItem->actionButtonText = trim(filter_var($_JSON['actionButtonText'], FILTER_SANITIZE_STRING));
                 	
+                	if(isset($_JSON['cardActionButtonText']) && !empty ($_JSON['cardActionButtonText']))
+                		$StoreItem->cardActionButtonText = trim(filter_var($_JSON['cardActionButtonText'], FILTER_SANITIZE_STRING));
+                	
+                	
                 	if(isset($_JSON['description']) && !empty ($_JSON['description']))
                 		$StoreItem->description = trim(filter_var($_JSON['description'], FILTER_SANITIZE_STRING));
+                	
+                	if(isset($_JSON['shortDescription']) && !empty ($_JSON['shortDescription']))
+                		$StoreItem->shortDescription = trim(filter_var($_JSON['shortDescription'], FILTER_SANITIZE_STRING));
                 	
                 	if(isset($_JSON['costType']) && !empty ($_JSON['costType']))
                 		$StoreItem->costType = trim(filter_var($_JSON['costType'], FILTER_SANITIZE_STRING));
