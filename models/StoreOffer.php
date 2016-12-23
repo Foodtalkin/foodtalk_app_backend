@@ -190,6 +190,26 @@ class StoreOffer extends FoodTalkActiveRecord
 	}
 	
 	
+	public static function getThisOffer($id=0, $storeItemId=0, $status = 'upcomming', $options=array()){
+	
+		$sql = self::getQuery();
+		
+		if($id > 0)
+			$sql .= ' WHERE o.id = '.$id;
+		else
+			$sql .= ' WHERE o.storeItemId = '.$storeItemId;
+	
+		if($status != 'all'){
+			$sql .= ' AND i.isDisabled = 0 ';
+		}
+	
+		$sql .= ' LIMIT 1';
+	
+		$result = Yii::app()->db->createCommand($sql)->queryRow(true);
+		return $result;
+	
+	}
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!

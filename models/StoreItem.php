@@ -156,7 +156,7 @@ class StoreItem extends FoodTalkActiveRecord
 		));
 	}
 
-	public static function getQuery($type = false)
+	public static function getQuery($type = false, $with='all')
 	{
 	
 		$typeOfItems = array('Event'=>'EVENT', 'Contest'=>'CONTEST', 'Offers'=>'OFFERS', 'Goods'=>'GOODS');
@@ -170,6 +170,9 @@ class StoreItem extends FoodTalkActiveRecord
 		$sql .= ",IFNULL(i.cardImage, '') as cardImage";
 		$sql .= ",IFNULL(i.actionButtonText, '') as actionButtonText";
 		$sql .= ",IFNULL(i.description, '') as description";
+		$sql .= ",IFNULL(i.cardActionButtonText, '') as cardActionButtonText";
+		$sql .= ",IFNULL(i.shortDescription, '') as shortDescription";
+		
 		$sql .= ",IFNULL(i.costType, '') as costType";
 		$sql .= ",IFNULL(i.costOnline, '') as costOnline";
 		$sql .= ",IFNULL(i.costPoints, '') as costPoints";
@@ -180,12 +183,14 @@ class StoreItem extends FoodTalkActiveRecord
 		$sql .= ",IFNULL(i.startDate, '') as startDate";
 		$sql .= ",IFNULL(i.endDate, '') as endDate";
 		
-		$sql .= ",IFNULL(p.userId, '') as userId";
-		$sql .= ",IFNULL(p.quantity, '') as quantity";
-		$sql .= ",IFNULL(p.costOnline, '') as paidCostOnline";
-		$sql .= ",IFNULL(p.costPoints, '') as paidCostPoints";
-		$sql .= ",IFNULL(p.metaData, '') as metaData";
-		$sql .= ",IFNULL(p.createDate, '') as createDate";
+		if($with == 'Purchase'){
+			$sql .= ",IFNULL(p.userId, '') as userId";
+			$sql .= ",IFNULL(p.quantity, '') as quantity";
+			$sql .= ",IFNULL(p.costOnline, '') as paidCostOnline";
+			$sql .= ",IFNULL(p.costPoints, '') as paidCostPoints";
+			$sql .= ",IFNULL(p.metaData, '') as metaData";
+			$sql .= ",IFNULL(p.createDate, '') as createDate";
+		}
 		
 		if($type)
 			$sql .= ",IFNULL(t.id, '') as entityId";
@@ -202,7 +207,8 @@ class StoreItem extends FoodTalkActiveRecord
 		if($type)
 			$sql .= " INNER JOIN store$type t on i.id = t.storeItemId and i.type = '".strtoupper($type)."' ";
 		
-		$sql .= " INNER JOIN storePurchase p on i.id = p.storeItemId ";
+		if($with == 'Purchase')
+			$sql .= " INNER JOIN storePurchase p on i.id = p.storeItemId ";
 		
 // 		$sql .= ",IFNULL(e.dateTime, '') as 'dateTime'";
 // 		$sql .= ",IFNULL(e.venue, '') as 'venue'";
@@ -218,11 +224,13 @@ class StoreItem extends FoodTalkActiveRecord
 		return $sql;
 	}
 	
-	public static function getStorePurchase($page=1, $type=false, $option = array(), $recordCount=9){
+	
+	
+	public static function getStorePurchase($page=1, $type=false, $option = array(), $recordCount = 9){
 		
 		$pagestart = ($page-1) * $recordCount;
 		
-		$sql = self::getQuery($type);
+		$sql = self::getQuery($type, 'Purchase');
 		
 // 		if($status != 'all'){
 // 			$sql .= ' WHERE e.dateTime > now() and i.startDate < now() and i.endDate > now() ';
@@ -236,6 +244,25 @@ class StoreItem extends FoodTalkActiveRecord
 		return $result;
 		
 	}
+	
+	
+	public static function getStoreItems($page=1, $type=false, $option = array(), $recordCount = 9){
+		
+		$pagestart = ($page-1) * $recordCount;
+		
+		$sql = self::getQuery($type);
+		
+		$sql .= ' WHERE i.startDate < now() and i.endDate > now() ';
+		$sql .= ' and i.isDisabled = 0 ';
+		
+		$sql .= ' ORDER BY i.createDate DESC';
+		$sql .= ' LIMIT '. $pagestart .', '. $recordCount;
+		
+		$result = Yii::app()->db->createCommand($sql)->queryAll(true);
+		return $result;
+		
+	}
+	
 	
 	
 	/**

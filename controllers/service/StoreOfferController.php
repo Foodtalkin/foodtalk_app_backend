@@ -146,6 +146,7 @@ class StoreOfferController extends ServiceBaseController
         }
         $this->sendResponse(json_encode($result, JSON_UNESCAPED_UNICODE));
     }
+
     
         
     public function actionList()
@@ -208,6 +209,67 @@ class StoreOfferController extends ServiceBaseController
     }
     
 
+    public function actionGet()
+    {
+    	$apiName = 'storeOffer/get';
+    	$sessionId = null;
+    
+    	$_JSON = $this->getJsonInput();
+    	 
+    	try
+    	{
+    		if(!isset($_JSON) || empty($_JSON))
+    			$result = $this->error($apiName, WS_ERR_POST_PARAM_MISSED, 'No input received.');
+    		else if(!isset($_JSON['sessionId']) || empty($_JSON['sessionId']))
+    			$result = $this->error($apiName, WS_ERR_POST_PARAM_MISSED, 'Please enter session id.');
+    		else
+    		{
+    			//             	$user = true;
+    			$userId = $this->isAuthentic($_JSON['sessionId']);
+    			$user = User::model()->findByPk($userId);
+    			 
+    			if (is_null($user))
+    				$result = $this->error($apiName, WS_ERR_WONG_USER, 'Please login before using this service.');
+    			else
+    			{
+    				$status = 'active';
+    				$id = 0;
+    				$storeItemId = 0;
+    
+    				if(isset($_JSON['status']) && $_JSON['status'] && $user->role == 'manager')
+    					$status = filter_var($_JSON['status'], FILTER_SANITIZE_STRING);
+    
+    				if(isset($_JSON['status']) && $_JSON['status'] && $user->role == 'manager')
+    					$status = filter_var($_JSON['status'], FILTER_SANITIZE_STRING);
+    				
+    				if(isset($_JSON['id']) && !empty ($_JSON['id']))
+    					$id = trim(filter_var($_JSON['id'], FILTER_SANITIZE_NUMBER_INT));
+
+    				if(isset($_JSON['storeItemId']) && !empty ($_JSON['storeItemId']))
+    					$storeItemId = trim(filter_var($_JSON['storeItemId'], FILTER_SANITIZE_NUMBER_INT));
+    				
+    				$storeOffer = StoreOffer::getThisOffer($id, $storeItemId, $status);
+    
+    				$result = array(
+    						'api' => $apiName,
+    						'apiMessage' => 'Records fetched successfully',
+    						'status' => 'OK',
+    						'storeOffer' => $storeOffer
+    				);
+    
+    			}
+    		}
+    	}
+    	catch (Exception $e)
+    	{
+    		$result = $this->error($apiName, $e->getCode(), Yii::t('app', $e->getMessage()));
+    	}
+    	$this->sendResponse(json_encode($result, JSON_UNESCAPED_UNICODE));
+    
+    }
+    
+    
+    
 
     public function actionAddCoupon()
     {

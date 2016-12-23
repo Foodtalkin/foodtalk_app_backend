@@ -62,6 +62,64 @@ class StoreItemController extends ServiceBaseController
     
     }
     
+    public function actionListItems()
+    {
+    	$apiName = 'storeItem/listItems';
+    	$sessionId = null;
+    
+    	$_JSON = $this->getJsonInput();
+    	 
+    	try
+    	{
+    		if(!isset($_JSON) || empty($_JSON))
+    			$result = $this->error($apiName, WS_ERR_POST_PARAM_MISSED, 'No input received.');
+    		else if(!isset($_JSON['sessionId']) || empty($_JSON['sessionId']))
+    			$result = $this->error($apiName, WS_ERR_POST_PARAM_MISSED, 'Please enter session id.');
+    		else
+    		{
+    			//             	$user = true;
+    			$userId = $this->isAuthentic($_JSON['sessionId']);
+    			$user = User::model()->findByPk($userId);
+    			 
+    			if (is_null($user))
+    				$result = $this->error($apiName, WS_ERR_WONG_USER, 'Please login before using this service.');
+    			else
+    			{
+    
+    				$page = 1;
+    				$type = false;
+    				$storePurchase = array();
+    
+    				if(isset($_JSON['page']) && $_JSON['page'])
+    					$page = filter_var($_JSON['page'], FILTER_SANITIZE_NUMBER_INT);
+    
+    				if(isset($_JSON['type']) && $_JSON['type'])
+    					$type = filter_var($_JSON['type'], FILTER_SANITIZE_STRING);
+    
+//     				if(isset($_JSON['status']) && $_JSON['status'] && $user->role == 'manager')
+//     					$status = filter_var($_JSON['status'], FILTER_SANITIZE_STRING);
+    
+					$storeItems = StoreItem::getStoreItems($page, $type);
+					
+					$result = array(
+							'api' => $apiName,
+    						'apiMessage' => 'Records fetched successfully',
+    						'status' => 'OK',
+    						'storeItems' => $storeItems
+    				);
+    
+    			}
+    		}
+    	}
+    	catch (Exception $e)
+    	{
+    		$result = $this->error($apiName, $e->getCode(), Yii::t('app', $e->getMessage()));
+    	}
+    	$this->sendResponse(json_encode($result, JSON_UNESCAPED_UNICODE));
+    
+    }
+    
+    
     public function actionPurchase()
 	{
     	$apiName = 'storeItem/purchase';
