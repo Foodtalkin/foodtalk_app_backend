@@ -106,7 +106,7 @@ class StoreItemController extends ServiceBaseController
 							'api' => $apiName,
     						'apiMessage' => 'Records fetched successfully',
     						'status' => 'OK',
-							'user'=>$profile,
+							'profile'=>$profile,
     						'storeItems' => $storeItems
     				);
     
