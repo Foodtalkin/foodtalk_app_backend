@@ -41,10 +41,10 @@ class NewsController extends ServiceBaseController
                 	if(isset($_JSON['coverImage']) && !empty($_JSON['coverImage']))
                 		$news->coverImage = filter_var($_JSON['coverImage'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
                 	
-                	if(isset($_JSON['source']) && !empty($_JSON['source']))
+                	if(isset($_JSON['source']))
                 		$news->source = filter_var($_JSON['source'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
                 	
-                	if(isset($_JSON['sourceUrl']) && !empty($_JSON['sourceUrl']))
+                	if(isset($_JSON['sourceUrl']))
                 		$news->sourceUrl = filter_var($_JSON['sourceUrl'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
                 	
                 	if(isset($_JSON['description']) && !empty($_JSON['description']))

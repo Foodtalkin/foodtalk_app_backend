@@ -100,11 +100,13 @@ class StoreItemController extends ServiceBaseController
 //     					$status = filter_var($_JSON['status'], FILTER_SANITIZE_STRING);
     
 					$storeItems = StoreItem::getStoreItems($page, $type);
+					$profile = User::getProfileById($userId, $userId);
 					
 					$result = array(
 							'api' => $apiName,
     						'apiMessage' => 'Records fetched successfully',
     						'status' => 'OK',
+							'user'=>$profile,
     						'storeItems' => $storeItems
     				);
     
