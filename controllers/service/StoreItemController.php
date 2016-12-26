@@ -155,23 +155,30 @@ class StoreItemController extends ServiceBaseController
     					throw new Exception(print_r('Invalid event id', true), WS_ERR_WONG_VALUE);
     				}
     				
-    				if($item['iPurchasedIt'] > 0 && $item['type'] == 'OFFER'){
-    					throw new Exception(print_r('You already have this offer', true), WS_ERR_REQUEST_NOT_ACCEPTED);
+
+    				$quantity = 1;
+    				
+    				switch ($item['type']){
+    					
+    					case 'OFFER':
+    						if($item['iPurchasedIt'] > 0){
+    							throw new Exception(print_r('You already have this offer', true), WS_ERR_REQUEST_NOT_ACCEPTED);
+    						}
+    						$costPoints = $item['costPoints'];
+    						$quantity = 1;
+    						break;
+    					default:
+    						if(isset($_JSON['costPoints']) && !empty ($_JSON['costPoints']))
+    							$costPoints = trim(filter_var($_JSON['costPoints'], FILTER_SANITIZE_NUMBER_INT));
+    						if(isset($_JSON['quantity']) && !empty ($_JSON['quantity']))
+    							$quantity = trim(filter_var($_JSON['quantity'], FILTER_SANITIZE_NUMBER_INT));
+    						break;
     				}
     				
     				$profile = User::getProfileById($userId, $userId);
     				
-    				if(isset($_JSON['costPoints']) && !empty ($_JSON['costPoints']))
-    					$costPoints = trim(filter_var($_JSON['costPoints'], FILTER_SANITIZE_NUMBER_INT));
-    				
-    				$quantity = 1;
-    				if(isset($_JSON['quantity']) && !empty ($_JSON['quantity']))
-    					$quantity = trim(filter_var($_JSON['quantity'], FILTER_SANITIZE_NUMBER_INT));
-    				
-					if($costPoints*$quantity > $profile['avilablePoints'])    				
+					if($costPoints * $quantity > $profile['avilablePoints'])    				
 						throw new Exception(print_r('cannnot process request insufficient points', true), WS_ERR_REQUEST_NOT_ACCEPTED);
-					
-					
 					
 //     				die('dead');
     					
@@ -188,8 +195,8 @@ class StoreItemController extends ServiceBaseController
     					$purchase->costOnline = trim(filter_var($_JSON['costOnline'], FILTER_SANITIZE_NUMBER_INT));
     				
 
-    				if(isset($_JSON['costPoints']) && !empty ($_JSON['costPoints']))
-    					$purchase->costPoints = trim(filter_var($_JSON['costPoints'], FILTER_SANITIZE_NUMBER_INT));
+//     				if(isset($_JSON['costPoints']) && !empty ($_JSON['costPoints']))
+    					$purchase->costPoints = $costPoints;
     				
     				if(isset($_JSON['quantity']) && !empty ($_JSON['quantity']))
 	    				$purchase->quantity = trim(filter_var($_JSON['quantity'], FILTER_SANITIZE_NUMBER_INT));
