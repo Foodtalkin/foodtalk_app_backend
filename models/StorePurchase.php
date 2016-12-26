@@ -7,6 +7,7 @@
  * @property string $id
  * @property string $storeItemId
  * @property string $userId
+ * @property string $facebookId
  * @property string $costType
  * @property integer $quantity
  * @property integer $costOnline
@@ -41,16 +42,17 @@ class StorePurchase extends FoodTalkActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('storeItemId, userId, costType', 'required'),
+			array('storeItemId, userId, facebookId, costType', 'required'),
 			array('quantity, costOnline, costPoints, isDisabled, createId, updateId', 'numerical', 'integerOnly'=>true),
 			array('storeItemId', 'length', 'max'=>11),
 			array('userId', 'length', 'max'=>10),
+			array('facebookId', 'length', 'max'=>50),
 			array('costType', 'length', 'max'=>6),
 			array('disableReason', 'length', 'max'=>200),
 			array('createDate, updateDate', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, storeItemId, userId, costType, quantity, costOnline, costPoints, metaData, isDisabled, disableReason, createDate, updateDate, createId, updateId', 'safe', 'on'=>'search'),
+			array('id, storeItemId, userId, facebookId, costType, quantity, costOnline, costPoints, metaData, isDisabled, disableReason, createDate, updateDate, createId, updateId', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -76,6 +78,7 @@ class StorePurchase extends FoodTalkActiveRecord
 			'id' => 'ID',
 			'storeItemId' => 'Store Item',
 			'userId' => 'User',
+			'facebookId' => 'Facebook',
 			'costType' => 'Cost Type',
 			'quantity' => 'Quantity',
 			'costOnline' => 'Cost Online',
@@ -111,6 +114,7 @@ class StorePurchase extends FoodTalkActiveRecord
 		$criteria->compare('id',$this->id,true);
 		$criteria->compare('storeItemId',$this->storeItemId,true);
 		$criteria->compare('userId',$this->userId,true);
+		$criteria->compare('facebookId',$this->facebookId,true);
 		$criteria->compare('costType',$this->costType,true);
 		$criteria->compare('quantity',$this->quantity);
 		$criteria->compare('costOnline',$this->costOnline);

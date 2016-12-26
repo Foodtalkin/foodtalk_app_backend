@@ -99,7 +99,7 @@ class StoreItemController extends ServiceBaseController
 //     				if(isset($_JSON['status']) && $_JSON['status'] && $user->role == 'manager')
 //     					$status = filter_var($_JSON['status'], FILTER_SANITIZE_STRING);
     
-					$storeItems = StoreItem::getStoreItems($page, $type);
+					$storeItems = StoreItem::getStoreItems($page, $userId, $type);
 					$profile = User::getProfileById($userId, $userId);
 					
 					$result = array(
@@ -147,17 +147,41 @@ class StoreItemController extends ServiceBaseController
     			{
     				
     				if(isset($_JSON['storeItemId']) && !empty ($_JSON['storeItemId']))
-    					$item = StoreItem::model()->findByPk($_JSON['storeItemId']);
+//     					$item = StoreItem::model()->findByPk($_JSON['storeItemId']);
+    					$item = StoreItem::getThisItem($_JSON['storeItemId'], $userId);
+    				
 
-    					if(empty($item)){
-    						throw new Exception(print_r('Invalid event id', true), WS_ERR_WONG_VALUE);
-    					}
+    				if(empty($item)){
+    					throw new Exception(print_r('Invalid event id', true), WS_ERR_WONG_VALUE);
+    				}
+    				
+    				if($item['iPurchasedIt'] > 0 && $item['type'] == 'OFFER'){
+    					throw new Exception(print_r('You already have this offer', true), WS_ERR_REQUEST_NOT_ACCEPTED);
+    				}
+    				
+    				$profile = User::getProfileById($userId, $userId);
+    				
+    				if(isset($_JSON['costPoints']) && !empty ($_JSON['costPoints']))
+    					$costPoints = trim(filter_var($_JSON['costPoints'], FILTER_SANITIZE_NUMBER_INT));
+    				
+    				$quantity = 1;
+    				if(isset($_JSON['quantity']) && !empty ($_JSON['quantity']))
+    					$quantity = trim(filter_var($_JSON['quantity'], FILTER_SANITIZE_NUMBER_INT));
+    				
+					if($costPoints*$quantity > $profile['avilablePoints'])    				
+						throw new Exception(print_r('cannnot process request insufficient points', true), WS_ERR_REQUEST_NOT_ACCEPTED);
+					
+					
+					
+//     				die('dead');
     					
     				$purchase = new StorePurchase('create_api');	
     				
-    				$purchase->storeItemId = $item->id;
+    				$purchase->storeItemId = $item['storeItemId'];
     				$purchase->userId = $user->id;
-    				$purchase->costType = $item->costType;
+    				$purchase->costType = $item['costType'];
+    				$purchase->facebookId = $user->facebookId;
+    				
     				
     				
     				if(isset($_JSON['costOnline']) && !empty ($_JSON['costOnline']))

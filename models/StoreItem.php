@@ -156,7 +156,7 @@ class StoreItem extends FoodTalkActiveRecord
 		));
 	}
 
-	public static function getQuery($type = false, $with='all')
+	public static function getQuery($userId=false, $type = false, $with='all')
 	{
 	
 		$typeOfItems = array('Event'=>'EVENT', 'Contest'=>'CONTEST', 'Offers'=>'OFFERS', 'Goods'=>'GOODS');
@@ -183,6 +183,8 @@ class StoreItem extends FoodTalkActiveRecord
 		$sql .= ",IFNULL(i.startDate, '') as startDate";
 		$sql .= ",IFNULL(i.endDate, '') as endDate";
 		
+		
+		
 		if($with == 'Purchase'){
 			$sql .= ",IFNULL(p.userId, '') as userId";
 			$sql .= ",IFNULL(p.quantity, '') as quantity";
@@ -191,6 +193,8 @@ class StoreItem extends FoodTalkActiveRecord
 			$sql .= ",IFNULL(p.metaData, '') as metaData";
 			$sql .= ",IFNULL(p.createDate, '') as createDate";
 		}
+		elseif($userId > 0)
+			$sql .= ',(SELECT COUNT(*) FROM `storePurchase` p WHERE i.id = p.storeItemId  AND p.isDisabled=0 AND p.userId='.$userId.') as iPurchasedIt';
 		
 		if($type)
 			$sql .= ",IFNULL(t.id, '') as entityId";
@@ -230,7 +234,7 @@ class StoreItem extends FoodTalkActiveRecord
 		
 		$pagestart = ($page-1) * $recordCount;
 		
-		$sql = self::getQuery($type, 'Purchase');
+		$sql = self::getQuery(false, $type, 'Purchase');
 		
 // 		if($status != 'all'){
 // 			$sql .= ' WHERE e.dateTime > now() and i.startDate < now() and i.endDate > now() ';
@@ -246,11 +250,11 @@ class StoreItem extends FoodTalkActiveRecord
 	}
 	
 	
-	public static function getStoreItems($page=1, $type=false, $option = array(), $recordCount = 9){
+	public static function getStoreItems($page=1, $userId, $type=false, $option = array(), $recordCount = 9){
 		
 		$pagestart = ($page-1) * $recordCount;
 		
-		$sql = self::getQuery($type);
+		$sql = self::getQuery($userId, $type);
 		
 		$sql .= ' WHERE i.startDate < now() and i.endDate > now() ';
 		$sql .= ' and i.isDisabled = 0 ';
@@ -260,8 +264,23 @@ class StoreItem extends FoodTalkActiveRecord
 		
 		$result = Yii::app()->db->createCommand($sql)->queryAll(true);
 		return $result;
-		
 	}
+	
+	
+	public static function getThisItem($storeItemId, $userId, $type=false, $option = array()){
+	
+	
+		$sql = self::getQuery($userId, $type);
+	
+		$sql .= ' WHERE i.isDisabled = 0 ';
+		$sql .= ' and i.id = '.$storeItemId;
+	
+		$sql .= ' LIMIT 1';
+	
+		$result = Yii::app()->db->createCommand($sql)->queryRow(true);
+		return $result;
+	}
+	
 	
 	
 	
