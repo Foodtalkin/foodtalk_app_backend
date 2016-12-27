@@ -273,7 +273,7 @@ class StoreOfferController extends ServiceBaseController
 
     public function actionAddCoupon()
     {
-    	$apiName = 'storeItem/addCoupon';
+    	$apiName = 'storeOffer/addCoupon';
     	$sessionId = null;
     
     	$_JSON = $this->getJsonInput();
