@@ -113,6 +113,21 @@ class StoreCoupon extends FoodTalkActiveRecord
 		));
 	}
 
+	public static function getNewCoupon($storeOfferId,$userId){
+	
+		$coupon = self::model()->findByAttributes(array('storeOfferId'=>$storeOfferId, 'userId'=>null ));
+		
+	    if(empty($coupon)){
+	    	return false;
+//     		throw new Exception(print_r('Invalid event id', true), WS_ERR_WONG_VALUE);
+    	}
+		
+		$coupon->userId = $userId;
+		$coupon->save();
+		return $coupon;
+	
+	}
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!

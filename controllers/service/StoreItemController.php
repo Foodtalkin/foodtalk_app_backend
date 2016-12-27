@@ -157,15 +157,43 @@ class StoreItemController extends ServiceBaseController
     				
 
     				$quantity = 1;
+    				$metaData = array();
     				
     				switch ($item['type']){
     					
     					case 'OFFER':
+    						
     						if($item['iPurchasedIt'] > 0){
     							throw new Exception(print_r('You already have this offer', true), WS_ERR_REQUEST_NOT_ACCEPTED);
     						}
+    						$offer = StoreOffer::model()->findByAttributes(array('storeItemId' => $item['storeItemId']));
+    						
+    						if($offer->availableQuantity < 1){
+    							throw new Exception(print_r('oops...! No coupon left', true), WS_ERR_REQUEST_NOT_ACCEPTED);
+    						}
+    						
+    						if($offer->subType == 'UNIQUE_CODE'){
+    							$coupon = StoreCoupon::getNewCoupon($offer->id, $userId);
+    							
+    						 	if(!$coupon){
+    								throw new Exception(print_r('oops...! No coupon left', true), WS_ERR_REQUEST_NOT_ACCEPTED);
+    							}
+    							
+    							$metaData['couponCode'] = $coupon->code;
+    							
+    						}
+    						else {
+    							$metaData['couponCode'] = $offer->couponCode;
+    						}
+    						$metaData['validTill'] = $offer->validTill;
+    						$metaData['type'] = 'Online';
+    						 
     						$costPoints = $item['costPoints'];
     						$quantity = 1;
+    						
+    						$offer->availableQuantity = $offer->availableQuantity - 1;
+    						$offer->save();
+    						
     						break;
     					default:
     						if(isset($_JSON['costPoints']) && !empty ($_JSON['costPoints']))
@@ -188,6 +216,7 @@ class StoreItemController extends ServiceBaseController
     				$purchase->userId = $user->id;
     				$purchase->costType = $item['costType'];
     				$purchase->facebookId = $user->facebookId;
+    				$purchase->metaData = json_encode($metaData);
     				
     				
     				
