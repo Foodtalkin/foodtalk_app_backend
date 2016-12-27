@@ -185,6 +185,8 @@ class StoreItemController extends ServiceBaseController
     						else {
     							$metaData['couponCode'] = $offer->couponCode;
     						}
+    						
+    						$metaData['redemptionUrl'] = $offer->redemptionUrl;
     						$metaData['validTill'] = $offer->validTill;
     						$metaData['type'] = 'Online';
     						 
