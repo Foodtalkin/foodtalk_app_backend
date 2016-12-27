@@ -323,7 +323,7 @@ class StoreOfferController extends ServiceBaseController
     
     				$result = array(
     						'api' => $apiName,
-    						'apiMessage' => 'User fields added successfully',
+    						'apiMessage' => 'Coupons added successfully',
     						'status' => 'OK'
     						//     						'storePurchaseId' => $purchase->id
     				);
