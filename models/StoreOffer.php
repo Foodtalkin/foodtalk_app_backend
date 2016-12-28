@@ -144,6 +144,7 @@ class StoreOffer extends FoodTalkActiveRecord
 		$sql .= ",IFNULL(i.cardActionButtonText, '') as cardActionButtonText";
 		$sql .= ",IFNULL(i.description, '') as description";
 		$sql .= ",IFNULL(i.shortDescription, '') as shortDescription";
+		$sql .= ",IFNULL(i.cityText, '') as cityText";
 		$sql .= ",IFNULL(i.costType, '') as costType";
 		$sql .= ",IFNULL(i.costOnline, '') as costOnline";
 		$sql .= ",IFNULL(i.costPoints, '') as costPoints";
