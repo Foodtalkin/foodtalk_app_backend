@@ -86,6 +86,9 @@ class StoreOfferController extends ServiceBaseController
                 	if(isset($_JSON['shortDescription']) && !empty ($_JSON['shortDescription']))
                 		$StoreItem->shortDescription = trim(filter_var($_JSON['shortDescription'], FILTER_SANITIZE_STRING));
                 	
+                	if(isset($_JSON['cityText']) && !empty ($_JSON['cityText']))
+                		$StoreItem->cityText = trim(filter_var($_JSON['cityText'], FILTER_SANITIZE_STRING));
+                	
                 	if(isset($_JSON['costType']) && !empty ($_JSON['costType']))
                 		$StoreItem->costType = trim(filter_var($_JSON['costType'], FILTER_SANITIZE_STRING));
                 	

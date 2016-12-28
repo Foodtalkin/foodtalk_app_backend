@@ -9,7 +9,10 @@
  * @property string $coverImage
  * @property string $cardImage
  * @property string $actionButtonText
+ * @property string $cardActionButtonText
  * @property string $description
+ * @property string $shortDescription
+ * @property string $cityText
  * @property string $costType
  * @property integer $costOnline
  * @property integer $costPoints
@@ -30,6 +33,8 @@
  * @property StoreContest[] $storeContests
  * @property StoreEvent[] $storeEvents
  * @property StoreGoods[] $storeGoods
+ * @property StoreItemCity[] $storeItemCities
+ * @property StoreItemUserInfo[] $storeItemUserInfos
  * @property StoreOffer[] $storeOffers
  * @property StorePurchase[] $storePurchases
  */
@@ -54,14 +59,15 @@ class StoreItem extends FoodTalkActiveRecord
 			array('title, coverImage, cardImage, costType, type', 'required'),
 			array('costOnline, costPoints, isDisabled, createId, updateId', 'numerical', 'integerOnly'=>true),
 			array('title, coverImage, cardImage, termConditionsLink', 'length', 'max'=>255),
-			array('actionButtonText', 'length', 'max'=>50),
+			array('actionButtonText, cardActionButtonText', 'length', 'max'=>50),
+			array('shortDescription, disableReason', 'length', 'max'=>100),
 			array('costType', 'length', 'max'=>6),
 			array('type', 'length', 'max'=>7),
 			array('disableReason', 'length', 'max'=>100),
-			array('description, thankYouText, postPurchaseInstructions, startDate, endDate, createDate, updateDate', 'safe'),
+			array('description, cityText, thankYouText, postPurchaseInstructions, startDate, endDate, createDate, updateDate', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, title, coverImage, cardImage, actionButtonText, description, costType, costOnline, costPoints, termConditionsLink, type, thankYouText, postPurchaseInstructions, startDate, endDate, isDisabled, disableReason, createDate, updateDate, createId, updateId', 'safe', 'on'=>'search'),
+			array('id, title, coverImage, cardImage, actionButtonText, cardActionButtonText, description, shortDescription, cityText, costType, costOnline, costPoints, termConditionsLink, type, thankYouText, postPurchaseInstructions, startDate, endDate, isDisabled, disableReason, createDate, updateDate, createId, updateId', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -76,6 +82,8 @@ class StoreItem extends FoodTalkActiveRecord
 			'storeContests' => array(self::HAS_MANY, 'StoreContest', 'storeItemId'),
 			'storeEvents' => array(self::HAS_MANY, 'StoreEvent', 'storeItemId'),
 			'storeGoods' => array(self::HAS_MANY, 'StoreGoods', 'storeItemId'),
+			'storeItemCities' => array(self::HAS_MANY, 'StoreItemCity', 'storeItemId'),
+			'storeItemUserInfos' => array(self::HAS_MANY, 'StoreItemUserInfo', 'storeItemId'),
 			'storeOffers' => array(self::HAS_MANY, 'StoreOffer', 'storeItemId'),
 			'storePurchases' => array(self::HAS_MANY, 'StorePurchase', 'storeItemId'),
 		);
@@ -92,7 +100,10 @@ class StoreItem extends FoodTalkActiveRecord
 			'coverImage' => 'Cover Image',
 			'cardImage' => 'Card Image',
 			'actionButtonText' => 'Action Button Text',
+			'cardActionButtonText' => 'Card Action Button Text',
 			'description' => 'Description',
+			'shortDescription' => 'Short Description',
+			'cityText' => 'City Text',
 			'costType' => 'Cost Type',
 			'costOnline' => 'Cost Online',
 			'costPoints' => 'Cost Points',
@@ -134,7 +145,10 @@ class StoreItem extends FoodTalkActiveRecord
 		$criteria->compare('coverImage',$this->coverImage,true);
 		$criteria->compare('cardImage',$this->cardImage,true);
 		$criteria->compare('actionButtonText',$this->actionButtonText,true);
+		$criteria->compare('cardActionButtonText',$this->cardActionButtonText,true);
 		$criteria->compare('description',$this->description,true);
+		$criteria->compare('shortDescription',$this->shortDescription,true);
+		$criteria->compare('cityText',$this->cityText,true);
 		$criteria->compare('costType',$this->costType,true);
 		$criteria->compare('costOnline',$this->costOnline);
 		$criteria->compare('costPoints',$this->costPoints);
@@ -172,6 +186,7 @@ class StoreItem extends FoodTalkActiveRecord
 		$sql .= ",IFNULL(i.description, '') as description";
 		$sql .= ",IFNULL(i.cardActionButtonText, '') as cardActionButtonText";
 		$sql .= ",IFNULL(i.shortDescription, '') as shortDescription";
+		$sql .= ",IFNULL(i.cityText, '') as cityText";
 		
 		$sql .= ",IFNULL(i.costType, '') as costType";
 		$sql .= ",IFNULL(i.costOnline, '') as costOnline";
