@@ -230,11 +230,11 @@ class StoreItem extends FoodTalkActiveRecord
 	
 	
 	
-	public static function getStorePurchase($page=1, $type=false, $option = array(), $recordCount = 9){
+	public static function getStorePurchase($page=1, $userId = false, $type=false, $option = array(), $recordCount = 9){
 		
 		$pagestart = ($page-1) * $recordCount;
 		
-		$sql = self::getQuery(false, $type, 'Purchase');
+		$sql = self::getQuery($userId, $type, 'Purchase');
 		
 // 		if($status != 'all'){
 // 			$sql .= ' WHERE e.dateTime > now() and i.startDate < now() and i.endDate > now() ';

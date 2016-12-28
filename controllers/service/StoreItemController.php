@@ -42,7 +42,7 @@ class StoreItemController extends ServiceBaseController
 //     				if(isset($_JSON['status']) && $_JSON['status'] && $user->role == 'manager')
 //     					$status = filter_var($_JSON['status'], FILTER_SANITIZE_STRING);
     				
-    				$storePurchase = StoreItem::getStorePurchase($page, $type);
+    				$storePurchase = StoreItem::getStorePurchase($page, $userId, $type);
     				
     				$result = array(
     						'api' => $apiName,
