@@ -212,7 +212,7 @@ class StoreItem extends FoodTalkActiveRecord
 			$sql .= " INNER JOIN store$type t on i.id = t.storeItemId and i.type = '".strtoupper($type)."' ";
 		
 		if($with == 'Purchase')
-			$sql .= " INNER JOIN storePurchase p on i.id = p.storeItemId ";
+			$sql .= " INNER JOIN storePurchase p on i.id = p.storeItemId and p.userId = ".$userId ;
 		
 // 		$sql .= ",IFNULL(e.dateTime, '') as 'dateTime'";
 // 		$sql .= ",IFNULL(e.venue, '') as 'venue'";
