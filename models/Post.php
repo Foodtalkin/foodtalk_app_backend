@@ -371,7 +371,7 @@ class Post extends FoodTalkActiveRecord
     }
     
     
-    public static function getPostsByUserId($userId, $postUserId, $includeFollowed=false, $includeCount=false, $tagId=0, $recordCount=9, $exceptions='' , $page=1)
+    public static function getPostsByUserId($userId, $postUserId, $includeFollowed=false, $includeCount=false, $tagId=0, $recordCount=12, $exceptions='' , $page=1)
     {
     	$pagestart = ($page-1) * $recordCount;
     	
@@ -516,7 +516,7 @@ class Post extends FoodTalkActiveRecord
     }
     
     
-    public static function getUniqueCheckInCount($userId, $page=1, $recordCount=10, $exceptions='')
+    public static function getUniqueCheckInCount($userId, $page=1, $recordCount=12, $exceptions='')
     {
     	
     	$pageStart = ($page-1) * $recordCount;
