@@ -338,8 +338,31 @@ class Post extends FoodTalkActiveRecord
     	$sql = 'SELECT p.`id`, p.`userId`, IFNULL(p.`checkedInRestaurantId`, "") as checkedInRestaurantId  , IFNULL(CONCAT(IF(isGif, "http://res.cloudinary.com/digital-food-talk-pvt-ltd/image/upload/q_60/", "' . imagePath('post') . '"), p.image), "") as postImage, d.dishName, IFNULL(d.url, "") as dishUrl, IFNULL(dr.rating, "0") as rating, p.`tip`, u.userName, u.id userId, ';
 
     			
-    if($postId)	
-    		$sql .=' (SELECT MAX(id) FROM `post` pp WHERE pp.id < '.$postId.' AND pp.isDisabled=0 AND pp.userId = p.userId) as `next` , (SELECT MIN(id) FROM `post` pp WHERE pp.id > '.$postId.' AND pp.isDisabled=0 AND pp.userId=p.userId) as `previous`, ';	
+    if($postId)	{
+
+    		$for = (isset($options['for'])? $options['for']:'' );
+    		
+    		switch ($for){
+    			case 'resturant':
+    				$sql .=' (SELECT MAX(id) FROM `post` pp WHERE pp.id < '.$postId.' AND pp.isDisabled=0 AND pp.checkedInRestaurantId = p.checkedInRestaurantId) as `next` , 
+    						(SELECT MIN(id) FROM `post` pp WHERE pp.id > '.$postId.' AND pp.isDisabled=0 AND pp.checkedInRestaurantId=p.checkedInRestaurantId) as `previous`, ';
+    				break;
+    			case 'dish':
+    				$sql .=' (SELECT MAX(pp.id) FROM `post` pp
+    						INNER JOIN dishReview pdr on pp.id = pdr.postId INNER JOIN dish pd on pd.id = pdr.dishId
+    						WHERE pp.id < '.$postId.' AND pp.isDisabled=0 AND pd.id = d.id) as `next` ,
+    						(SELECT MIN(pp.id) FROM `post` pp
+    						INNER JOIN dishReview pdr on pp.id = pdr.postId INNER JOIN dish pd on pd.id = pdr.dishId		
+    						WHERE pp.id > '.$postId.' AND pp.isDisabled=0 AND pd.id = d.id) as `previous`, ';
+    				
+    				break;
+    			default:
+    				$sql .=' (SELECT MAX(id) FROM `post` pp WHERE pp.id < '.$postId.' AND pp.isDisabled=0 AND pp.userId = p.userId) as `next` , 
+    						(SELECT MIN(id) FROM `post` pp WHERE pp.id > '.$postId.' AND pp.isDisabled=0 AND pp.userId=p.userId) as `previous`, ';
+	    			break;
+    			
+    		}
+    }
     			
 			$sql .='(SELECT COUNT(*) FROM `bookmark` b1 WHERE b1.postId=p.id AND b1.isDisabled=0 AND b1.userId='.$userId.') as iBookark, '
     		.' (SELECT COUNT(*) FROM `bookmark` b2, user u WHERE b2.userId = u.id and u.isDisabled=0 and b2.postId=p.id AND b2.isDisabled=0) as bookmarkCount, '
@@ -361,6 +384,8 @@ class Post extends FoodTalkActiveRecord
     		$sql .= 'and  p.userId='.$userId.' and p.image is not null and p.checkedInRestaurantId is not null and dr.rating is null ';	
     	}
     	
+//     	echo $sql;
+//     	die('DEAD');
     	
 //     	error_log($sql);
     	

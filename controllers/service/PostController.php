@@ -463,9 +463,16 @@ class PostController extends ServiceBaseController
     				$result = $this->error($apiName, WS_ERR_WONG_USER, 'Please login before using this service.');
     			else
     			{
+    				
+					$options = array();
+    				if(isset($_JSON['for']) && $_JSON['for'])
+    					$options['for'] = filter_var($_JSON['for'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
+    				
     				$postId = filter_var($_JSON['postId'], FILTER_SANITIZE_NUMBER_INT);
-    				$posts = Post::getPost($postId, $userId);
-
+    				$posts = Post::getPost($postId, $userId, $options);
+    
+    				
+    				
     				foreach ($posts as &$post)
     				{
     					$post['timeElapsed'] = getTimeElapsed(date_create($post['createDate']), date_create($post['currentDate']));
