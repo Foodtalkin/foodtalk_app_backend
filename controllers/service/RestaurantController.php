@@ -43,8 +43,8 @@ class RestaurantController extends ServiceBaseController
                             $longitude = filter_var($_JSON['longitude'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
                         
                         $restaurantProfile = Restaurant::getProfileById($userId, $restaurantId, $latitude, $longitude, true, true);
-                        $tipPosts = Post::getTipPostsByRestaurantId($userId, $restaurantId, 15);
-                        $imagePosts = Post::getImagePostsByRestaurantId($userId, $restaurantId, 15);
+                        $tipPosts = Post::getTipPostsByRestaurantId($userId, $restaurantId, 12);
+                        $imagePosts = Post::getImagePostsByRestaurantId($userId, $restaurantId, 12);
                         
                         $result = array(
                             'api' => $apiName,
@@ -102,7 +102,7 @@ class RestaurantController extends ServiceBaseController
                         if(isset($_JSON['exceptions']) && $_JSON['exceptions'])
                             $exceptions = filter_var($_JSON['exceptions'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
 
-                        $tipPosts = Post::getTipPostsByRestaurantId($userId, $restaurantId, 15, $exceptions);
+                        $tipPosts = Post::getTipPostsByRestaurantId($userId, $restaurantId, 12, $exceptions);
                         
                         $result = array(
                             'api' => $apiName,
@@ -155,7 +155,7 @@ class RestaurantController extends ServiceBaseController
                     {
                         $exceptions = '';   //list of post ids that are not to be included in the list
                     
-                        $recordCount=15;
+                        $recordCount=12;
                         
                         if(isset($_JSON['recordCount']) && $_JSON['recordCount'])
                         	$recordCount = filter_var($_JSON['recordCount'], FILTER_SANITIZE_NUMBER_INT);

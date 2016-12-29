@@ -47,7 +47,7 @@ class UserController extends ServiceBaseController
                         $result = $this->error($apiName, WS_ERR_WONG_VALUE, 'Selected user does not exist.');
                     else
                     {
-                        $tipPosts = Post::getTipPostsByUserId($userId, $selectedUserId, 15);
+                        $tipPosts = Post::getTipPostsByUserId($userId, $selectedUserId, 12);
                         
                         foreach($tipPosts as &$tipPost)
                         {
@@ -65,8 +65,8 @@ class UserController extends ServiceBaseController
                         
                         
                         
-                        $imagePosts = Post::getImagePostsByUserId($userId, $selectedUserId, 15, '', 1, $latitude, $longitude);
-//                         $checkInPosts = Post::getUniqueCheckInPostsByUserId($userId, $selectedUserId, 15);
+                        $imagePosts = Post::getImagePostsByUserId($userId, $selectedUserId, 12, '', 1, $latitude, $longitude);
+//                         $checkInPosts = Post::getUniqueCheckInPostsByUserId($userId, $selectedUserId, 12);
                         $favourites = Favourite::getFavouriteRestaurants($selectedUserId);
                         
                         $result = array(
@@ -124,7 +124,7 @@ class UserController extends ServiceBaseController
     					$result = $this->error($apiName, WS_ERR_WONG_VALUE, 'Selected user does not exist.');
     				else
     				{
-    					$tipPosts = Post::getTipPostsByUserId($userId, $selectedUserId, 15);
+    					$tipPosts = Post::getTipPostsByUserId($userId, $selectedUserId, 12);
     
     					foreach($tipPosts as &$tipPost)
     					{
@@ -134,8 +134,8 @@ class UserController extends ServiceBaseController
     					$latitude = 0;
     					$longitude = 0;    
     
-    					$imagePosts = Post::getImagePostsByUserId($userId, $selectedUserId, 15, '', 1, $latitude, $longitude);
-    					//                         $checkInPosts = Post::getUniqueCheckInPostsByUserId($userId, $selectedUserId, 15);
+    					$imagePosts = Post::getImagePostsByUserId($userId, $selectedUserId, 12, '', 1, $latitude, $longitude);
+    					//                         $checkInPosts = Post::getUniqueCheckInPostsByUserId($userId, $selectedUserId, 12);
     					$favourites = Favourite::getFavouriteRestaurants($selectedUserId);
     
     					$result = array(
@@ -198,7 +198,7 @@ class UserController extends ServiceBaseController
                         if(isset($_JSON['exceptions']) && $_JSON['exceptions'])
                             $exceptions = filter_var($_JSON['exceptions'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
 
-                        $tipPosts = Post::getTipPostsByUserId($userId, $selectedUserId, 15, $exceptions);
+                        $tipPosts = Post::getTipPostsByUserId($userId, $selectedUserId, 12, $exceptions);
                         
                         foreach($tipPosts as &$tipPost)
                         {
@@ -266,7 +266,7 @@ class UserController extends ServiceBaseController
     					if(isset($_JSON['page']) && $_JSON['page'])
     						$page = filter_var($_JSON['page'], FILTER_SANITIZE_NUMBER_INT);
     
-    					$imagePosts = Post::getImagePostsByUserId($userId, $selectedUserId, 15, $exceptions, $page);
+    					$imagePosts = Post::getImagePostsByUserId($userId, $selectedUserId, 12, $exceptions, $page);
     
     					$result = array(
     							'api' => $apiName,
@@ -337,7 +337,7 @@ class UserController extends ServiceBaseController
                         if(isset($_JSON['page']) && $_JSON['page'])
                         	$page = filter_var($_JSON['page'], FILTER_SANITIZE_NUMBER_INT);
                         
-                        $imagePosts = Post::getImagePostsByUserId($userId, $selectedUserId, 15, $exceptions, $page);
+                        $imagePosts = Post::getImagePostsByUserId($userId, $selectedUserId, 12, $exceptions, $page);
                         
                         $result = array(
                             'api' => $apiName,
@@ -394,7 +394,7 @@ class UserController extends ServiceBaseController
                         if(isset($_JSON['exceptions']) && $_JSON['exceptions'])
                             $exceptions = filter_var($_JSON['exceptions'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
 
-                        $checkInPosts = Post::getUniqueCheckInPostsByUserId($userId, $selectedUserId, 15, $exceptions);
+                        $checkInPosts = Post::getUniqueCheckInPostsByUserId($userId, $selectedUserId, 12, $exceptions);
                         $favourites = Favourite::getFavouriteRestaurants($selectedUserId);
                         
                         $result = array(
@@ -959,7 +959,7 @@ class UserController extends ServiceBaseController
                 {
                     $searchText = '';
                     $exceptions = '';
-                    $recordCount = 15;
+                    $recordCount = 12;
                     
                     if(isset($_JSON['searchText']) && !empty($_JSON['searchText']))
                         $searchText = filter_var($_JSON['searchText'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);

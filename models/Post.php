@@ -770,7 +770,7 @@ class Post extends FoodTalkActiveRecord
     	
     }
     
-    public static function getDiscoverPosts($userId, $latitude=0, $longitude=0, $tagId=0, $recordCount=15, $exceptions='', $maxDistance=0, $search='', $page = 1, $days=0, $dishId='', $region='')
+    public static function getDiscoverPosts($userId, $latitude=0, $longitude=0, $tagId=0, $recordCount=12, $exceptions='', $maxDistance=0, $search='', $page = 1, $days=0, $dishId='', $region='')
     {
 
     	$pagestart = ($page-1) * $recordCount;
