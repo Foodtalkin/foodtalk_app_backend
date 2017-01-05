@@ -219,6 +219,11 @@ class ServiceBaseController extends Controller
         echo $body;
     }
     
+    protected function isManager($user){    	
+//     	$user->role == 'manager';
+    	return true;
+    }
+    
     function getJsonInput()
     {
     	

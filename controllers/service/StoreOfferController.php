@@ -185,7 +185,7 @@ class StoreOfferController extends ServiceBaseController
     				
     				$status = 'active';
     				
-    				if(isset($_JSON['status']) && $_JSON['status'] && $user->role == 'manager')
+    				if(isset($_JSON['status']) && $_JSON['status'] &&  self::isManager($user))
     					$status = filter_var($_JSON['status'], FILTER_SANITIZE_STRING);
     				
     				if(isset($_JSON['city']) && $_JSON['city'])

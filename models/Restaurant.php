@@ -130,6 +130,7 @@ class Restaurant extends FoodTalkActiveRecord
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
+        	array('cityId, restaurantName', 'required'),
             array('cityId, homeDelivery, veg, nonVeg, dineIn, seating, suggested, outdoorSeating, airConditioned, lounge, serveAlcohol, microbrewery, fullBar, pub, nightClub, smokingZone, sheesha, wifi, liveMusic, entryFee, isActivated, isDisabled', 'numerical', 'integerOnly'=>true),
             array('latitude, longitude', 'numerical'),
             array('role', 'length', 'max'=>16),
