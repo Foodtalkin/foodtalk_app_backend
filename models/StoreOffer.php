@@ -163,6 +163,7 @@ class StoreOffer extends FoodTalkActiveRecord
 		$sql .= ",subType ";
 		$sql .= ",IFNULL(o.redemptionUrl, '') as 'redemptionUrl'";
 		$sql .= ",IFNULL(o.storeItemId, '') as 'storeItemId'";
+		$sql .= ",IFNULL(o.isDisabled, '') as 'isDisabled'";
 	
 		$sql .= " FROM storeOffer o ";
 		$sql .= " INNER JOIN storeItem i on i.id = o.storeItemId and i.type = 'OFFER' ";
