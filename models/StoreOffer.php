@@ -173,6 +173,8 @@ class StoreOffer extends FoodTalkActiveRecord
 	
 	public static function getOffers($page=1, $status = 'upcomming', $options=array(), $recordCount=9 ){
 	
+		
+		$recordCount = (self::$MAXRecordCount < $recordCount ? self::$MAXRecordCount : $recordCount);
 		$pagestart = ($page-1) * $recordCount;
 	
 		$sql = self::getQuery();

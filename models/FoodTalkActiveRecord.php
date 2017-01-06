@@ -1,6 +1,8 @@
 <?php
 abstract class FoodTalkActiveRecord extends CActiveRecord
 {
+	protected static $MAXRecordCount = 50;
+	
     //Prepares createId and updateId attributes beforesaving.
     protected function beforeSave()
     {
