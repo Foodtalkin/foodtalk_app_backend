@@ -193,7 +193,11 @@ class StoreOfferController extends ServiceBaseController
     				if(isset($_JSON['city']) && $_JSON['city'])
     					$options['city'] = filter_var($_JSON['city'], FILTER_SANITIZE_NUMBER_INT);
     				
-    				$storeOffer = StoreOffer::getOffers($page, $status, $options);
+    				$recordCount = 9;
+    				if(isset($_JSON['recordCount']) && $_JSON['recordCount'])
+    					$recordCount = filter_var($_JSON['recordCount'], FILTER_SANITIZE_NUMBER_INT);
+    				
+    				$storeOffer = StoreOffer::getOffers($page, $status, $options, $recordCount);
     				
     				$result = array(
     						'api' => $apiName,

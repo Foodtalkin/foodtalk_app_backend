@@ -182,7 +182,7 @@ class StoreOffer extends FoodTalkActiveRecord
 			$sql .= ' and i.isDisabled = 0 ';
 		}
 	
-		$sql .= ' ORDER BY o.createDate ASC';
+		$sql .= ' ORDER BY o.createDate DESC';
 	
 		$sql .= ' LIMIT '. $pagestart .', '. $recordCount;
 	
