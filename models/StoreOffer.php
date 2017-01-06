@@ -42,7 +42,7 @@ class StoreOffer extends FoodTalkActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('couponCode, subType, redemptionUrl, storeItemId', 'required'),
+			array('subType, redemptionUrl, storeItemId', 'required'),
 			array('totalQuantity, availableQuantity, limitPerUser, isDisabled, createId, updateId', 'numerical', 'integerOnly'=>true),
 			array('couponCode', 'length', 'max'=>100),
 			array('subType, storeItemId', 'length', 'max'=>11),
