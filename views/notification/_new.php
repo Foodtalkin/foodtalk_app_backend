@@ -30,7 +30,13 @@
 		<?php echo $form->error($model,'eventType'); ?>
 	</div>
 <div>
-<select style="display:none" name="Event[elementId]" id="Event_elementId">
+<select style="display:none" id="Event_elementId">
+</select>
+
+<select style="display:none" id="offer_elementId">
+</select>
+
+<select style="display:none" id="purchase_elementId">
 </select>
 
 <?php 
@@ -102,9 +108,11 @@ function validateForm(form){
 
 $( document ).ready(function() {
 	$('#Event_elementId').selectize({
+		allowEmptyOption: true,
 	    valueField: 'id',
 	    labelField: 'restaurantName',
 	    searchField: 'restaurantName',
+	    wrapperClass: 'restaurant-control',
 	    create: false,
 	    render: {
 	        option: function(item, escape) {
@@ -133,33 +141,120 @@ $( document ).ready(function() {
 	});
 	});
 
+$( document ).ready(function() {
+	$('#offer_elementId').selectize({
+		allowEmptyOption: true,
+	    valueField: 'id',
+	    labelField: 'title',
+	    searchField: 'title',
+	    wrapperClass: 'offer-control',
+	    create: false,
+	    render: {
+	        option: function(item, escape) {
+
+	            return '<div><span class="title"><span class="name">' + escape(item.title) + '</span></span><br><span class="by">' + escape(item.shortDescription) +', ('+ escape(item.cityText) +')</span></div>';
+	        }
+	    },
+	    load: function(query, callback) {
+	        if (!query.length) return callback();
+	        $.ajax({
+	        	url: '<?php echo Yii::app()->request->baseUrl; ?>/index.php/service/storeOffer/list?sessionId=GUEST&searchText=' + encodeURIComponent(query),
+	            type: 'GET',
+	            error: function() {
+	                callback();
+	            },
+	            success: function(res) {
+	                callback(res.storeOffers);
+	            }
+	        });
+	    }
+	});
+	});
+
+
+$( document ).ready(function() {
+	$('#purchase_elementId').selectize({
+		allowEmptyOption: true,
+	    valueField: 'storeItemId',
+	    labelField: 'title',
+	    searchField: 'title',
+	    wrapperClass: 'purchase-control',
+	    create: false,
+	    render: {
+	        option: function(item, escape) {
+
+	            return '<div><span class="title"><span class="name">' + escape(item.title) + '</span></span><br><span class="by">' + escape(item.shortDescription) +', ('+ escape(item.cityText) +')</span></div>';
+	        }
+	    },
+	    load: function(query, callback) {
+	        if (!query.length) return callback();
+	        $.ajax({
+	        	url: '<?php echo Yii::app()->request->baseUrl; ?>/index.php/service/storeOffer/list?sessionId=GUEST&searchText=' + encodeURIComponent(query),
+	            type: 'GET',
+	            error: function() {
+	                callback();
+	            },
+	            success: function(res) {
+	                callback(res.storeOffers);
+	            }
+	        });
+	    }
+	});
+	});
+
+
+	var elementId = '';
+
 	$(document).ready(function(){
 		
 		$("#post-form").submit(function(event){
 
-// 			alert($('#Event_elementId').val());
-		    if($("#Event_eventType").val() == 53){
-				if($('#Event_elementId').val() < 1 ){
+			$( '#' + elementId ).attr('name', 'Event[elementId]');
+			
+		    if( $("#Event_eventType").val() == 53 || $("#Event_eventType").val() == 57 ){
+				if($( '#' + elementId ).val() < 1 ){
 					event.preventDefault();
-					alert('please select a resturant from the list');
+					alert('please select an option from the list');
 				}
 		    }
 			return true;  
 
 		});
 		
-		$('#Event_elementId').selectize({
-			allowEmptyOption: true
-		});
 		
-		$('.selectize-control').hide();
+		
+		$('.restaurant-control').hide();
+		$('.offer-control').hide();
+		$('.purchase-control').hide();
 		
 	    $("#Event_eventType").change(function(){
 
-		    if($("#Event_eventType").val() == 53){
-				$('.selectize-control').show();
+		    if($("#Event_eventType").val() == 53 || $("#Event_eventType").val() == 57 || $("#Event_eventType").val() == 58){
+
+		    	$('.restaurant-control').hide();
+				$('.offer-control').hide();
+				$('.purchase-control').hide();
+		    	
+			    if($("#Event_eventType").val() == 53){
+					$('.restaurant-control').show();
+					elementId = 'Event_elementId';
+			    }
+
+			    if($("#Event_eventType").val() == 57){
+					$('.offer-control').show();
+					elementId = 'offer_elementId';
+					
+			    }
+
+			    if($("#Event_eventType").val() == 58){
+					$('.purchase-control').show();
+					elementId = 'purchase_elementId';
+			    }
+				
 		    }else{
-				$('.selectize-control').hide();
+		    	$('.restaurant-control').hide();
+				$('.offer-control').hide();
+				$('.purchase-control').hide();
 		    }
 		        
 	    });

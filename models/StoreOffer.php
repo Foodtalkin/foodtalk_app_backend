@@ -137,6 +137,7 @@ class StoreOffer extends FoodTalkActiveRecord
 	
 		$sql = "SELECT o.id";
 	
+		$sql .= ",i.id as storeItemId ";
 		$sql .= ",IFNULL(i.title, '') as title";
 		$sql .= ",IFNULL(i.coverImage, '') as coverImage";
 		$sql .= ",IFNULL(i.cardImage, '') as cardImage";
@@ -183,11 +184,17 @@ class StoreOffer extends FoodTalkActiveRecord
 			$sql .= ' WHERE o.validTill > now() and i.startDate < now() and i.endDate > now() ';
 			$sql .= ' and i.isDisabled = 0 ';
 		}
+		
+		if(isset($options['searchText'])){
+			$sql .= ' and i.title like "%'.$options['searchText'].'%"';
+		}
+		
+		
 	
 		$sql .= ' ORDER BY o.createDate DESC';
 	
 		$sql .= ' LIMIT '. $pagestart .', '. $recordCount;
-	
+		
 		$result = Yii::app()->db->createCommand($sql)->queryAll(true);
 		return $result;
 	
