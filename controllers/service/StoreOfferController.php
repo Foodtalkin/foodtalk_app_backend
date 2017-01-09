@@ -113,7 +113,7 @@ class StoreOfferController extends ServiceBaseController
                 	if(isset($_JSON['endDate']) && !empty ($_JSON['endDate']))
                 		$StoreItem->endDate = trim(filter_var($_JSON['endDate'], FILTER_SANITIZE_STRING));
 	                
-                	if(isset($_JSON['isDisabled']) && !empty ($_JSON['isDisabled'])){
+                	if(isset($_JSON['isDisabled']) ){
                 		$StoreItem->isDisabled = trim(filter_var($_JSON['isDisabled'], FILTER_SANITIZE_NUMBER_INT));
                 		$offer->isDisabled = trim(filter_var($_JSON['isDisabled'], FILTER_SANITIZE_NUMBER_INT));
                 	}
@@ -184,6 +184,9 @@ class StoreOfferController extends ServiceBaseController
     				
     				if(isset($_JSON['page']) && $_JSON['page'])
     					$page = filter_var($_JSON['page'], FILTER_SANITIZE_NUMBER_INT);
+    				
+    				if(isset($_JSON['searchText']) && $_JSON['searchText'])
+    					$options['searchText'] = filter_var($_JSON['searchText'], FILTER_SANITIZE_STRING);
     				
     				$status = 'active';
     				
