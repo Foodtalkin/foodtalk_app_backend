@@ -247,7 +247,8 @@ class StoreOfferController extends ServiceBaseController
     				$status = 'active';
     				$id = 0;
     				$storeItemId = 0;
-    
+    				$options=array();
+    				
 //     				if(isset($_JSON['status']) && $_JSON['status'] && $user->role == 'manager')
 //     					$status = filter_var($_JSON['status'], FILTER_SANITIZE_STRING);
     
@@ -260,7 +261,9 @@ class StoreOfferController extends ServiceBaseController
     				if(isset($_JSON['storeItemId']) && !empty ($_JSON['storeItemId']))
     					$storeItemId = trim(filter_var($_JSON['storeItemId'], FILTER_SANITIZE_NUMBER_INT));
     				
-    				$storeOffer = StoreOffer::getThisOffer($id, $storeItemId, $status);
+    				$options['userId'] = $userId;
+    				
+    				$storeOffer = StoreOffer::getThisOffer($id, $storeItemId, $status, $options);
     
     				$result = array(
     						'api' => $apiName,

@@ -132,7 +132,7 @@ class StoreOffer extends FoodTalkActiveRecord
 	}
 
 	
-	public static function getQuery($isManager = false)
+	public static function getQuery($userId=0)
 	{
 	
 		$sql = "SELECT o.id";
@@ -154,7 +154,9 @@ class StoreOffer extends FoodTalkActiveRecord
 		$sql .= ",IFNULL(i.postPurchaseInstructions, '') as postPurchaseInstructions";
 		$sql .= ",IFNULL(i.startDate, '') as startDate";
 		$sql .= ",IFNULL(i.endDate, '') as endDate";
-	
+
+		if($userId > 0)
+			$sql .= ',(SELECT COUNT(*) FROM `storePurchase` p WHERE i.id = p.storeItemId  AND p.isDisabled=0 AND p.userId='.$userId.') as iPurchasedIt';
 	
 		$sql .= ",IFNULL(o.validTill, '') as 'validTill'";
 		$sql .= ",IFNULL(o.totalQuantity, '') as 'totalQuantity'";
@@ -203,7 +205,12 @@ class StoreOffer extends FoodTalkActiveRecord
 	
 	public static function getThisOffer($id=0, $storeItemId=0, $status = 'upcomming', $options=array()){
 	
-		$sql = self::getQuery();
+		if(isset($options['userId']) && $options['userId'] > 0)
+			$userId = $options['userId'];
+		else 
+			$userId = 0;
+		
+		$sql = self::getQuery($userId);
 		
 		if($id > 0)
 			$sql .= ' WHERE o.id = '.$id;
