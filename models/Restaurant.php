@@ -103,13 +103,18 @@ class Restaurant extends FoodTalkActiveRecord
 					"area" =>$this->area,
 
 					"regionid" => $this->city->regionId,
-					"regionname" => $this->city->region->name,
+
 					"isactivated" => false,
 					"suggested" => false,
 					"timing" => '',
 					"pricerange" => '',
 					"popularity"=> 0
 			);
+
+			if( $this->city->regionId > 0)
+				$esRestaurant['regionname'] = $this->city->region->name;
+			else 
+				$esRestaurant['regionname'] = '';
 			
 			if($this->latitude > 0)
 			$esRestaurant["location"] = $this->latitude.", ".$this->longitude;

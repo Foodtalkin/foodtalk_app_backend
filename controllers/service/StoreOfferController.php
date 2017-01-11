@@ -65,7 +65,7 @@ class StoreOfferController extends ServiceBaseController
                 		$StoreItem = $offer->storeItem;
                 		
                 	if(isset($_JSON['title']) && !empty ($_JSON['title']))
-						$StoreItem->title = trim(filter_var($_JSON['title'], FILTER_SANITIZE_STRING));
+						$StoreItem->title = trim($_JSON['title']);
                 	
                 	if(isset($_JSON['coverImage']) && !empty ($_JSON['coverImage']))
 	                	$StoreItem->coverImage = filter_var($_JSON['coverImage'], FILTER_SANITIZE_STRING);
@@ -74,17 +74,17 @@ class StoreOfferController extends ServiceBaseController
 	                	$StoreItem->cardImage = filter_var($_JSON['cardImage'], FILTER_SANITIZE_STRING);
                 	
                 	if(isset($_JSON['actionButtonText']) && !empty ($_JSON['actionButtonText']))
-	                	$StoreItem->actionButtonText = trim(filter_var($_JSON['actionButtonText'], FILTER_SANITIZE_STRING));
+	                	$StoreItem->actionButtonText = trim($_JSON['actionButtonText']);
                 	
                 	if(isset($_JSON['cardActionButtonText']) && !empty ($_JSON['cardActionButtonText']))
-                		$StoreItem->cardActionButtonText = trim(filter_var($_JSON['cardActionButtonText'], FILTER_SANITIZE_STRING));
+                		$StoreItem->cardActionButtonText = trim($_JSON['cardActionButtonText']);
                 	
                 	
                 	if(isset($_JSON['description']) && !empty ($_JSON['description']))
-                		$StoreItem->description = trim(filter_var($_JSON['description'], FILTER_SANITIZE_STRING));
+                		$StoreItem->description = trim($_JSON['description']);
                 	
                 	if(isset($_JSON['shortDescription']) && !empty ($_JSON['shortDescription']))
-                		$StoreItem->shortDescription = trim(filter_var($_JSON['shortDescription'], FILTER_SANITIZE_STRING));
+                		$StoreItem->shortDescription = trim($_JSON['shortDescription']);
                 	
                 	if(isset($_JSON['cityText']) && !empty ($_JSON['cityText']))
                 		$StoreItem->cityText = trim(filter_var($_JSON['cityText'], FILTER_SANITIZE_STRING));

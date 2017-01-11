@@ -325,7 +325,7 @@ class RestaurantController extends ServiceBaseController
                         $restaurant->longitude = filter_var($_JSON['longitude'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
                     
                     if(isset($_JSON['restaurantName']) && !empty($_JSON['restaurantName']))
-                        $restaurant->restaurantName = filter_var($_JSON['restaurantName'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
+                        $restaurant->restaurantName = trim($_JSON['restaurantName']);
                     
                     if(isset($_JSON['area']) && !empty($_JSON['area']))
                     	$restaurant->area = filter_var($_JSON['area'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
@@ -339,7 +339,7 @@ class RestaurantController extends ServiceBaseController
                     	$restaurant->cityId = $city['city']->id;
                     	
                     }elseif(isset($_JSON['address']) && !empty($_JSON['address']))
-                    	$restaurant->address = filter_var($_JSON['address'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
+                    	$restaurant->address = trim($_JSON['address']);
 
                     
                     if(isset($_JSON['region']) && !empty($_JSON['region']))
