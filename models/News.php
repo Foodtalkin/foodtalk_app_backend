@@ -147,7 +147,7 @@ class News extends CActiveRecord
 			$sql .= ' WHERE isDisabled = 0 ';
 		}
 	
-		$sql .= ' ORDER BY createDate ASC';
+		$sql .= ' ORDER BY createDate DESC';
 	
 		$sql .= ' LIMIT '. $pagestart .', '. $recordCount;
 	
