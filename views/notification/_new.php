@@ -40,6 +40,19 @@
 </select>
 
 <?php 
+echo CHtml::dropDownList( '', '',
+		CHtml::listData(
+				News::model()->findAll(
+						array( "condition"=>" isDisabled = 0 ", "select"=>"id, title", 'limit' => 25, 'order' => 'createDate DESC' )),
+				'id',
+				'title'),
+		array(
+				'empty'=>'Select a news',
+				'id'=>'news_elementId',
+				'style'=>'display:none'
+				
+)
+);
 // echo CHtml::dropDownList(
 // 		'Event[elementId]',
 // 		'',
@@ -210,7 +223,7 @@ $( document ).ready(function() {
 		$("#post-form").submit(function(event){
 
 			$( '#' + elementId ).attr('name', 'Event[elementId]');
-			
+
 		    if( $("#Event_eventType").val() == 53 || $("#Event_eventType").val() == 57 ){
 				if($( '#' + elementId ).val() < 1 ){
 					event.preventDefault();
@@ -226,14 +239,19 @@ $( document ).ready(function() {
 		$('.restaurant-control').hide();
 		$('.offer-control').hide();
 		$('.purchase-control').hide();
+		$('#news_elementId').hide();
+		
+		
 		
 	    $("#Event_eventType").change(function(){
 
-		    if($("#Event_eventType").val() == 53 || $("#Event_eventType").val() == 57 || $("#Event_eventType").val() == 58){
+		    if($("#Event_eventType").val() == 53 || $("#Event_eventType").val() == 57 || $("#Event_eventType").val() == 58 || $("#Event_eventType").val() == 59){
 
 		    	$('.restaurant-control').hide();
 				$('.offer-control').hide();
 				$('.purchase-control').hide();
+				$('#news_elementId').hide();
+
 		    	
 			    if($("#Event_eventType").val() == 53){
 					$('.restaurant-control').show();
@@ -250,11 +268,19 @@ $( document ).ready(function() {
 					$('.purchase-control').show();
 					elementId = 'purchase_elementId';
 			    }
+			    
+			    if($("#Event_eventType").val() == 59){
+					$('#news_elementId').show();
+					elementId = 'news_elementId';
+			    }
+
+			    
 				
 		    }else{
 		    	$('.restaurant-control').hide();
 				$('.offer-control').hide();
 				$('.purchase-control').hide();
+				$('#news_elementId').hide();
 		    }
 		        
 	    });

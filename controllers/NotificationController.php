@@ -67,7 +67,7 @@ class NotificationController extends SiteBaseController
 			
 	        $model->eventType = $_POST['Event']['eventType'];
 	        
-	        if($_POST['Event']['eventType'] == 53 || $_POST['Event']['eventType'] == 57 || $_POST['Event']['eventType'] == 58)
+	        if($_POST['Event']['eventType'] == 53 || $_POST['Event']['eventType'] == 57 || $_POST['Event']['eventType'] == 58 || $_POST['Event']['eventType'] == 59)
 	        if($_POST['Event']['elementId'] > 0)	
 		    	$model->elementId = $_POST['Event']['elementId'];
 	        
