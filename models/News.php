@@ -136,7 +136,7 @@ class News extends CActiveRecord
 		return $sql;
 	}
 	
-	public static function getnews($page=1, $status = 'upcomming', $options=array(), $recordCount=9 ){
+	public static function getnews($page=1, $status = 'upcomming', $options=array(), $recordCount=25 ){
 	
 		$pagestart = ($page-1) * $recordCount;
 	
