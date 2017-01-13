@@ -144,7 +144,7 @@ $( document ).ready(function() {
 $( document ).ready(function() {
 	$('#offer_elementId').selectize({
 		allowEmptyOption: true,
-	    valueField: 'id',
+	    valueField: 'storeItemId',
 	    labelField: 'title',
 	    searchField: 'title',
 	    wrapperClass: 'offer-control',
