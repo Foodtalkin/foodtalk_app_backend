@@ -245,7 +245,7 @@ class StoreItem extends FoodTalkActiveRecord
 	
 	
 	
-	public static function getStorePurchase($page=1, $userId = false, $type=false, $option = array(), $recordCount = 9){
+	public static function getStorePurchase($page=1, $userId = false, $type=false, $option = array(), $recordCount = 24){
 		
 		$pagestart = ($page-1) * $recordCount;
 		
