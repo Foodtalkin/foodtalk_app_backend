@@ -36,19 +36,22 @@ class NewsController extends ServiceBaseController
 	                	$news = new News('create_api');
                 	
                 	if(isset($_JSON['title']) && !empty($_JSON['title']))
-                		$news->title = filter_var($_JSON['title'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
+                		$news->title = trim($_JSON['title']); 
+//                 	filter_var($_JSON['title'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
                 	 
                 	if(isset($_JSON['coverImage']) && !empty($_JSON['coverImage']))
                 		$news->coverImage = filter_var($_JSON['coverImage'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
                 	
                 	if(isset($_JSON['source']))
-                		$news->source = filter_var($_JSON['source'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
+                		$news->source = trim($_JSON['source']); 
+//                 	filter_var($_JSON['source'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
                 	
                 	if(isset($_JSON['sourceUrl']))
                 		$news->sourceUrl = filter_var($_JSON['sourceUrl'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
                 	
                 	if(isset($_JSON['description']) && !empty($_JSON['description']))
-                		$news->description = filter_var($_JSON['description'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
+                		$news->description = trim($_JSON['description']); 
+//                 	filter_var($_JSON['description'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
                 	
                 	if(isset($_JSON['startDate']) && !empty($_JSON['startDate']))
                 		$news->startDate = filter_var($_JSON['startDate'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
