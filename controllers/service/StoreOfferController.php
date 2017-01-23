@@ -55,8 +55,19 @@ class StoreOfferController extends ServiceBaseController
                 	if(isset($_JSON['subType']) && !empty ($_JSON['subType']))
                 		$offer->subType = trim(filter_var($_JSON['subType'], FILTER_SANITIZE_STRING));
                 	
-                	if(isset($_JSON['redemptionUrl']) && !empty ($_JSON['redemptionUrl']))
-                		$offer->redemptionUrl = trim(filter_var($_JSON['redemptionUrl'], FILTER_SANITIZE_STRING));
+                	if(isset($_JSON['redemptionUrl'])){
+	                	if(empty (trim($_JSON['redemptionUrl'])))
+	                		$offer->redemptionUrl = null;
+	                	else 	
+	                		$offer->redemptionUrl = trim(filter_var($_JSON['redemptionUrl'], FILTER_SANITIZE_STRING));
+                	}
+                	
+                	if(isset($_JSON['redemptionPhone']) && !empty ($_JSON['redemptionPhone'])){
+	                	if(empty (trim($_JSON['redemptionPhone'])))
+                			$offer->redemptionPhone = null;
+                		else
+                			$offer->redemptionPhone = trim(filter_var($_JSON['redemptionPhone'], FILTER_SANITIZE_STRING));
+                	}
                 	 
                 	
                 	if ($isNewOffer)
