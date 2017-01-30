@@ -884,6 +884,80 @@ class UserController extends ServiceBaseController
         $this->sendResponse(json_encode($result, JSON_UNESCAPED_UNICODE));
     }
     
+    
+    /**
+     * block a user
+     */
+    public function actionblock()
+    {
+    	$apiName = 'user/block';
+    	$sessionId = null;
+    
+    	$_JSON = $this->getJsonInput();
+    
+    	try
+    	{
+    		if(!isset($_JSON) || empty($_JSON))
+    			$result = $this->error($apiName, WS_ERR_POST_PARAM_MISSED, 'No input received.');
+    		else if(!isset($_JSON['sessionId']) || empty($_JSON['sessionId']))
+    			$result = $this->error($apiName, WS_ERR_POST_PARAM_MISSED, 'Please enter session id.');
+    		else
+    		{
+    			$userId = $this->isAuthentic($_JSON['sessionId']);
+    			$user = User::model()->findByPk($userId);
+    			if (is_null($user))
+    				$result = $this->error($apiName, WS_ERR_WONG_USER, 'Please login before using this service.');
+    			else
+    			{
+    				if(isset($_JSON['userId']) && !empty($_JSON['userId']))
+    				{
+    					$blockedUserId = filter_var($_JSON['userId'], FILTER_SANITIZE_NUMBER_INT);
+    				}
+   
+    				$reason = null;
+    				if(isset($_JSON['reason']) && !empty($_JSON['reason']))
+    				{
+    					$reason = filter_var($_JSON['reason'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
+    				}
+    				
+    				$blockedUser = new BlockUser('add_api');
+    				$blockedUser->userId = $userId;
+    				$blockedUser->blockedUserId = $blockedUserId;
+    				$blockedUser->blockingReason = $reason;
+    				$blockedUser->save();
+    				
+    				if($blockedUser->hasErrors())
+    				{
+    					throw new Exception(print_r($blockedUser->getErrors(), true), WS_ERR_UNKNOWN);
+    				}
+    				
+    				Follower::model()->deleteAllByAttributes(
+    						array(
+    								'followerUserId'=>$userId,
+    								'followedUserId'=>$blockedUserId
+    						)
+    					);
+    				Follower::model()->deleteAllByAttributes(
+    						array(
+    								'followerUserId'=>$blockedUserId,
+    								'followedUserId'=>$userId
+    						)
+    					);
+    				$result = array(
+    						'api' => $apiName,
+    						'apiMessage' => 'user blocked successfully',
+    						'status' => 'OK',
+    				);
+    			}
+    		}
+    	}
+    	catch (Exception $e)
+    	{
+    		$result = $this->error($apiName, $e->getCode(), Yii::t('app', $e->getMessage()));
+    	}
+    	$this->sendResponse(json_encode($result, JSON_UNESCAPED_UNICODE));
+    }
+    
     /**
      * Get user names list, used for search and auto suggest
      */

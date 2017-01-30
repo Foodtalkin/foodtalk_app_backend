@@ -365,6 +365,139 @@ class StoreOfferController extends ServiceBaseController
     
     }
     
+ 
+	public function actionGetCoupon(){
+
+		$apiName = 'storeOffer/getCoupon';
+		$sessionId = null;
+		
+		$_JSON = $this->getJsonInput();
+		
+		try
+		{
+			if(!isset($_JSON) || empty($_JSON))
+				$result = $this->error($apiName, WS_ERR_POST_PARAM_MISSED, 'No input received.');
+			else if(!isset($_JSON['sessionId']) || empty($_JSON['sessionId']))
+				$result = $this->error($apiName, WS_ERR_POST_PARAM_MISSED, 'Please enter session id.');
+			else
+			{
+				//             	$user = true;
+				$userId = $this->isAuthentic($_JSON['sessionId']);
+				$user = User::model()->findByPk($userId);
+		
+				if (is_null($user))
+					$result = $this->error($apiName, WS_ERR_WONG_USER, 'Please login before using this service.');
+				else
+				{
+					$user = false;
+					$storeOffer= false;
+					$code= false;
+					$attributes = array();
+					
+						if(isset($_JSON['code']) && !empty ($_JSON['code']))
+							$attributes['code'] = trim(filter_var($_JSON['code'], FILTER_SANITIZE_STRING));
+		
+						if(isset($_JSON['storeOfferId']) && !empty ($_JSON['storeOfferId']))
+							$attributes['storeOfferId'] = trim(filter_var($_JSON['storeOfferId'], FILTER_SANITIZE_NUMBER_INT));
+		
+// 						$options['userId'] = $userId;
+		
+						
+						$coupon = StoreCoupon::model()->findByAttributes($attributes);
+
+						
+						
+						if($coupon && $coupon->userId){
+								$user = User::getProfileById($coupon->userId, $coupon->userId);
+							if($user)
+								$storeOffer = StoreOffer::getThisOffer($coupon->storeOfferId);
+							$code = $coupon->code;
+						}
+		
+						$result = array(
+								'api' => $apiName,
+								'apiMessage' => 'Records fetched successfully',
+								'status' => 'OK',
+								'code' => $code,
+								'user' => $user,
+								'storeOffer' => $storeOffer
+						);
+		
+				}
+			}
+		}
+		catch (Exception $e)
+		{
+			$result = $this->error($apiName, $e->getCode(), Yii::t('app', $e->getMessage()));
+		}
+		$this->sendResponse(json_encode($result, JSON_UNESCAPED_UNICODE));
+		
+	}
     
+    
+	public function actionRedeemCoupon(){
+		
+		$apiName = 'storeOffer/redeemCoupon';
+		$sessionId = null;
+		
+		$_JSON = $this->getJsonInput();
+		
+		try
+		{
+			if(!isset($_JSON) || empty($_JSON))
+				$result = $this->error($apiName, WS_ERR_POST_PARAM_MISSED, 'No input received.');
+			else if(!isset($_JSON['sessionId']) || empty($_JSON['sessionId']))
+				$result = $this->error($apiName, WS_ERR_POST_PARAM_MISSED, 'Please enter session id.');
+			else
+			{
+				//             	$user = true;
+				$userId = $this->isAuthentic($_JSON['sessionId']);
+				$user = User::model()->findByPk($userId);
+		
+				if (is_null($user) and $user->id  > 0)
+					$result = $this->error($apiName, WS_ERR_WONG_USER, 'Please login before using this service.');
+				else
+				{
+		
+					if(isset($_JSON['code']) && !empty ($_JSON['code']))
+						$coupon = StoreCoupon::model()->findByAttributes(array('code'=>$_JSON['code']));
+					else
+						throw new Exception(print_r('no code provided', true), WS_ERR_POST_PARAM_MISSED);
+						
+					if(empty($coupon)){
+						throw new Exception(print_r('Invalid code', true), WS_ERR_WONG_VALUE);
+					}
+				
+// 					    				StoreItemUserInfo::model()->deleteAllByAttributes(array('storeItemId'=>$item->id));
+					if($coupon->userId > 0){
+						
+						$coupon->isUsed = true;
+						$coupon->save();
+		
+						if ($coupon->hasErrors()){
+							throw new Exception(print_r($coupon->getErrors(), true), WS_ERR_UNKNOWN);
+						}
+		
+					}else{
+						throw new Exception(print_r('Invalid code', true), WS_ERR_WONG_VALUE);
+					}
+		
+					$result = array(
+							'api' => $apiName,
+							'apiMessage' => 'Coupon redeemed successfully',
+							'status' => 'OK'
+							//     						'storePurchaseId' => $purchase->id
+					);
+		
+				}
+			}
+		}
+		catch (Exception $e)
+		{
+			$result = $this->error($apiName, $e->getCode(), Yii::t('app', $e->getMessage()));
+		}
+		$this->sendResponse(json_encode($result, JSON_UNESCAPED_UNICODE));
+	}
+	   
 
 }
