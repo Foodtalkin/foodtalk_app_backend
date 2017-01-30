@@ -76,8 +76,11 @@ class SearchController extends ServiceBaseController
 // 						$search['query']['bool']['should'][] = array('wildcard'=> [ 'cityname'=> end($searchWords).'*' ] );
 // 						$search['query']['bool']['should'][] = array('wildcard'=> [ 'cityname'=> end($searchWords).'*' ] );
 						
-						
 					}
+					
+					if(isset($options['excludeusers']) and !empty($options['excludeusers']))
+					$search['query']['bool']['must_not'][] = array('terms'=> [ 'id'=> $options['excludeusers'] ] );
+						
 				break;
 				
 			case 'dish':
@@ -140,7 +143,7 @@ class SearchController extends ServiceBaseController
 
 		$query = json_encode($search);
 // 		echo $query;
-// 		die();
+// 		die();	
 
 // 		return array('Finalresult'=>es($query, $searchurl), 'query' => $search, 'options'=>$options);
 		return es($query, $searchurl);
@@ -174,7 +177,7 @@ class SearchController extends ServiceBaseController
 		
     public function actionEs()
     {
-        $apiName = 'Search/es';
+        $apiName = 'search/es';
         $sessionId = null;
         
         $_JSON = $this->getJsonInput();
@@ -209,6 +212,23 @@ class SearchController extends ServiceBaseController
                 		
                 		if(isset($_JSON['isactivated']) && !empty($_JSON['isactivated']))
                 			$options['isactivated'] = true ;
+                		
+                		$usersBlockedHim = BlockUser::model()->findAllByAttributes(array('blockedUserId' => $userId));
+                		$usersHeBlocked = BlockUser::model()->findAllByAttributes(array('userId' => $userId));
+                		
+                		foreach ($usersBlockedHim as $users){
+                			$options['excludeusers'][] = $users->userId; 
+                		}
+                		
+                		foreach ($usersHeBlocked as $users){
+                			$options['excludeusers'][] = $users->blockedUserId;
+                		}
+                		
+                		if(isset($options['excludeusers']) and !empty($options['excludeusers']))
+	                		$options['excludeusers'] = array_unique($options['excludeusers']);
+                		
+//                 		$options['excludeusers'] = [12];
+                		
                 		
                 		$type='';
                 		if(isset($_JSON['type']))
