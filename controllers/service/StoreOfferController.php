@@ -389,6 +389,7 @@ class StoreOfferController extends ServiceBaseController
 					$result = $this->error($apiName, WS_ERR_WONG_USER, 'Please login before using this service.');
 				else
 				{
+					$isUsed = false;
 					$user = false;
 					$storeOffer= false;
 					$code= false;
@@ -400,18 +401,14 @@ class StoreOfferController extends ServiceBaseController
 						if(isset($_JSON['storeOfferId']) && !empty ($_JSON['storeOfferId']))
 							$attributes['storeOfferId'] = trim(filter_var($_JSON['storeOfferId'], FILTER_SANITIZE_NUMBER_INT));
 		
-// 						$options['userId'] = $userId;
-		
-						
 						$coupon = StoreCoupon::model()->findByAttributes($attributes);
-
-						
 						
 						if($coupon && $coupon->userId){
 								$user = User::getProfileById($coupon->userId, $coupon->userId);
 							if($user)
 								$storeOffer = StoreOffer::getThisOffer($coupon->storeOfferId);
 							$code = $coupon->code;
+							$isUsed = boolval($coupon->isUsed);
 						}
 		
 						$result = array(
@@ -419,6 +416,7 @@ class StoreOfferController extends ServiceBaseController
 								'apiMessage' => 'Records fetched successfully',
 								'status' => 'OK',
 								'code' => $code,
+								'isUsed'=>$isUsed,
 								'user' => $user,
 								'storeOffer' => $storeOffer
 						);
@@ -455,23 +453,27 @@ class StoreOfferController extends ServiceBaseController
 				$user = User::model()->findByPk($userId);
 		
 				if (is_null($user) and $user->id  > 0)
-					$result = $this->error($apiName, WS_ERR_WONG_USER, 'Please login before using this service.');
+					$result = $this->error($apiName, WS_ERR_WONG_USER, 'Error :  Please login before using this service.');
 				else
 				{
 		
 					if(isset($_JSON['code']) && !empty ($_JSON['code']))
 						$coupon = StoreCoupon::model()->findByAttributes(array('code'=>$_JSON['code']));
 					else
-						throw new Exception(print_r('no code provided', true), WS_ERR_POST_PARAM_MISSED);
+						throw new Exception(print_r('Error : No Coupon code provided!', true), WS_ERR_POST_PARAM_MISSED);
 						
 					if(empty($coupon)){
-						throw new Exception(print_r('Invalid code', true), WS_ERR_WONG_VALUE);
+						throw new Exception(print_r('Error : Invalid Coupon code!', true), WS_ERR_WONG_VALUE);
 					}
 				
-// 					    				StoreItemUserInfo::model()->deleteAllByAttributes(array('storeItemId'=>$item->id));
+					if(boolval($coupon->isUsed))
+					{
+						throw new Exception(print_r('Error : Coupon code Already Used!', true), WS_ERR_REQUEST_NOT_ACCEPTED);
+					}
+					
 					if($coupon->userId > 0){
 						
-						$coupon->isUsed = true;
+						$coupon->isUsed = 1;
 						$coupon->save();
 		
 						if ($coupon->hasErrors()){
@@ -479,14 +481,13 @@ class StoreOfferController extends ServiceBaseController
 						}
 		
 					}else{
-						throw new Exception(print_r('Invalid code', true), WS_ERR_WONG_VALUE);
+						throw new Exception(print_r('Error : Invalid Coupon code!', true), WS_ERR_WONG_VALUE);
 					}
 		
 					$result = array(
 							'api' => $apiName,
-							'apiMessage' => 'Coupon redeemed successfully',
+							'apiMessage' => 'Success : Coupon redeemed successfully',
 							'status' => 'OK'
-							//     						'storePurchaseId' => $purchase->id
 					);
 		
 				}
