@@ -78,7 +78,7 @@ $('#duplicateId').selectize({
     load: function(query, callback) {
         if (!query.length) return callback();
         $.ajax({
-        	url: '<?php echo Yii::app()->request->baseUrl; ?>/index.php/service/restaurant/list?sessionId=GUEST&searchText=' + encodeURIComponent(query),
+        	url: '<?php echo Yii::app()->request->baseUrl; ?>/index.php/service/restaurant/list?exceptions=<?php echo $model->id; ?>&sessionId=GUEST&searchText=' + encodeURIComponent(query),
             type: 'GET',
             error: function() {
                 callback();
