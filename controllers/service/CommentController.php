@@ -73,7 +73,16 @@ class CommentController extends ServiceBaseController
                         }
                         
                         //save event
-                        Event::saveEvent(Event::COMMENT_CREATED, $userId, $comment->postId, $comment->createDate, $post->userId);
+                        if($post->type == 'question'){
+                        	$eventtype = 14;
+                        	$message1 =  $user->userName.' answered to your question.';
+                        }
+                        else{
+                        	$eventtype = Event::COMMENT_CREATED;
+                        	$message1 = false;
+                        }
+                        
+                        Event::saveEvent($eventtype, $userId, $comment->postId, $comment->createDate, $post->userId);
                         
                         $ignore_user[] = $post->userId;
                         $sql = 'SELECT DISTINCT userId FROM `comment` WHERE postId = '.$postId;
@@ -83,7 +92,16 @@ class CommentController extends ServiceBaseController
                         
 //                         var_dump($post->user->userName);
                         
-                        $message = $user->userName.' also commented on '.$post->user->userName."'s post.";
+                        if($post->type == 'question'){
+                        	$eventtype = 15;
+                        	$message1 =  $user->userName.' also answered to '.$post->user->userName."'s question.";
+                        }
+                        else{
+                        	$eventtype = 12;
+                        	$message = $user->userName.' also commented on '.$post->user->userName."'s post.";
+                        }
+                        
+//                         $message = $user->userName.' also commented on '.$post->user->userName."'s post.";
                         
                         
                         foreach ($user_comments as $comm){

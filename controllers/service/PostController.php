@@ -570,6 +570,12 @@ class PostController extends ServiceBaseController
                         $recordCount = 0;   //0 means all records
                         $exceptions = '';   //list of post ids that are not to be included in the list
                         $page=1;
+                        $option = array();
+                        
+                        
+                        if(isset($_JSON['type']) && $_JSON['type'])
+                        	$option['type'] = $_JSON['type'];
+                        
                         if(isset($_JSON['includeFollowed']) && $_JSON['includeFollowed'])
                             $includeFollowed = true;
                         
@@ -589,7 +595,7 @@ class PostController extends ServiceBaseController
                         if(isset($_JSON['tagId']) && $_JSON['tagId'])
                             $tagId = filter_var($_JSON['tagId'], FILTER_SANITIZE_NUMBER_INT);
                         
-                        $posts = Post::getPostsByUserId($userId, $postUserId, $includeFollowed, $includeCount, $tagId, $recordCount, $exceptions, $page);
+                        $posts = Post::getPostsByUserId($userId, $postUserId, $includeFollowed, $includeCount, $tagId, $recordCount, $exceptions, $page, $option);
                         foreach ($posts as &$post)
                         {
                             $lastComment = Comment::getLastComment($post['id']);

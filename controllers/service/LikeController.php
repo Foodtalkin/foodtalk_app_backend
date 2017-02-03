@@ -55,8 +55,14 @@ class LikeController extends ServiceBaseController
                                 throw new Exception(print_r($like->getErrors(), true), WS_ERR_UNKNOWN);
                             }
                             
-                            if($is_new)
+                            if($is_new){
+                            	if($post->type == 'question')
+                            		$eventtype = 13;
+                            	else
+                            		$eventtype = Event::POST_LIKED;
+                            	
 	                            Event::saveEvent(Event::POST_LIKED, $userId, $like->postId, $like->createDate, $post->userId);
+                            }
 
                             $result = array(
                                 'api' => $apiName,

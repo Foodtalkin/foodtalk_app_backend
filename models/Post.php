@@ -396,7 +396,7 @@ class Post extends FoodTalkActiveRecord
     }
     
     
-    public static function getPostsByUserId($userId, $postUserId, $includeFollowed=false, $includeCount=false, $tagId=0, $recordCount=12, $exceptions='' , $page=1)
+    public static function getPostsByUserId($userId, $postUserId, $includeFollowed=false, $includeCount=false, $tagId=0, $recordCount=12, $exceptions='' , $page=1, $options = array())
     {
     	$pagestart = ($page-1) * $recordCount;
     	
@@ -405,6 +405,13 @@ class Post extends FoodTalkActiveRecord
         
         if($exceptions)
             $sql .= ' AND p.id NOT IN (' .$exceptions. ')';
+        
+        
+        if (isset($options['type']) && $options['type'] == 'all'){
+//         	$sql .= ' AND p.id NOT IN (' .$exceptions. ')';
+        }
+        else 
+        	$sql .= ' AND p.type ="dish"';
         
         if($tagId)
         {
