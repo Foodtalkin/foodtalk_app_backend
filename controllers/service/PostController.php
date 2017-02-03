@@ -34,7 +34,7 @@ class PostController extends ServiceBaseController
                     if(isset($_JSON['checkedInRestaurantId']) && !empty ($_JSON['checkedInRestaurantId']))
                         $post->checkedInRestaurantId = filter_var($_JSON['checkedInRestaurantId'], FILTER_SANITIZE_NUMBER_INT);
                     
-                    if(is_numeric($_JSON['checkedInRestaurantId']) && $_JSON['checkedInRestaurantId']>0){
+                    if(isset($_JSON['checkedInRestaurantId']) && is_numeric($_JSON['checkedInRestaurantId']) && $_JSON['checkedInRestaurantId']>0){
                     	
 
                     	
@@ -55,6 +55,10 @@ class PostController extends ServiceBaseController
 						$post->checkinId = $checkin->id;
                     	                    	
                     }
+                    
+                    
+                    if(isset($_JSON['type']) && !empty ($_JSON['type']))
+                    	$post->type = filter_var($_JSON['type'], FILTER_SANITIZE_STRING);
                     
                     
                     if(isset($_JSON['tip']))

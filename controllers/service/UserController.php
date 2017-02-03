@@ -163,9 +163,9 @@ class UserController extends ServiceBaseController
     /**
      * Get tip post by user id
      */
-    public function actionGetTipPosts()
+    public function actionGetQuestionPosts()
     {
-        $apiName = 'user/getTipPosts';
+        $apiName = 'user/getQuestionPosts';
         $sessionId = null;
         
         $_JSON = $this->getJsonInput();

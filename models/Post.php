@@ -309,8 +309,8 @@ class Post extends FoodTalkActiveRecord
         
         $sql .= ' FROM post p JOIN user u ON p.userId = u.id AND u.isDisabled=0 ';
         
-        $sql .= ' INNER JOIN dishReview dr ON p.id = dr.postId';
-        $sql .= ' INNER JOIN dish d ON d.id = dr.dishId and d.isDisabled=0 ';
+        $sql .= ' LEFT JOIN dishReview dr ON p.id = dr.postId';
+        $sql .= ' LEFT JOIN dish d ON d.id = dr.dishId and d.isDisabled=0 ';
         
         $sql .= ' LEFT JOIN restaurant r ON p.checkedInRestaurantId = r.id';
         $sql .= ' LEFT JOIN city ON r.cityId = city.id';
@@ -426,13 +426,14 @@ class Post extends FoodTalkActiveRecord
         return $posts;
     }
     
-    public static function getTipPostsByUserId($userId, $postUserId, $recordCount=0, $exceptions='')
+    public static function getTipPostsByUserId($userId, $postUserId, $recordCount=12, $exceptions='')
     {
         //fetch all tip posts of given user
         $sql = self::getQuery($userId, $postUserId, false, true);
         $sql .= ' AND p.tip !=""';
         $sql .= ' AND p.tip IS NOT NULL';
-        $sql .= ' AND (p.image ="" OR p.image IS NULL)';
+        $sql .= ' AND p.type ="question"';
+//         $sql .= ' AND (p.image ="" OR p.image IS NULL)';
         
         if($exceptions)
             $sql .= ' AND p.id NOT IN (' .$exceptions. ')';
@@ -452,7 +453,7 @@ class Post extends FoodTalkActiveRecord
         return $posts;
     }
     
-    public static function getImagePostsByUserId($userId, $postUserId, $recordCount=0, $exceptions='', $page=1, $latitude=0, $longitude=0)
+    public static function getImagePostsByUserId($userId, $postUserId, $recordCount=12, $exceptions='', $page=1, $latitude=0, $longitude=0)
     {
     	
     	$pagestart = ($page-1) * $recordCount;
@@ -460,6 +461,7 @@ class Post extends FoodTalkActiveRecord
         $sql = self::getQuery($userId, $postUserId, false, true, $latitude, $longitude);
         $sql .= ' AND p.image !=""';
         $sql .= ' AND p.image IS NOT NULL';
+//         $sql .= ' AND p.type ="dish"';
         
         if($exceptions)
             $sql .= ' AND p.id NOT IN (' .$exceptions. ')';
