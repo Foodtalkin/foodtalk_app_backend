@@ -205,6 +205,7 @@ class StoreItem extends FoodTalkActiveRecord
 			$sql .= ",IFNULL(p.quantity, '') as quantity";
 			$sql .= ",IFNULL(p.costOnline, '') as paidCostOnline";
 			$sql .= ",IFNULL(p.costPoints, '') as paidCostPoints";
+			$sql .= ",IFNULL(p.isUsed, '') as isUsed";
 			$sql .= ",IFNULL(p.metaData, '') as metaData";
 			$sql .= ",IFNULL(p.createDate, '') as createDate";
 		}

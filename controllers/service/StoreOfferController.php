@@ -486,6 +486,11 @@ class StoreOfferController extends ServiceBaseController
 						if ($coupon->hasErrors()){
 							throw new Exception(print_r($coupon->getErrors(), true), WS_ERR_UNKNOWN);
 						}
+						
+// 						$coupon->storeOffer->storeItemId;
+						$purchase = StorePurchase::model()->findByAttributes(array('storeItemId'=>$coupon->storeOffer->storeItemId, 'userId'=>$coupon->userId));
+						$purchase->isUsed = 1;
+						$purchase->save();
 		
 					}else{
 						throw new Exception(print_r('Error : Invalid Coupon code!', true), WS_ERR_WONG_VALUE);
