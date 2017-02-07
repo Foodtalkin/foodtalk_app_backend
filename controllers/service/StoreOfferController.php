@@ -130,12 +130,14 @@ class StoreOfferController extends ServiceBaseController
                 	}
 
                 	
-                	if(isset($_JSON['type'])  && strtoupper(trim($_JSON['type'])) =='DINE-IN' ){
-                		$StoreItem->type = 'DINE-IN';
-//                 		$offer->subType = 'UNIQUE_CODE';
-                	}else
-	                	$StoreItem->type = 'OFFER'; 
-
+                	
+                	if($isNewOffer){
+	                	if(isset($_JSON['type'])  && strtoupper(trim($_JSON['type'])) =='DINE-IN' ){
+	                		$StoreItem->type = 'DINE-IN';
+// 	                		$offer->subType = 'UNIQUE_CODE';
+	                	}else
+		                	$StoreItem->type = 'OFFER'; 
+                	}
                 	$StoreItem->save();
                 	 
                 	if ($StoreItem->hasErrors()){
