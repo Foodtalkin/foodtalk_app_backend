@@ -154,6 +154,7 @@ class StoreOffer extends FoodTalkActiveRecord
 		$sql .= ",IFNULL(i.postPurchaseInstructions, '') as postPurchaseInstructions";
 		$sql .= ",IFNULL(i.startDate, '') as startDate";
 		$sql .= ",IFNULL(i.endDate, '') as endDate";
+		$sql .= ",IFNULL(i.type, '') as type";
 
 		if($userId > 0)
 			$sql .= ',(SELECT COUNT(*) FROM `storePurchase` p WHERE i.id = p.storeItemId  AND p.isDisabled=0 AND p.userId='.$userId.') as iPurchasedIt';
