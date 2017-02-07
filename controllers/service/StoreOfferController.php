@@ -128,8 +128,13 @@ class StoreOfferController extends ServiceBaseController
                 		$StoreItem->isDisabled = trim(filter_var($_JSON['isDisabled'], FILTER_SANITIZE_NUMBER_INT));
                 		$offer->isDisabled = trim(filter_var($_JSON['isDisabled'], FILTER_SANITIZE_NUMBER_INT));
                 	}
+
                 	
-                	$StoreItem->type = 'OFFER'; 
+                	if(isset($_JSON['type'])  && strtoupper(trim($_JSON['type'])) =='DINE-IN' ){
+                		$StoreItem->type = 'DINE-IN';
+//                 		$offer->subType = 'UNIQUE_CODE';
+                	}else
+	                	$StoreItem->type = 'OFFER'; 
 
                 	$StoreItem->save();
                 	 
