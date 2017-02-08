@@ -162,6 +162,7 @@ class StoreItemController extends ServiceBaseController
     				switch ($item['type']){
     					
     					case 'OFFER':
+    					case 'DINE-IN':
     						
     						if($item['iPurchasedIt'] > 0){
     							throw new Exception(print_r('You already have this offer', true), WS_ERR_REQUEST_NOT_ACCEPTED);
