@@ -116,17 +116,41 @@ class StoreCoupon extends FoodTalkActiveRecord
 		));
 	}
 
-	public static function getNewCoupon($storeOfferId,$userId){
+	public static function getNewCoupon($storeOfferId,$userId, $generate=false){
 	
-		$coupon = self::model()->findByAttributes(array('storeOfferId'=>$storeOfferId, 'userId'=>null ));
+		start:
 		
-	    if(empty($coupon)){
-	    	return false;
-//     		throw new Exception(print_r('Invalid event id', true), WS_ERR_WONG_VALUE);
-    	}
-		
-		$coupon->userId = $userId;
-		$coupon->save();
+		if($generate){
+			try {
+				$coupon = new self('create_api');
+				$coupon->code = randomStringAlphaNum(6);
+				$coupon->userId = $userId;
+				$coupon->storeOfferId = $storeOfferId;
+				$coupon->save();
+			}
+			catch (Exception $e){
+				if($e->getCode()==23000)
+					goto start;
+				else
+					return false;
+			}
+				
+// 			if ($coupon->hasErrors()){
+				
+// 				$code = randomStringAlphaNum(6);
+// 				goto start;
+// 				throw new Exception(print_r($coupon->getErrors(), true), WS_ERR_UNKNOWN);
+// 			}
+		}
+		else{
+			$coupon = self::model()->findByAttributes(array('storeOfferId'=>$storeOfferId, 'userId'=>null ));
+		    if(empty($coupon)){
+		    	return false;
+	//     		throw new Exception(print_r('Invalid event id', true), WS_ERR_WONG_VALUE);
+	    	}
+			$coupon->userId = $userId;
+			$coupon->save();
+		}
 		return $coupon;
 	
 	}

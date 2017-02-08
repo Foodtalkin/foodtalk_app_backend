@@ -174,7 +174,7 @@ class StoreItemController extends ServiceBaseController
     						}
     						
     						if($offer->subType == 'UNIQUE_CODE'){
-    							$coupon = StoreCoupon::getNewCoupon($offer->id, $userId);
+    							$coupon = StoreCoupon::getNewCoupon($offer->id, $userId, $offer->autoGenerateCode);
     							
     						 	if(!$coupon){
     								throw new Exception(print_r('oops...! No coupon left', true), WS_ERR_REQUEST_NOT_ACCEPTED);

@@ -39,12 +39,18 @@ class StoreOfferController extends ServiceBaseController
                 	
                 	if(isset($_JSON['validTill']) && !empty ($_JSON['validTill']))
                 		$offer->validTill = trim(filter_var($_JSON['validTill'], FILTER_SANITIZE_STRING));
-                	                 	 
+
+                	
+                	if($isNewOffer){
+                		if(isset($_JSON['totalQuantity']) && !empty ($_JSON['totalQuantity']))
+                			$offer->availableQuantity = trim(filter_var($_JSON['totalQuantity'], FILTER_SANITIZE_NUMBER_INT));
+                	}else
+                		if(isset($_JSON['totalQuantity']) && !empty ($_JSON['totalQuantity']))
+                			$offer->availableQuantity = trim(filter_var($_JSON['totalQuantity'], FILTER_SANITIZE_NUMBER_INT)) - $offer->totalQuantity + $offer->availableQuantity;
+                		 
+                	
                 	if(isset($_JSON['totalQuantity']) && !empty ($_JSON['totalQuantity']))
                 		$offer->totalQuantity = trim(filter_var($_JSON['totalQuantity'], FILTER_SANITIZE_NUMBER_INT));
-                	 
-                	if(isset($_JSON['totalQuantity']) && !empty ($_JSON['totalQuantity']))
-                		$offer->availableQuantity = trim(filter_var($_JSON['totalQuantity'], FILTER_SANITIZE_NUMBER_INT));
                 	 
                 	if(isset($_JSON['limitPerUser']) && !empty ($_JSON['limitPerUser']))
                 		$offer->limitPerUser = trim(filter_var($_JSON['limitPerUser'], FILTER_SANITIZE_NUMBER_INT));
@@ -54,6 +60,9 @@ class StoreOfferController extends ServiceBaseController
 
                 	if(isset($_JSON['subType']) && !empty ($_JSON['subType']))
                 		$offer->subType = trim(filter_var($_JSON['subType'], FILTER_SANITIZE_STRING));
+                	
+                	if(isset($_JSON['autoGenerateCode'])){
+                		$offer->autoGenerateCode = trim(filter_var($_JSON['autoGenerateCode'], FILTER_SANITIZE_NUMBER_INT));
                 	
                 	if(isset($_JSON['redemptionUrl'])){
 	                	if(empty (trim($_JSON['redemptionUrl'])))
