@@ -262,6 +262,7 @@ class Post extends FoodTalkActiveRecord
 //         $sql .= ',IFNULL(CONCAT("' . imagePath('post') . '", p.image), "") as postImage';
 //         $sql .= ',IFNULL(CONCAT("' . thumbPath('post') . '", p.image), "") as postThumb';
         $sql .= ',IFNULL(p.tip, "") as tip';
+        $sql .= ',IFNULL(p.type, "") as type';
         $sql .= ',IFNULL(d.dishName, "") as dishName';        
         $sql .= ',IFNULL(d.url, "") as dishUrl';
         $sql .= ',IFNULL(dr.rating, "0") as rating';
