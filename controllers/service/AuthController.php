@@ -41,6 +41,15 @@ class AuthController extends ServiceBaseController
     }
 
     
+    public function actionAppVersionControl()
+    {
+    	$apiName = 'auth/appversion';
+    	$msg = 'App Version details fetched successfully.';
+    	 
+    	$version = Yii::app()->db->createCommand('select * from appVersion')->queryAll(true);
+    	self::actionCloudAccess($apiName, $msg, $version);
+    }
+    
     public function actionAppVersion()
     {
     	$apiName = 'auth/appversion';
