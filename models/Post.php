@@ -336,7 +336,7 @@ class Post extends FoodTalkActiveRecord
     public static function getPost($postId = false, $userId , $options = array()){
     	    	
     	
-    	$sql = 'SELECT p.`id`, p.`userId`, IFNULL(p.`checkedInRestaurantId`, "") as checkedInRestaurantId  , IFNULL(CONCAT(IF(isGif, "http://res.cloudinary.com/digital-food-talk-pvt-ltd/image/upload/q_60/", "' . imagePath('post') . '"), p.image), "") as postImage, d.dishName, IFNULL(d.url, "") as dishUrl, IFNULL(dr.rating, "0") as rating, p.`tip`, u.userName, u.id userId, ';
+    	$sql = 'SELECT p.`id`, p.`type`, p.`userId`, IFNULL(p.`checkedInRestaurantId`, "") as checkedInRestaurantId  , IFNULL(CONCAT(IF(isGif, "http://res.cloudinary.com/digital-food-talk-pvt-ltd/image/upload/q_60/", "' . imagePath('post') . '"), p.image), "") as postImage, d.dishName, IFNULL(d.url, "") as dishUrl, IFNULL(dr.rating, "0") as rating, p.`tip`, u.userName, u.id userId, ';
 
     			
     if($postId)	{
@@ -377,7 +377,8 @@ class Post extends FoodTalkActiveRecord
 			.' FROM `post` p INNER JOIN user u on p.userId = u.id AND u.isDisabled=0 
 					LEFT JOIN restaurant r on p.checkedInRestaurantId = r.id 
 					LEFT JOIN city c on r.cityId = c.id
-					INNER JOIN dishReview dr on p.id = dr.postId INNER JOIN dish d on d.id = dr.dishId and d.isDisabled = 0
+					LEFT JOIN dishReview dr on p.id = dr.postId 
+					LEFT JOIN dish d on d.id = dr.dishId and d.isDisabled = 0
 					WHERE p.isDisabled = 0 ';
      	if($postId)
     		$sql .= ' and p.id ='.$postId ;
