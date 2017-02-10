@@ -129,13 +129,13 @@ $('#Restaurant_cityId').selectize({
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'latitude'); ?>
-		<?php echo $form->textField($model,'latitude'); ?>
+		<?php echo $form->textField($model,'latitude', array('required' => true)); ?>
 		<?php echo $form->error($model,'latitude'); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'longitude'); ?>
-		<?php echo $form->textField($model,'longitude'); ?>
+		<?php echo $form->textField($model,'longitude', array('required' => true)); ?>
 		<?php echo $form->error($model,'longitude'); ?>
 	</div>
 

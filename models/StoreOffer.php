@@ -158,7 +158,8 @@ class StoreOffer extends FoodTalkActiveRecord
 
 		if($userId > 0)
 			$sql .= ',(SELECT COUNT(*) FROM `storePurchase` p WHERE i.id = p.storeItemId  AND p.isDisabled=0 AND p.userId='.$userId.') as iPurchasedIt';
-	
+		
+		$sql .= ', IF(o.subType = "UNIQUE_CODE", (SELECT COUNT(1) FROM storeCoupon c WHERE c.storeOfferId = o.id and c.isUsed = 1 ) , "N/A") as totalRedeemed';	
 		$sql .= ",IFNULL(o.validTill, '') as 'validTill'";
 		$sql .= ",IFNULL(o.totalQuantity, '') as 'totalQuantity'";
 		$sql .= ",IFNULL(o.availableQuantity, '') as 'availableQuantity'";
@@ -179,7 +180,6 @@ class StoreOffer extends FoodTalkActiveRecord
 	
 	public static function getOffers($page=1, $status = 'upcomming', $options=array(), $recordCount=9 ){
 	
-		
 		$recordCount = (self::$MAXRecordCount < $recordCount ? self::$MAXRecordCount : $recordCount);
 		$pagestart = ($page-1) * $recordCount;
 	
@@ -189,15 +189,20 @@ class StoreOffer extends FoodTalkActiveRecord
 			$sql .= ' WHERE o.validTill > now() and i.startDate < now() and i.endDate > now() ';
 			$sql .= ' and i.isDisabled = 0 ';
 		}
+
+		if(isset($options['type'])){
+			$sql .= ' and i.type like "'.$options['type'].'"';
+		}
+		
+		if(isset($options['ids'])){
+			$sql .= ' and o.id in ('.$options['ids'].')';
+		}
 		
 		if(isset($options['searchText'])){
 			$sql .= ' and i.title like "%'.$options['searchText'].'%"';
 		}
-		
-		
 	
 		$sql .= ' ORDER BY o.createDate DESC';
-	
 		$sql .= ' LIMIT '. $pagestart .', '. $recordCount;
 		
 		$result = Yii::app()->db->createCommand($sql)->queryAll(true);

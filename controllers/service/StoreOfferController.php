@@ -223,6 +223,12 @@ class StoreOfferController extends ServiceBaseController
     				if(isset($_JSON['city']) && $_JSON['city'])
     					$options['city'] = filter_var($_JSON['city'], FILTER_SANITIZE_NUMBER_INT);
     				
+    				if(isset($_JSON['type']) && $_JSON['type'])
+    					$options['type'] = filter_var($_JSON['type'], FILTER_SANITIZE_STRING);
+
+    				if(isset($_JSON['ids']) && $_JSON['ids'])
+    					$options['ids'] = filter_var($_JSON['ids'], FILTER_SANITIZE_STRING);    				
+    				
     				$recordCount = 9;
     				if(isset($_JSON['recordCount']) && $_JSON['recordCount'])
     					$recordCount = filter_var($_JSON['recordCount'], FILTER_SANITIZE_NUMBER_INT);
