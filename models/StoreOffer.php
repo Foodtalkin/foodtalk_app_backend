@@ -165,6 +165,8 @@ class StoreOffer extends FoodTalkActiveRecord
 		$sql .= ",IFNULL(o.availableQuantity, '') as 'availableQuantity'";
 		$sql .= ",IFNULL(o.limitPerUser, '') as 'limitPerUser'";
 		$sql .= ",IFNULL(o.couponCode, '') as 'couponCode'";
+		$sql .= ",IFNULL(o.autoGenerateCode, '') as 'autoGenerateCode'";
+		
 		$sql .= ",subType ";
 		$sql .= ",IFNULL(o.redemptionUrl, '') as 'redemptionUrl'";
 		$sql .= ",IFNULL(o.redemptionPhone, '') as 'redemptionPhone'";
