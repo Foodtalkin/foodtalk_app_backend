@@ -202,7 +202,7 @@ class UserController extends ServiceBaseController
                         if(isset($_JSON['page']) && $_JSON['page'])
                         	$page = filter_var($_JSON['page'], FILTER_SANITIZE_NUMBER_INT);
 
-                        $tipPosts = Post::getTipPostsByUserId($userId, $selectedUserId, 12, $exceptions);
+                        $tipPosts = Post::getTipPostsByUserId($userId, $selectedUserId, 12, $exceptions,$page );
                         
                         foreach($tipPosts as &$tipPost)
                         {
