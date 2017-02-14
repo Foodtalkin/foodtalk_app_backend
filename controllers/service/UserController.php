@@ -193,10 +193,14 @@ class UserController extends ServiceBaseController
                         $result = $this->error($apiName, WS_ERR_WONG_VALUE, 'Selected user does not exist.');
                     else
                     {
+                    	$page = 1;
                         $exceptions = '';   //list of post ids that are not to be included in the list
                     
                         if(isset($_JSON['exceptions']) && $_JSON['exceptions'])
                             $exceptions = filter_var($_JSON['exceptions'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
+                        
+                        if(isset($_JSON['page']) && $_JSON['page'])
+                        	$page = filter_var($_JSON['page'], FILTER_SANITIZE_NUMBER_INT);
 
                         $tipPosts = Post::getTipPostsByUserId($userId, $selectedUserId, 12, $exceptions);
                         

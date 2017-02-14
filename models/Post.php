@@ -435,8 +435,9 @@ class Post extends FoodTalkActiveRecord
         return $posts;
     }
     
-    public static function getTipPostsByUserId($userId, $postUserId, $recordCount=12, $exceptions='')
+    public static function getTipPostsByUserId($userId, $postUserId, $recordCount=12, $exceptions='', $page=1)
     {
+    	$pagestart = ($page-1) * $recordCount;
         //fetch all tip posts of given user
         $sql = self::getQuery($userId, $postUserId, false, true);
         $sql .= ' AND p.tip !=""';
@@ -449,8 +450,9 @@ class Post extends FoodTalkActiveRecord
         
         $sql .= ' ORDER BY p.createDate DESC';
         
-        if($recordCount != 0)
-            $sql .= ' LIMIT ' . $recordCount;
+//         if($recordCount != 0)
+			$sql .= ' LIMIT '. $pagestart .', '. $recordCount;
+//             $sql .= ' LIMIT ' . $recordCount;
         
         $posts = Yii::app()->db->createCommand($sql)->queryAll(true);
 
