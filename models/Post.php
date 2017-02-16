@@ -824,6 +824,8 @@ class Post extends FoodTalkActiveRecord
 //     	$sql .= ',IFNULL(CONCAT("' . thumbPath('post') . '", p.image), "") as postThumb';
     	$sql .= ',IFNULL(d.dishName, "") as dishName';
     	$sql .= ',IFNULL(d.url, "") as dishUrl';
+    	$sql .= ',IFNULL(p.type, "") as type';
+    	
     	$sql .= ',IFNULL(dr.rating, "0") as rating';
     	 
 //     	if($search)
