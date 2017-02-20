@@ -388,6 +388,75 @@ class StoreOfferController extends ServiceBaseController
     }
     
  
+    public function actionAddRestaurant()
+    {
+    	$apiName = 'storeOffer/addRestaurant';
+    	$sessionId = null;
+    
+    	$_JSON = $this->getJsonInput();
+    
+    	try
+    	{
+    		if(!isset($_JSON) || empty($_JSON))
+    			$result = $this->error($apiName, WS_ERR_POST_PARAM_MISSED, 'No input received.');
+    		else if(!isset($_JSON['sessionId']) || empty($_JSON['sessionId']))
+    			$result = $this->error($apiName, WS_ERR_POST_PARAM_MISSED, 'Please enter session id.');
+    		else
+    		{
+    			//             	$user = true;
+    			$userId = $this->isAuthentic($_JSON['sessionId']);
+    			$user = User::model()->findByPk($userId);
+    
+    			if (is_null($user) and $user->id  > 0)
+    				$result = $this->error($apiName, WS_ERR_WONG_USER, 'Please login before using this service.');
+    			else
+    			{
+    
+    				if(isset($_JSON['storeOfferId']) && !empty ($_JSON['storeOfferId']))
+    					$offer = StoreOffer::model()->findByPk($_JSON['storeOfferId']);
+    
+    				if(empty($offer)){
+    					throw new Exception(print_r('Invalid offer id', true), WS_ERR_WONG_VALUE);
+    				}
+    
+    				if(isset($_JSON['restaurants']) && !empty ($_JSON['restaurants']))
+    					$restaurants = $_JSON['restaurants'];
+    				else
+    					throw new Exception(print_r('no restaurants provided', true), WS_ERR_POST_PARAM_MISSED);
+    
+    				//     				StoreItemUserInfo::model()->deleteAllByAttributes(array('storeItemId'=>$item->id));
+    
+    				foreach ($restaurants as $rid){
+    					$restaurant = new StoreItemRestaurant('create_api');
+    					$restaurant->storeItemId = $offer->storeItemId;
+    					$restaurant->restaurantId = $rid;
+    					$restaurant->save();
+    
+    					if ($restaurant->hasErrors()){
+    						throw new Exception(print_r($restaurant->getErrors(), true), WS_ERR_UNKNOWN);
+    					}
+    				}
+    
+    
+    				$result = array(
+    						'api' => $apiName,
+    						'apiMessage' => 'Coupons added successfully',
+    						'status' => 'OK'
+    						//     						'storePurchaseId' => $purchase->id
+    				);
+    
+    			}
+    		}
+    	}
+    	catch (Exception $e)
+    	{
+    		$result = $this->error($apiName, $e->getCode(), Yii::t('app', $e->getMessage()));
+    	}
+    	$this->sendResponse(json_encode($result, JSON_UNESCAPED_UNICODE));
+    
+    }
+    
+    
 	public function actionGetCoupon(){
 
 		$apiName = 'storeOffer/getCoupon';
