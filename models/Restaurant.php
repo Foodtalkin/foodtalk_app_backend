@@ -599,4 +599,11 @@ class Restaurant extends FoodTalkActiveRecord
         $restaurants = Yii::app()->db->createCommand($sql)->queryAll(true);
         return $restaurants;
     }
+    
+    public static function getCheckinsStats($id, $days, $to, $from)
+    {
+    	$sql = 'SELECT count(1) as cnt';
+        $sql .= ' FROM restaurant r';
+    			
+    }
 }

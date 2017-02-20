@@ -186,26 +186,61 @@ class StoreOffer extends FoodTalkActiveRecord
 		$pagestart = ($page-1) * $recordCount;
 	
 		$sql = self::getQuery();
-	
-		if($status != 'all'){
-			$sql .= ' WHERE o.validTill > now() and i.startDate < now() and i.endDate > now() ';
-			$sql .= ' and i.isDisabled = 0 ';
+
+		if(isset($options['restaurantId']))
+			$sql .= ' INNER JOIN storeItemRestaurant r on r.storeItemId = o.storeItemId and r.restaurantId = '.$options['restaurantId'];
+		
+		$where = [];
+// 		if($status != 'all'){
+			
+// 			$sql .= ' WHERE o.validTill > now() and i.startDate < now() and i.endDate > now() ';
+// 			$sql .= ' and i.isDisabled = 0 ';
+// 		}
+		
+		switch (strtolower($status)){
+			case 'active':
+				$where[] = 'o.validTill > now()';
+				$where[] = 'i.startDate < now()';
+				$where[] = 'i.endDate > now()';
+				$where[] = 'i.isDisabled = 0';
+				break;
+			case 'disabled':
+				$where[] = 'i.isDisabled = 1';
+				break;
+			case 'past':
+				$where[] = 'o.validTill < now()';
+				$where[] = 'i.endDate < now()';
+				$where[] = 'i.isDisabled = 0';
+				break;
+			case 'all':
+				break;
+			default:
+				$where[] = 'o.validTill > now()';
+				$where[] = 'i.startDate < now()';
+				$where[] = 'i.endDate > now()';
+				$where[] = 'i.isDisabled = 0';
 		}
 
 		if(isset($options['type'])){
-			$sql .= ' and i.type like "'.$options['type'].'"';
+			$where[] = 'i.type like "'.$options['type'].'"';
+// 			$sql .= ' and i.type like "'.$options['type'].'"';
 		}
-		
 		if(isset($options['ids'])){
-			$sql .= ' and o.id in ('.$options['ids'].')';
+			$where[] = ' o.id in ('.$options['ids'].')';
+// 			$sql .= ' and o.id in ('.$options['ids'].')';
 		}
-		
 		if(isset($options['searchText'])){
-			$sql .= ' and i.title like "%'.$options['searchText'].'%"';
+			$where[] = ' i.title like "%'.$options['searchText'].'%"';
+// 			$sql .= ' and i.title like "%'.$options['searchText'].'%"';
 		}
-	
+
+		$sql .= empty($where)? ' ':' WHERE '.implode(' and ', $where);
+		
 		$sql .= ' ORDER BY o.createDate DESC';
 		$sql .= ' LIMIT '. $pagestart .', '. $recordCount;
+		
+// 		echo $sql;
+// 		die('DIE');
 		
 		$result = Yii::app()->db->createCommand($sql)->queryAll(true);
 		return $result;

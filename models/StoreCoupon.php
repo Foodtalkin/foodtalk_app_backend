@@ -155,6 +155,47 @@ class StoreCoupon extends FoodTalkActiveRecord
 	
 	}
 	
+	protected static function getQuery($options)
+	{
+		$sql = 'SELECT c.id ';
+		$sql .= ',c.code ';
+		$sql .= ',c.userId ';
+		$sql .= ',c.isUsed ';
+		$sql .= ',c.storeOfferId ';
+		$sql .= ',c.code ';
+		
+// 		offer details
+		$sql .= ',i.title ';
+		$sql .= ',i.coverImage ';
+		$sql .= ',i.cardImage ';
+		$sql .= ',IFNULL(i.description, "") as description';
+		$sql .= ',IFNULL(i.shortDescription, "") as shortDescription';
+		$sql .= ',IFNULL(i.cityText, "") as cityText';
+		$sql .= ',i.type ';
+
+		$sql .= ',IFNULL(o.validTill, "N/A") as validTill';
+		$sql .= ',o.subType ';
+		$sql .= ',o.storeItemId ';
+		
+		$sql .= ' FROM storeCoupon c';
+		$sql .= ' INNER JOIN storeOffer o on o.id = c.storeOfferId and c.isDisabled=0 and o.isDisabled=0';
+		$sql .= ' INNER JOIN storeItem i on i.id = o.storeItem and i.isDisabled=0';
+		
+		if(isset($options['restaurantId']))
+			$sql .= ' INNER JOIN storeItemRestaurant r on i.id = r.storeItemId and r.restaurantId='.$options['restaurantId'];
+		
+	}
+	
+	public static function getThisCoupon($couponCode, $options=[]){
+		
+		$sql = self::getQuery($options);
+		$sql .= ' WHERE c.code ="'.$couponCode.'" ';
+		
+		$coupon = Yii::app()->db->createCommand($sql)->queryAll(true);
+		 
+		return $coupon;
+	}
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
