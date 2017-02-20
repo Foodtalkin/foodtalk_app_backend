@@ -179,10 +179,12 @@ class StoreCoupon extends FoodTalkActiveRecord
 		
 		$sql .= ' FROM storeCoupon c';
 		$sql .= ' INNER JOIN storeOffer o on o.id = c.storeOfferId and c.isDisabled=0 and o.isDisabled=0';
-		$sql .= ' INNER JOIN storeItem i on i.id = o.storeItem and i.isDisabled=0';
+		$sql .= ' INNER JOIN storeItem i on i.id = o.storeItemId and i.isDisabled=0';
 		
 		if(isset($options['restaurantId']))
 			$sql .= ' INNER JOIN storeItemRestaurant r on i.id = r.storeItemId and r.restaurantId='.$options['restaurantId'];
+		
+		return $sql;
 		
 	}
 	
@@ -191,7 +193,10 @@ class StoreCoupon extends FoodTalkActiveRecord
 		$sql = self::getQuery($options);
 		$sql .= ' WHERE c.code ="'.$couponCode.'" ';
 		
-		$coupon = Yii::app()->db->createCommand($sql)->queryAll(true);
+// 		echo $sql;
+// 		die('daeas')
+		
+		$coupon = Yii::app()->db->createCommand($sql)->queryRow();
 		 
 		return $coupon;
 	}

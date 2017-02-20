@@ -429,7 +429,6 @@ class StoreOfferController extends RestaurantServiceBaseController
     
 	public function actionRedeemCoupon(){
 		
-		
 		$_JSON = $this->getJsonInput();
 		
 		if(isset($_JSON['code']) && !empty ($_JSON['code']))
@@ -440,16 +439,15 @@ class StoreOfferController extends RestaurantServiceBaseController
 		if(empty($coupon)){
 			throw new Exception(print_r('Error : Invalid Coupon code!', true), WS_ERR_WONG_VALUE);
 		}
-				
+		
 		if(boolval($coupon['isUsed'])){
 			throw new Exception(print_r('Error : Coupon code Already Used!', true), WS_ERR_REQUEST_NOT_ACCEPTED);
 		}
 		
-		
-		
 		if($coupon['userId'] > 0){
 						
 			$res = StoreCoupon::model()->updateByPk( $coupon['id'], array('isUsed'=>1) );
+			
 // 			$coupon->isUsed = 1;
 // 			$coupon->save();
 // 			if ($coupon->hasErrors()){
@@ -462,10 +460,7 @@ class StoreOfferController extends RestaurantServiceBaseController
 		}else{
 			throw new Exception(print_r('Error : Invalid Coupon code!', true), WS_ERR_WONG_VALUE);
 		}
-				
 		return	$this->sendResponse([],self::SUCCESS_OK);
-		
 	}
-	   
 
 }
