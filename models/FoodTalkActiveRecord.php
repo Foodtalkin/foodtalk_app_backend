@@ -68,9 +68,14 @@ abstract class FoodTalkActiveRecord extends CActiveRecord
     			));
     	
     	if($activity && $this->manageActivity($activity)){
-    		
-    		$session = Session::model()->findByAttributes(array('sessionId'=>$_JSON['sessionId']));
-    		$UserfacebookId = $session->user->facebookId;
+
+    		if(isset($_JSON['sessionId'])){
+    			$session = Session::model()->findByAttributes(array('sessionId'=>$_JSON['sessionId']));
+    			$UserfacebookId = $session->user->facebookId;
+    		}
+    		elseif ($this->tableName()== 'user'){
+    			$UserfacebookId = $this->facebookId;
+    		}
     		
     		return ActivityLog::model()->log($UserfacebookId, $activity, $this->id, $type);    		
     	}
