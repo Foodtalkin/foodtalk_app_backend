@@ -98,7 +98,7 @@ class CommentController extends ServiceBaseController
                         }
                         else{
                         	$eventtype = 12;
-                        	$message = $user->userName.' also commented on '.$post->user->userName."'s post.";
+                        	$message1 = $user->userName.' also commented on '.$post->user->userName."'s post.";
                         }
                         
 //                         $message = $user->userName.' also commented on '.$post->user->userName."'s post.";
@@ -108,7 +108,7 @@ class CommentController extends ServiceBaseController
                         	
                         	if(!in_array($comm['userId'], $ignore_user))
 // 		                        Event::saveEvent(12, $userId, $comment->postId, $comment->createDate, $comm['userId']);
-                        		Event::saveEvent(12, $userId, $comment->postId, $comment->createDate, $comm['userId'], $message );
+                        		Event::saveEvent(12, $userId, $comment->postId, $comment->createDate, $comm['userId'], $message1 );
                         }
                         
                         //send notifications to followers of the post user
