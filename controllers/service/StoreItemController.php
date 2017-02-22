@@ -155,9 +155,16 @@ class StoreItemController extends ServiceBaseController
     					throw new Exception(print_r('Invalid event id', true), WS_ERR_WONG_VALUE);
     				}
     				
-
+    				$profile = User::getProfileById($userId, $userId);
+    				
+    				$costPoints = $item['costPoints'];
+    				
     				$quantity = 1;
     				$metaData = array();
+    				
+    				if($costPoints * $quantity > $profile['avilablePoints'])
+    					throw new Exception(print_r('cannnot process request insufficient points', true), WS_ERR_REQUEST_NOT_ACCEPTED);
+    				
     				
     				switch ($item['type']){
     					
@@ -207,11 +214,6 @@ class StoreItemController extends ServiceBaseController
     						break;
     				}
     				
-    				$profile = User::getProfileById($userId, $userId);
-    				
-					if($costPoints * $quantity > $profile['avilablePoints'])    				
-						throw new Exception(print_r('cannnot process request insufficient points', true), WS_ERR_REQUEST_NOT_ACCEPTED);
-					
 //     				die('dead');
     					
     				$purchase = new StorePurchase('create_api');	
