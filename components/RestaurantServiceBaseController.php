@@ -54,7 +54,6 @@ class RestaurantServiceBaseController extends ServiceController
     {
     	
     	Yii::app()->errorHandler->errorAction = $id.'/Error';
-    	 
     	
     	$nonAutharizedRequest = ['auth']; 
     	
@@ -84,6 +83,10 @@ class RestaurantServiceBaseController extends ServiceController
     		}
     		
     	}
+    	
+    	$method = $_SERVER['REQUEST_METHOD'];
+    	if ($method == 'OPTIONS')
+    		die();
     	
     	$req = 	$this->getJsonInput();
     	
