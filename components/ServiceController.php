@@ -204,7 +204,10 @@ class ServiceController extends Controller
     	unset($response ['header']);
     	$body = json_encode($response , JSON_UNESCAPED_UNICODE);
     	 
-    	echo $body;
+		if(isset($_GET['callback']) && !empty(trim($_GET['callback'])))
+    		echo $_GET['callback']."($body)";
+    	else 	
+	    	echo $body;
     }
     
     function getJsonInput(){
