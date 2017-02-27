@@ -75,7 +75,7 @@ class CommentController extends ServiceBaseController
                         //save event
                         if($post->type == 'question'){
                         	$eventtype = 14;
-                        	$message1 =  $user->userName.' answered to your question.';
+                        	$message1 =  $user->userName.' answered your question.';
                         }
                         else{
                         	$eventtype = Event::COMMENT_CREATED;
@@ -94,7 +94,7 @@ class CommentController extends ServiceBaseController
                         
                         if($post->type == 'question'){
                         	$eventtype = 15;
-                        	$message1 =  $user->userName.' also answered to '.$post->user->userName."'s question.";
+                        	$message1 =  $user->userName.' also answered '.$post->user->userName."'s question.";
                         }
                         else{
                         	$eventtype = 12;
