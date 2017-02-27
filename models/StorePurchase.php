@@ -171,7 +171,7 @@ class StorePurchase extends FoodTalkActiveRecord
 		$sql .= ' where p.storeItemId = '.$storeItemId;
 		$sql .= ' AND p.isDisabled = 0 ';
 		
-		$result = Yii::app()->db->createCommand($sql)->queryRow(true);
+		$result = Yii::app()->db->createCommand($sql)->queryAll(true);
 		return $result;
 		
 	}
