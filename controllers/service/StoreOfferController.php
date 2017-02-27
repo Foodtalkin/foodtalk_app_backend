@@ -297,12 +297,18 @@ class StoreOfferController extends ServiceBaseController
     				$options['userId'] = $userId;
     				
     				$storeOffer = StoreOffer::getThisOffer($id, $storeItemId, $status, $options);
+    				
+    				$clamedUsers = [];
+    				if(!empty($storeOffer))
+    					$clamedUsers = StorePurchase::getClamedUsers($storeOffer['storeItemId']);
+    				
     
     				$result = array(
     						'api' => $apiName,
     						'apiMessage' => 'Records fetched successfully',
     						'status' => 'OK',
-    						'storeOffer' => $storeOffer
+    						'storeOffer' => $storeOffer,
+    						'clamedUsers'=>$clamedUsers
     				);
     
     			}

@@ -132,6 +132,50 @@ class StorePurchase extends FoodTalkActiveRecord
 		));
 	}
 
+	public static function getQuery()
+	{
+	
+		$sql = "SELECT p.id";
+	
+		$sql .= ",p.storeItemId as storeItemId ";
+		$sql .= ",p.costType ";
+		$sql .= ",IFNULL(p.quantity, 'N/A') as quantity";
+		$sql .= ",IFNULL(p.costOnline, 'N/A') as costOnline";
+		$sql .= ",IFNULL(p.costPoints, 'N/A') as costPoints";
+		$sql .= ",IFNULL(p.isUsed, 'N/A') as isUsed";
+		$sql .= ",IFNULL(p.createDate, 'N/A') as purchaseDate";
+		
+		
+		$sql .= ",IFNULL(p.userId, '') as userId";
+		$sql .= ",IFNULL(u.userName, '') as userName";
+		$sql .= ",IFNULL(u.fullName, '') as fullName";
+		$sql .= ",IFNULL(u.gender, '') as gender";
+		$sql .= ',IFNULL(CONCAT("' . imagePath('user') . '", u.image, "?type=large"), "") as image';
+		$sql .= ',IFNULL(CONCAT("' . thumbPath('user') . '", u.image, "?type=small"), "") as thumb';
+		$sql .= ",IFNULL(u.cityId, '') as cityId";
+		$sql .= ",IFNULL(c.cityName, '') as cityName";
+		$sql .= ",IFNULL(c.countryId, '') as countryId";
+		
+		$sql .= ' FROM storePurchase p';
+		$sql .= ' INNER JOIN user u on u.id = p.userId';
+		$sql .= ' LEFT JOIN city c on c.id = u.cityId';
+		
+		return $sql;
+	}
+	
+	
+	public static function getClamedUsers($storeItemId, $options=[]){
+		
+		$sql = self::getQuery();
+		
+		$sql .= ' where p.storeItemId = '.$storeItemId;
+		$sql .= ' AND p.isDisabled = 0 ';
+		
+		$result = Yii::app()->db->createCommand($sql)->queryRow(true);
+		return $result;
+		
+	}
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
