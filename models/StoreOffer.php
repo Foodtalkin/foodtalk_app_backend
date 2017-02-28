@@ -132,7 +132,7 @@ class StoreOffer extends FoodTalkActiveRecord
 	}
 
 	
-	public static function getQuery($userId=0)
+	public static function getQuery($userId=0, $options=[])
 	{
 	
 		$sql = "SELECT o.id";
@@ -176,6 +176,10 @@ class StoreOffer extends FoodTalkActiveRecord
 		$sql .= " FROM storeOffer o ";
 		$sql .= " INNER JOIN storeItem i on i.id = o.storeItemId ";
 // 		$sql .= " INNER JOIN storeItem i on i.id = o.storeItemId and i.type = 'OFFER' ";
+
+		if(isset($options['restaurantId']))
+			$sql .= ' INNER JOIN storeItemRestaurant r on r.storeItemId = o.storeItemId and r.restaurantId = '.$options['restaurantId'];
+		
 		
 		return $sql;
 	}
@@ -185,10 +189,7 @@ class StoreOffer extends FoodTalkActiveRecord
 		$recordCount = (self::$MAXRecordCount < $recordCount ? self::$MAXRecordCount : $recordCount);
 		$pagestart = ($page-1) * $recordCount;
 	
-		$sql = self::getQuery();
-
-		if(isset($options['restaurantId']))
-			$sql .= ' INNER JOIN storeItemRestaurant r on r.storeItemId = o.storeItemId and r.restaurantId = '.$options['restaurantId'];
+		$sql = self::getQuery(0, $options);
 		
 		$where = [];
 // 		if($status != 'all'){
@@ -255,7 +256,8 @@ class StoreOffer extends FoodTalkActiveRecord
 		else 
 			$userId = 0;
 		
-		$sql = self::getQuery($userId);
+		$sql = self::getQuery($userId, $options);
+		
 		
 		if($id > 0)
 			$sql .= ' WHERE o.id = '.$id;

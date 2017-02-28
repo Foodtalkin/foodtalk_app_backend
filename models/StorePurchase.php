@@ -132,7 +132,7 @@ class StorePurchase extends FoodTalkActiveRecord
 		));
 	}
 
-	public static function getQuery()
+	public static function getQuery($options)
 	{
 	
 		$sql = "SELECT p.id";
@@ -145,7 +145,10 @@ class StorePurchase extends FoodTalkActiveRecord
 		$sql .= ",IFNULL(p.isUsed, 'N/A') as isUsed";
 		$sql .= ",IFNULL(p.createDate, 'N/A') as purchaseDate";
 		
-		
+		if(isset($options['isUsed']) and $options['isUsed']==1){
+			$sql .= ",p.metaData ";
+			$sql .= ",p.updateDate as redeemDate ";
+		}
 		$sql .= ",IFNULL(p.userId, '') as userId";
 		$sql .= ",IFNULL(u.userName, '') as userName";
 		$sql .= ",IFNULL(u.fullName, '') as fullName";
@@ -166,10 +169,15 @@ class StorePurchase extends FoodTalkActiveRecord
 	
 	public static function getClamedUsers($storeItemId, $options=[]){
 		
-		$sql = self::getQuery();
+		$sql = self::getQuery($options);
 		
 		$sql .= ' where p.storeItemId = '.$storeItemId;
 		$sql .= ' AND p.isDisabled = 0 ';
+		
+		if(isset($options['isUsed']) and $options['isUsed']==1)
+			$sql .= ' AND p.isUsed = 1 ';
+				
+		$sql .= ' ORDER BY p.updateDate DESC ';
 		
 		$result = Yii::app()->db->createCommand($sql)->queryAll(true);
 		return $result;

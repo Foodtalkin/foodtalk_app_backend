@@ -186,30 +186,25 @@ class StoreOfferController extends RestaurantServiceBaseController
 		$_JSON = $this->getJsonInput ();
 		$page = 1;
 		$status = 'active';
-		$message = null;
-		
-		if ($this->restaurant ()->id > 0)
-			$options ['restaurantId'] = $this->restaurant ()->id;
-		else
-			throw new Exception ( 'no restaurant : unautharized', self::UN_AUTHORIZED );
+		$message = null;		
 		
 		if (isset ( $_JSON ['page'] ) && $_JSON ['page'])
 			$page = filter_var ( $_JSON ['page'], FILTER_SANITIZE_NUMBER_INT );
 		
 		if (isset ( $_JSON ['searchText'] ) && $_JSON ['searchText'])
-			$options ['searchText'] = filter_var ( $_JSON ['searchText'], FILTER_SANITIZE_STRING );
+			$this->options ['searchText'] = filter_var ( $_JSON ['searchText'], FILTER_SANITIZE_STRING );
 		
 		if (isset ( $_JSON ['status'] ) && $_JSON ['status'] && self::isManager ())
 			$status = filter_var ( $_JSON ['status'], FILTER_SANITIZE_STRING );
 		
 		if (isset ( $_JSON ['type'] ) && $_JSON ['type'])
-			$options ['type'] = filter_var ( $_JSON ['type'], FILTER_SANITIZE_STRING );
+			$this->options ['type'] = filter_var ( $_JSON ['type'], FILTER_SANITIZE_STRING );
 			
 		$recordCount = 9;
 		if (isset ( $_JSON ['recordCount'] ) && $_JSON ['recordCount'])
 			$recordCount = filter_var ( $_JSON ['recordCount'], FILTER_SANITIZE_NUMBER_INT );
 		
-		$response = StoreOffer::getOffers( $page, $status, $options, $recordCount );
+		$response = StoreOffer::getOffers( $page, $status, $this->options, $recordCount );
 		
 		if(empty($response))
 			$message = 'no such offers';
@@ -218,71 +213,38 @@ class StoreOfferController extends RestaurantServiceBaseController
     
     }
     
-
-    public function actionGet()
-    {
-    	$apiName = 'storeOffer/get';
-    	$sessionId = null;
-    
-    	$_JSON = $this->getJsonInput();
-    	 
-    	try
-    	{
-    		if(!isset($_JSON) || empty($_JSON))
-    			$result = $this->error($apiName, WS_ERR_POST_PARAM_MISSED, 'No input received.');
-    		else if(!isset($_JSON['sessionId']) || empty($_JSON['sessionId']))
-    			$result = $this->error($apiName, WS_ERR_POST_PARAM_MISSED, 'Please enter session id.');
-    		else
-    		{
-    			//             	$user = true;
-    			$userId = $this->isAuthentic($_JSON['sessionId']);
-    			$user = User::model()->findByPk($userId);
-    			 
-    			if (is_null($user))
-    				$result = $this->error($apiName, WS_ERR_WONG_USER, 'Please login before using this service.');
-    			else
-    			{
-    				$status = 'active';
-    				$id = 0;
-    				$storeItemId = 0;
-    				$options=array();
-    				
-//     				if(isset($_JSON['status']) && $_JSON['status'] && $user->role == 'manager')
-//     					$status = filter_var($_JSON['status'], FILTER_SANITIZE_STRING);
-    
-    				if(isset($_JSON['status']) && $_JSON['status'] && self::isManager($user))
-    					$status = filter_var($_JSON['status'], FILTER_SANITIZE_STRING);
-    				
-    				if(isset($_JSON['id']) && !empty ($_JSON['id']))
-    					$id = trim(filter_var($_JSON['id'], FILTER_SANITIZE_NUMBER_INT));
-
-    				if(isset($_JSON['storeItemId']) && !empty ($_JSON['storeItemId']))
-    					$storeItemId = trim(filter_var($_JSON['storeItemId'], FILTER_SANITIZE_NUMBER_INT));
-    				
-    				$options['userId'] = $userId;
-    				
-    				$storeOffer = StoreOffer::getThisOffer($id, $storeItemId, $status, $options);
-    
-    				$result = array(
-    						'api' => $apiName,
-    						'apiMessage' => 'Records fetched successfully',
-    						'status' => 'OK',
-    						'storeOffer' => $storeOffer
-    				);
-    
-    			}
-    		}
-    	}
-    	catch (Exception $e)
-    	{
-    		$result = $this->error($apiName, $e->getCode(), Yii::t('app', $e->getMessage()));
-    	}
-    	$this->sendResponse(json_encode($result, JSON_UNESCAPED_UNICODE));
-    
-    }
-    
-    
-    
+	public function actionGet() {
+		
+		$_JSON = $this->getJsonInput ();
+		$status = 'active';
+		$id = 0;
+		$storeItemId = 0;
+		$message = null;
+		
+		if (isset ( $_JSON ['status'] ) && $_JSON ['status'] && self::isManager ( $user ))
+			$status = filter_var ( $_JSON ['status'], FILTER_SANITIZE_STRING );
+		
+		if (isset ( $_JSON ['id'] ) && ! empty ( $_JSON ['id'] ))
+			$id = trim ( filter_var ( $_JSON ['id'], FILTER_SANITIZE_NUMBER_INT ) );
+		
+		if (isset ( $_JSON ['storeItemId'] ) && ! empty ( $_JSON ['storeItemId'] ))
+			$storeItemId = trim ( filter_var ( $_JSON ['storeItemId'], FILTER_SANITIZE_NUMBER_INT ) );
+		
+		$storeOffer = StoreOffer::getThisOffer ( $id, $storeItemId, $status, $this->options );
+		
+		$clamedUsers = [];
+		if(!empty($storeOffer))
+			$clamedUsers = StorePurchase::getClamedUsers($storeOffer['storeItemId']);
+		else 
+			$message = 'no such offers';
+		
+		$response = array (
+				'storeOffer' => $storeOffer,
+				'clamedUsers'=>$clamedUsers
+		);
+		return	$this->sendResponse($response,self::SUCCESS_OK, $message);
+		
+	}
 
     public function actionAddCoupon()
     {
@@ -426,7 +388,44 @@ class StoreOfferController extends RestaurantServiceBaseController
 		return	$this->sendResponse($response,self::SUCCESS_OK, $message);
 	}
     
-    
+ 
+	public function actionRedeemHistory()
+	{
+		$_JSON = $this->getJsonInput ();
+		$status = 'active';
+		$id = 0;
+		$storeItemId = 0;
+		$message = null;
+		
+		if (isset ( $_JSON ['status'] ) && $_JSON ['status'] && self::isManager ( $user ))
+			$status = filter_var ( $_JSON ['status'], FILTER_SANITIZE_STRING );
+		
+		if (isset ( $_JSON ['id'] ) && ! empty ( $_JSON ['id'] ))
+			$id = trim ( filter_var ( $_JSON ['id'], FILTER_SANITIZE_NUMBER_INT ) );
+		
+		if (isset ( $_JSON ['storeItemId'] ) && ! empty ( $_JSON ['storeItemId'] ))
+			$storeItemId = trim ( filter_var ( $_JSON ['storeItemId'], FILTER_SANITIZE_NUMBER_INT ) );
+		
+		$storeOffer = StoreOffer::getThisOffer ( $id, $storeItemId, $status, $this->options );
+		
+		$purchaseOptions = array('isUsed'=>1);
+		
+		$redeemUsers = [];
+		if(!empty($storeOffer))
+			$redeemUsers = StorePurchase::getClamedUsers($storeOffer['storeItemId'], $purchaseOptions );
+		else 
+			$message = 'no such offers';
+		
+		$response = array (
+				'storeOffer' => $storeOffer,
+				'redeemUsers'=>$redeemUsers
+		);
+		return	$this->sendResponse($response,self::SUCCESS_OK, $message);
+		
+	}
+	
+	
+	
 	public function actionRedeemCoupon(){
 		
 		$_JSON = $this->getJsonInput();
