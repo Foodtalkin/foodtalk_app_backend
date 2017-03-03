@@ -7,6 +7,7 @@
  * @property integer $id
  * @property string $platform
  * @property string $version
+ * @property string $message
  * @property integer $isCritical
  */
 class AppVersion extends CActiveRecord
@@ -31,9 +32,10 @@ class AppVersion extends CActiveRecord
 			array('isCritical', 'numerical', 'integerOnly'=>true),
 			array('platform', 'length', 'max'=>7),
 			array('version', 'length', 'max'=>20),
+			array('message', 'length', 'max'=>200),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, platform, version, isCritical', 'safe', 'on'=>'search'),
+			array('id, platform, version, message, isCritical', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -57,6 +59,7 @@ class AppVersion extends CActiveRecord
 			'id' => 'ID',
 			'platform' => 'Platform',
 			'version' => 'Version',
+			'message' => 'Message',
 			'isCritical' => 'Is Critical',
 		);
 	}
@@ -82,6 +85,7 @@ class AppVersion extends CActiveRecord
 		$criteria->compare('id',$this->id);
 		$criteria->compare('platform',$this->platform,true);
 		$criteria->compare('version',$this->version,true);
+		$criteria->compare('message',$this->message,true);
 		$criteria->compare('isCritical',$this->isCritical);
 
 		return new CActiveDataProvider($this, array(
