@@ -26,12 +26,18 @@ class AdwordsController extends ServiceBaseController
                     $result = $this->error($apiName, WS_ERR_WONG_USER, 'Please login before using this service.');
                 else
                 {
-                	$type=false;
+                	$option = [];
                 	
                 	if(isset($_JSON['type']) && strlen(trim($_JSON['type']))>1)
-                		$type = filter_var($_JSON['type'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
+                		$option['type'] = filter_var($_JSON['type'], FILTER_SANITIZE_STRING | FILTER_SANITIZE_MAGIC_QUOTES);
                 	
-                    $addList = Adwords::getAds($userId,$type);
+                	if(isset($_JSON['latitude']) && $_JSON['latitude'])
+                		$option['latitude'] = filter_var($_JSON['latitude'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+                	
+                	if(isset($_JSON['longitude']) && $_JSON['longitude'])
+                		$option['longitude'] = filter_var($_JSON['longitude'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+                	
+                    $addList = Ads::getAds($userId,$option);
                     $result = array(
                         'api' => $apiName,
                         'apiMessage' => 'adwords fetched successfully.',
