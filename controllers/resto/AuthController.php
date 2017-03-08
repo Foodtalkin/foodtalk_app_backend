@@ -25,6 +25,7 @@ class AuthController extends RestaurantServiceBaseController
 				$_SESSION['restaurant']['id'] = $Restaurant->id;
 				$_SESSION['restaurant']['email'] = $Restaurant->email;
 				$_SESSION['restaurant']['restaurantName'] = $Restaurant->restaurantName;
+				$_SESSION['restaurant']['area'] = $Restaurant->area;
 				$_SESSION['role'] = $Restaurant->role;
 				$autharized = true;
 			}
