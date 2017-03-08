@@ -381,7 +381,15 @@ class StoreOfferController extends RestaurantServiceBaseController
 			$response = StoreCoupon::getThisCoupon(trim(filter_var($_JSON['code'], FILTER_SANITIZE_STRING)), $this->options);
 		else 
 			throw new Exception(print_r('Error : No Coupon code provided!', true), WS_ERR_POST_PARAM_MISSED);
-						
+
+		
+		$purchase = StorePurchase::model()->findByAttributes(array('storeItemId'=>$response['storeItemId'], 'userId'=>$response['userId']));
+		$metadata = json_decode($purchase->metaData, true);
+			
+		if(time() > strtotime($metadata['validTill']))
+			throw new Exception(print_r('Error : Coupon code Expired!', true), WS_ERR_REQUEST_NOT_ACCEPTED);
+		
+		
 		if(empty($response))
 			$message = 'Error : Invalid Coupon code!';
 			
