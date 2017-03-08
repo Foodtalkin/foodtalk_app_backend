@@ -380,15 +380,16 @@ class StoreOfferController extends RestaurantServiceBaseController
 		if(isset($_JSON['code']) && !empty ($_JSON['code']))
 			$response = StoreCoupon::getThisCoupon(trim(filter_var($_JSON['code'], FILTER_SANITIZE_STRING)), $this->options);
 		else 
-			throw new Exception(print_r('Error : No Coupon code provided!', true), WS_ERR_POST_PARAM_MISSED);
+			throw new Exception(print_r('Error : No Coupon code provided!', true), self::NOT_ACCEPTABLE);
 
 		
 		$purchase = StorePurchase::model()->findByAttributes(array('storeItemId'=>$response['storeItemId'], 'userId'=>$response['userId']));
 		$metadata = json_decode($purchase->metaData, true);
 			
 		if(time() > strtotime($metadata['validTill']))
-			throw new Exception(print_r('Error : Coupon code Expired!', true), WS_ERR_REQUEST_NOT_ACCEPTED);
+			throw new Exception(print_r('Error : Coupon code Expired!', true), self::NOT_ACCEPTABLE);
 		
+		$response['validTill'] = $metadata['validTill'];
 		
 		if(empty($response))
 			$message = 'Error : Invalid Coupon code!';
@@ -441,14 +442,14 @@ class StoreOfferController extends RestaurantServiceBaseController
 		if(isset($_JSON['code']) && !empty ($_JSON['code']))
 			$coupon = StoreCoupon::getThisCoupon(trim(filter_var($_JSON['code'], FILTER_SANITIZE_STRING)), $this->options);
 		else
-			throw new Exception(print_r('Error : No Coupon code provided!', true), WS_ERR_POST_PARAM_MISSED);
+			throw new Exception(print_r('Error : No Coupon code provided!', true), self::NOT_ACCEPTABLE);
 						
 		if(empty($coupon)){
-			throw new Exception(print_r('Error : Invalid Coupon code!', true), WS_ERR_WONG_VALUE);
+			throw new Exception(print_r('Error : Invalid Coupon code!', true), self::NOT_ACCEPTABLE);
 		}
 		
 		if(boolval($coupon['isUsed'])){
-			throw new Exception(print_r('Error : Coupon code Already Used!', true), WS_ERR_REQUEST_NOT_ACCEPTED);
+			throw new Exception(print_r('Error : Coupon code Already Used!', true), self::NOT_ACCEPTABLE);
 		}
 		
 		if($coupon['userId'] > 0){
@@ -458,7 +459,7 @@ class StoreOfferController extends RestaurantServiceBaseController
 			$metadata = json_decode($purchase->metaData, true);
 			
 			if(time() > strtotime($metadata['validTill']))
-				throw new Exception(print_r('Error : Coupon code Expired!', true), WS_ERR_REQUEST_NOT_ACCEPTED);
+				throw new Exception(print_r('Error : Coupon code Expired!', true), self::NOT_ACCEPTABLE);
 			
 			$purchase->isUsed = 1;
 			$purchase->save();
@@ -466,7 +467,7 @@ class StoreOfferController extends RestaurantServiceBaseController
 			$res = StoreCoupon::model()->updateByPk( $coupon['id'], array('isUsed'=>1) );
 		
 		}else{
-			throw new Exception(print_r('Error : Invalid Coupon code!', true), WS_ERR_WONG_VALUE);
+			throw new Exception(print_r('Error : Invalid Coupon code!', true), self::NOT_ACCEPTABLE);
 		}
 		return	$this->sendResponse([],self::SUCCESS_OK);
 	}
