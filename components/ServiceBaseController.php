@@ -46,7 +46,9 @@ class ServiceBaseController extends Controller
             $sessionId = filter_var($_POST['sessionId'], FILTER_SANITIZE_STRING);
 
         // Check sessionId
-        $session = Session::model()->findByAttributes(array('sessionId' => $sessionId));
+//         $session = Session::model()->findByAttributes(array('sessionId' => $sessionId));
+//         uncomment after one month.
+        $session = Session::model()->findByAttributes(array('sessionId' => $sessionId), 'timestamp >= DATE_SUB(NOW(), INTERVAL 7 DAY)' );
         if (null === $session) {
             throw new Exception(
                 'Your session has expired, please login again.', WS_ERR_WONG_SESSION_ID);

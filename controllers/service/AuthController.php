@@ -25,6 +25,7 @@ class AuthController extends ServiceBaseController
         	if($session->isNewRecord){
 	            $sessionId = sha1(microtime());
 	            $session->sessionId = $sessionId;
+	            $session->refreshToken = sha1(microtime());
         	}
             // Safety guard
             if (++$i > 10) 
@@ -37,7 +38,41 @@ class AuthController extends ServiceBaseController
             throw new Exception(print_r($session->getErrors(), true), WS_ERR_UNKNOWN);
         }
 
-        return $session->sessionId;
+        return $session;
+    }
+    
+    public function actionRefresh(){
+    	$apiName = 'auth/refresh';
+    	$_JSON = $this->getJsonInput();
+
+    	try{
+    		if(!isset($_JSON) || empty($_JSON))
+    			$result = $this->error($apiName, WS_ERR_POST_PARAM_MISSED, 'No input received.');
+    		else if(!isset($_JSON['refreshToken']) || empty($_JSON['refreshToken']))
+    			$result = $this->error($apiName, WS_ERR_POST_PARAM_MISSED, ' refreshToken is required ');
+    		else {
+    			$newSession = Session::refreshSession($_JSON['refreshToken']);
+
+				if(empty($newSession))
+					throw new Exception(' Invalid/Expired refreshToken ', WS_ERR_REQUEST_NOT_ACCEPTED);
+
+				$user = User::model()->findByPk($newSession->userId);
+    			if (is_null($user))
+    				$result = $this->error($apiName, WS_ERR_WONG_USER, 'Please login before using this service.');
+    			else {
+    				$result['api'] = $apiName;
+    				$result['apiMessage'] = 'Success';
+    				$result['status'] = 'OK';
+    				$result['sessionId'] = $newSession->sessionId;
+    				$result['refreshToken'] = $newSession->refreshToken;
+    			}
+    		}
+    	}
+    	catch (Exception $e)
+    	{
+    		$result = $this->error($apiName, $e->getCode(), Yii::t('app', $e->getMessage()));
+    	}
+    	$this->sendResponse(json_encode($result, JSON_UNESCAPED_UNICODE));
     }
 
     
@@ -346,6 +381,7 @@ class AuthController extends ServiceBaseController
                         Follower::autoFollow($user->id);
                     /* end of auto follow part */
                     
+                    $session = $this->login($user->id, $user->role, $deviceToken);
                     $result = array(
                         'api' => $apiName,
                         'apiMessage' => 'User signed in successfully.',
@@ -354,7 +390,8 @@ class AuthController extends ServiceBaseController
                         'userId' => $user->id,
                         'userName' => $userName,
                         'profile' => $profile,
-                        'sessionId' => $this->login($user->id, $user->role, $deviceToken)
+                        'sessionId' => $session->sessionId,
+                    	'refreshToken' => $session->refreshToken
                     );
                 }
             }

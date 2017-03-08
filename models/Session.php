@@ -6,6 +6,7 @@
  * The followings are the available columns in table 'session':
  * @property string $id
  * @property string $sessionId
+ * @property string $refreshToken
  * @property string $userId
  * @property string $userName
  * @property string $role
@@ -34,15 +35,15 @@ class Session extends CActiveRecord
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('sessionId, userId, role', 'required'),
-            array('sessionId', 'length', 'max'=>40),
+            array('sessionId, refreshToken, userId, role', 'required'),
+            array('sessionId, refreshToken', 'length', 'max'=>40),
             array('userId, deviceBadge', 'length', 'max'=>10),
             array('userName', 'length', 'max'=>128),
             array('role', 'length', 'max'=>16),
             array('deviceToken', 'length', 'max'=>500),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, sessionId, userId, userName, role, deviceToken, deviceBadge, timestamp', 'safe', 'on'=>'search'),
+            array('id, sessionId, refreshToken, userId, userName, role, deviceToken, deviceBadge, timestamp', 'safe', 'on'=>'search'),
         );
     }
 
@@ -66,6 +67,7 @@ class Session extends CActiveRecord
         return array(
             'id' => 'ID',
             'sessionId' => 'Session',
+        	'refreshToken' => 'Refresh Token',
             'userId' => 'User',
             'userName' => 'User Name',
             'role' => 'Role',
@@ -95,6 +97,7 @@ class Session extends CActiveRecord
 
         $criteria->compare('id',$this->id,true);
         $criteria->compare('sessionId',$this->sessionId,true);
+		$criteria->compare('refreshToken',$this->refreshToken,true);
         $criteria->compare('userId',$this->userId,true);
         $criteria->compare('userName',$this->userName,true);
         $criteria->compare('role',$this->role,true);
@@ -125,6 +128,7 @@ class Session extends CActiveRecord
     {
         $sql = "SELECT s.id";
         $sql .= ",s.sessionId";
+        $sql .= ",s.refreshToken";
         $sql .= ",s.userId";
         $sql .= ",s.userName";
         $sql .= ",s.role";
@@ -144,4 +148,24 @@ class Session extends CActiveRecord
         else
             return $session['deviceBadge'];
     }
+    
+    public static function refreshSession($refreshToken){
+    	
+    	Session::model()->deleteAll('timestamp <= DATE_SUB(NOW(), INTERVAL 1 MONTH) and sessionId != "GUEST" ');
+    	$session = Session::model()->findByAttributes(array('refreshToken' => $refreshToken));
+    	
+    	if(!empty($session)){
+    		$datetime1 = date_create($session->timestamp);
+    		$datetime2 = date_create(date('Y-m-d H:i:s'));
+    		$interval = date_diff($datetime1, $datetime2);
+			$diff = $interval->format ( '%R%a days' );
+			if((int)$diff > 6)
+				$session->sessionId = sha1 ( microtime () );
+			
+			$session->timestamp = date ( 'Y-m-d H:i:s' );
+			$session->save ();
+    	}
+    	return $session;
+    }
+    
 }
