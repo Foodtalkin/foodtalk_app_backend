@@ -174,10 +174,15 @@ class SearchController extends ServiceBaseController
 		
 	}
 	
+	public function actionindex(){
 		
-    public function actionEs()
+		$this->actionEs('Search');
+	}
+	
+		
+    public function actionEs($apiName = 'Search/es')
     {
-        $apiName = 'Search/es';
+        
         $sessionId = null;
         
         $_JSON = $this->getJsonInput();
