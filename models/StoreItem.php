@@ -56,7 +56,7 @@ class StoreItem extends FoodTalkActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('title, coverImage, cardImage, costType, type', 'required'),
+			array('title, coverImage, costType, type', 'required'),
 			array('costOnline, costPoints, isDisabled, createId, updateId', 'numerical', 'integerOnly'=>true),
 			array('title, coverImage, cardImage, termConditionsLink', 'length', 'max'=>255),
 			array('actionButtonText, cardActionButtonText', 'length', 'max'=>50),
