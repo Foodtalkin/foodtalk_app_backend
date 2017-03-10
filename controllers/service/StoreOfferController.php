@@ -282,6 +282,7 @@ class StoreOfferController extends ServiceBaseController
     				$storeItemId = 0;
     				$options=array();
     				
+    				
 //     				if(isset($_JSON['status']) && $_JSON['status'] && $user->role == 'manager')
 //     					$status = filter_var($_JSON['status'], FILTER_SANITIZE_STRING);
     
@@ -299,8 +300,16 @@ class StoreOfferController extends ServiceBaseController
     				$storeOffer = StoreOffer::getThisOffer($id, $storeItemId, $status, $options);
     				
     				$clamedUsers = [];
-    				if(!empty($storeOffer))
+    				$coupons = [];
+    				$resturants = [];
+    				if(!empty($storeOffer)){
     					$clamedUsers = StorePurchase::getClamedUsers($storeOffer['storeItemId']);
+	    				$coupons = StoreCoupon::getAll($storeOffer['id']);
+	    				$resturants = Restaurant::getStoreItemRestaurants($storeOffer['storeItemId']);
+    				}
+    				
+    				
+    				
     				
     
     				$result = array(
@@ -308,7 +317,10 @@ class StoreOfferController extends ServiceBaseController
     						'apiMessage' => 'Records fetched successfully',
     						'status' => 'OK',
     						'storeOffer' => $storeOffer,
-    						'clamedUsers'=>$clamedUsers
+    						'clamedUsers'=>$clamedUsers,
+    						'coupons' =>$coupons,
+    						'resturants' => $resturants
+    						
     				);
     
     			}

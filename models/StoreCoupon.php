@@ -201,6 +201,16 @@ class StoreCoupon extends FoodTalkActiveRecord
 		return $coupon;
 	}
 	
+	public static function getAll($offerId, $options=[]){
+		
+		$sql = 'SELECT code FROM storeCoupon where storeOfferId = '.$offerId;
+		
+		$coupons = Yii::app()->db->createCommand($sql)->queryAll(true);
+		 
+		return $coupons;
+	}
+	
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!

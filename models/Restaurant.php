@@ -528,6 +528,14 @@ class Restaurant extends FoodTalkActiveRecord
         return $profile;
     }
     
+    
+    public static function getStoreItemRestaurants($itemId, $options=[]){
+    	$sql = self::getQuery(0);
+    	$sql .= " INNER JOIN storeItemRestaurant i on i.restaurantId = r.id  WHERE r.isDisabled = 0 and i.storeItemId = ".$itemId;
+    	$result = Yii::app()->db->createCommand($sql)->queryAll(true);
+    	return $result;
+    }
+    
     /**
      * Returns restaurant records
      */
