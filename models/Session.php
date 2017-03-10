@@ -151,7 +151,7 @@ class Session extends CActiveRecord
     
     public static function refreshSession($refreshToken){
     	
-//     	Session::model()->deleteAll('timestamp <= DATE_SUB(NOW(), INTERVAL 1 MONTH) and sessionId != "GUEST" ');
+    	Session::model()->deleteAll('timestamp <= DATE_SUB(NOW(), INTERVAL 1 MONTH) and sessionId != "GUEST" ');
     	$session = Session::model()->findByAttributes(array('refreshToken' => $refreshToken));
     	
     	if(!empty($session)){

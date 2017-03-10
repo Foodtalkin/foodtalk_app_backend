@@ -62,7 +62,7 @@ class AdwordsController extends SiteBaseController
 	 */
 	public function actionCreate()
 	{
-		$model=new Adwords;
+		$model=new Ads;
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
@@ -148,10 +148,10 @@ class AdwordsController extends SiteBaseController
 	 */
 	public function actionAdmin()
 	{
-		$model=new Adwords('search');
-		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['Adwords']))
-			$model->attributes=$_GET['Adwords'];
+		$model=new Ads('search');
+// 		$model->unsetAttributes();  // clear any default values
+// 		if(isset($_GET['Adwords']))
+// 			$model->attributes=$_GET['Adwords'];
 
 		$this->render('admin',array(
 			'model'=>$model,
@@ -167,7 +167,7 @@ class AdwordsController extends SiteBaseController
 	 */
 	public function loadModel($id)
 	{
-		$model=Adwords::model()->findByPk($id);
+		$model=Ads::model()->findByPk($id);
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;

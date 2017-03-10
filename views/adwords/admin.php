@@ -3,13 +3,17 @@
 /* @var $model Adwords */
 
 $this->breadcrumbs=array(
-	'Adwords'=>array('index'),
-	'Manage',
+	'links' => array('Adwords'),
 );
 
 $this->menu=array(
-// 	array('label'=>'List Adwords', 'url'=>array('index')),
-	array('label'=>'Create Adwords', 'url'=>array('create')),
+		array(
+				'label' => 'Operations',
+				'itemOptions' => array('class' => 'nav-header')
+		),
+		array('label' => 'Manage', 'url' => 'admin','itemOptions' => array('class' => 'active' )),
+		array('label' => 'Create','url' => 'create')
+		,
 );
 
 Yii::app()->clientScript->registerScript('search', "
@@ -40,38 +44,39 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 )); ?>
 </div><!-- search-form -->
 
-<?php $this->widget('zii.widgets.grid.CGridView', array(
+<?php $this->widget('booster.widgets.TbExtendedGridView', array(
 	'id'=>'adwords-grid',
+		'type' => 'striped',
 	'dataProvider'=>$model->search(),
 	'filter'=>$model,
 	'columns'=>array(
 // 		'id',
 		'title',
-			array(
-					'name' => 'image',
-					'type' => 'raw',
-					'value' => '(!empty($data->image))? CHtml::image(thumbPath("post") . $data->image, "") : " "',
-					'filter' => false
-			),
+// 			array(
+// 					'name' => 'image',
+// 					'type' => 'raw',
+// 					'value' => '(!empty($data->image))? CHtml::image(thumbPath("post") . $data->image, "") : " "',
+// 					'filter' => false
+// 			),
 		'entityId',
-		'points',
-		'totalSlots',
-		'bookedSlots',
-		'expiry',
-		/*
-		'paymentUrl',
+		'actionButtonText',
 		'description',
-		'description2',
-		'type',
+		'startDate',
+		'expiry',
+		'cap',
+		'latitude',
+		'longitude',
+		'priority',
+		'position',
+		'metaData',
 		'isDisabled',
-		'disableReason',
-		'createDate',
+		/*
 		'updateDate',
 		'createId',
 		'updateId',
 		*/
 		array(
-			'class'=>'CButtonColumn',
+			'class'=>'booster.widgets.TbButtonColumn',
 		),
 	),
 )); ?>

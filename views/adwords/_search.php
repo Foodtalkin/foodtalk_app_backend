@@ -27,24 +27,10 @@
 	</div>
 
 	<div class="row">
-		<?php echo $form->label($model,'image'); ?>
-		<?php echo $form->textField($model,'image',array('size'=>60,'maxlength'=>255)); ?>
+		<?php echo $form->label($model,'actionButtonText'); ?>
+		<?php echo $form->textField($model,'actionButtonText'); ?>
 	</div>
 
-	<div class="row">
-		<?php echo $form->label($model,'points'); ?>
-		<?php echo $form->textField($model,'points'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->label($model,'couponCode'); ?>
-		<?php echo $form->textField($model,'couponCode',array('size'=>50,'maxlength'=>50)); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->label($model,'paymentUrl'); ?>
-		<?php echo $form->textField($model,'paymentUrl',array('size'=>60,'maxlength'=>255)); ?>
-	</div>
 
 	<div class="row">
 		<?php echo $form->label($model,'description'); ?>
@@ -52,18 +38,8 @@
 	</div>
 
 	<div class="row">
-		<?php echo $form->label($model,'totalSlots'); ?>
-		<?php echo $form->textField($model,'totalSlots'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->label($model,'bookedSlots'); ?>
-		<?php echo $form->textField($model,'bookedSlots'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->label($model,'description2'); ?>
-		<?php echo $form->textArea($model,'description2',array('rows'=>6, 'cols'=>50)); ?>
+		<?php echo $form->label($model,'startDate'); ?>
+		<?php echo $form->textField($model,'startDate'); ?>
 	</div>
 
 	<div class="row">
@@ -72,8 +48,14 @@
 	</div>
 
 	<div class="row">
-		<?php echo $form->label($model,'type'); ?>
-		<?php echo $form->textField($model,'type',array('size'=>10,'maxlength'=>10)); ?>
+		<?php echo $form->label($model,'cap'); ?>
+		<?php echo $form->textField($model,'expiry'); ?>
+	</div>
+
+
+	<div class="row">
+		<?php echo $form->label($model,'adType'); ?>
+		<?php echo $form->textField($model,'adType'); ?>
 	</div>
 
 	<div class="row">
@@ -87,23 +69,23 @@
 	</div>
 
 	<div class="row">
-		<?php echo $form->label($model,'createDate'); ?>
-		<?php echo $form->textField($model,'createDate'); ?>
+		<?php echo $form->label($model,'latitude'); ?>
+		<?php echo $form->textField($model,'latitude'); ?>
 	</div>
 
 	<div class="row">
-		<?php echo $form->label($model,'updateDate'); ?>
-		<?php echo $form->textField($model,'updateDate'); ?>
+		<?php echo $form->label($model,'longitude'); ?>
+		<?php echo $form->textField($model,'longitude'); ?>
 	</div>
 
 	<div class="row">
-		<?php echo $form->label($model,'createId'); ?>
-		<?php echo $form->textField($model,'createId',array('size'=>10,'maxlength'=>10)); ?>
+		<?php echo $form->label($model,'priority'); ?>
+		<?php echo $form->textField($model,'priority',array('size'=>10,'maxlength'=>10)); ?>
 	</div>
 
 	<div class="row">
-		<?php echo $form->label($model,'updateId'); ?>
-		<?php echo $form->textField($model,'updateId',array('size'=>10,'maxlength'=>10)); ?>
+		<?php echo $form->label($model,'position'); ?>
+		<?php echo $form->textField($model,'position',array('size'=>10,'maxlength'=>10)); ?>
 	</div>
 
 	<div class="row buttons">
