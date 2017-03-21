@@ -379,8 +379,11 @@ class StoreOfferController extends RestaurantServiceBaseController
 		
 		if(isset($_JSON['code']) && !empty ($_JSON['code']))
 			$response = StoreCoupon::getThisCoupon(trim(filter_var($_JSON['code'], FILTER_SANITIZE_STRING)), $this->options);
-		else 
+		else
 			throw new Exception(print_r('Error : No Coupon code provided!', true), self::NOT_ACCEPTABLE);
+		
+		if(empty($response))
+			throw new Exception(print_r('Error : Invalid Coupon code!', true), self::NOT_ACCEPTABLE);
 
 		
 		$purchase = StorePurchase::model()->findByAttributes(array('storeItemId'=>$response['storeItemId'], 'userId'=>$response['userId']));
