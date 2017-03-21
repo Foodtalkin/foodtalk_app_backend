@@ -61,9 +61,10 @@ class RestaurantServiceBaseController extends ServiceController
 //     	error_log('method : '.$_SERVER['REQUEST_METHOD']);
     	
     	$method = $_SERVER['REQUEST_METHOD'];
-    	if ($method == 'OPTIONS')
+    	    	if ($method == 'OPTIONS'){
+    		self::sendResponse([]);
     		die();
-    	 
+    	} 
     	
     	if(!in_array(ltrim($id, 'resto/'), $nonAutharizedRequest)){
     		$authorized = false;
