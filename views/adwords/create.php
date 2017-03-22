@@ -13,10 +13,6 @@ $this->breadcrumbs=array(
 
 $this->menu=
 array(
-		array(
-				'label' => 'Operations',
-				'itemOptions' => array('class' => 'nav-header')
-		),
 		array('label' => 'Manage', 'url' => 'admin'),
 // 		array(),
 		array(

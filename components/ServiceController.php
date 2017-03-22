@@ -200,7 +200,7 @@ class ServiceController extends Controller
     	header($statusHeader);
     	header('Content-type: ' . $contentType);
     	header('Access-Control-Allow-Origin: *');
-	header("Access-Control-Allow-Headers: Origin,Content-Type, APISESSID");
+		header("Access-Control-Allow-Headers: Origin,Content-Type, APISESSID");
 
     	
     	unset($response ['header']);

@@ -67,17 +67,19 @@ class AdwordsController extends SiteBaseController
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
+// 		die('DAED');
 		
-		if(isset($_POST['Adwords']))
+		
+		if(isset($_POST['Ads']))
 		{
-			$_POST['Adwords']['image'] = uploadImagetoCloud($_POST['Adwords']['image']);
-
-			
+// 			$_POST['Adwords']['image'] = uploadImagetoCloud($_POST['Adwords']['image']);
+			if(isset($_POST['Ads']['expiry']))
+				$_POST['Ads']['expiry'] = $_POST['Ads']['expiry'].' 23:59:59';
 			
 // 			var_dump($_POST['Adwords']['image']);
 // 			die('DAED');
 			
-			$model->attributes=$_POST['Adwords'];
+			$model->attributes=$_POST['Ads'];
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->id));
 		}
@@ -99,14 +101,17 @@ class AdwordsController extends SiteBaseController
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['Adwords']))
+		if(isset($_POST['Ads']))
 		{
-			if(preg_match('/data:image/', $_POST['Adwords']['image']))
-				$_POST['Adwords']['image'] = uploadImagetoCloud($_POST['Adwords']['image']);
+// 			if(preg_match('/data:image/', $_POST['Adwords']['image']))
+// 				$_POST['Adwords']['image'] = uploadImagetoCloud($_POST['Adwords']['image']);
 // 			else 		
+			if(isset($_POST['Ads']['expiry']))
+				$_POST['Ads']['expiry'] = $_POST['Ads']['expiry'].' 23:59:59';
 			
-			$model->attributes=$_POST['Adwords'];
+			$model->attributes=$_POST['Ads'];
 			if($model->save())
+				
 				$this->redirect(array('view','id'=>$model->id));
 		}
 

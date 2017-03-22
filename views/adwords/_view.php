@@ -2,6 +2,14 @@
 /* @var $this AdwordsController */
 /* @var $data Adwords */
 ?>
+$this->breadcrumbs = array (
+		
+		'links' => array (
+				'Adwords' => 'admin',
+				'create' 
+		) 
+);
+
 
 <div class="view">
 

@@ -46,7 +46,7 @@ class Ads extends FoodTalkActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('title, adType, entityId, description, createDate', 'required'),
+			array('title, adType, entityId, description', 'required'),
 			array('adType, entityId, priority, position, isDisabled', 'numerical', 'integerOnly'=>true),
 			array('latitude, longitude', 'numerical'),
 			array('title', 'length', 'max'=>200),
@@ -133,13 +133,41 @@ class Ads extends FoodTalkActiveRecord
 		$criteria->compare('priority',$this->priority);
 		$criteria->compare('position',$this->position);
 		$criteria->compare('metaData',$this->metaData,true);
-		$criteria->compare('isDisabled',$this->isDisabled);
+// 		$criteria->compare('isDisabled',$this->isDisabled, true);
 		$criteria->compare('disableReason',$this->disableReason,true);
 		$criteria->compare('createDate',$this->createDate,true);
 		$criteria->compare('updateDate',$this->updateDate,true);
 		$criteria->compare('createId',$this->createId,true);
 		$criteria->compare('updateId',$this->updateId,true);
 
+		
+		
+		
+		switch (Yii::app()->request->getParam('status'))
+		{
+			case 'active':
+				$criteria->addCondition("isDisabled = 0");
+				break;
+				
+			case 'inactive':
+				$criteria->addCondition("isDisabled = 1");				
+				break;
+				
+			case 'upcomming':
+				$criteria->addCondition("startDate > now()");
+				break;
+				
+			case 'expired':
+				$criteria->addCondition("expiry < now()");
+				break;
+				
+			case 'default':
+// 				break;
+		}
+		
+// 		$criteria->addCondition("isDisabled = 1");
+		
+		
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));

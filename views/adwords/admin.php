@@ -7,11 +7,7 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-		array(
-				'label' => 'Operations',
-				'itemOptions' => array('class' => 'nav-header')
-		),
-		array('label' => 'Manage', 'url' => 'admin','itemOptions' => array('class' => 'active' )),
+		array('label' => 'Manage','itemOptions' => array('class' => 'active' )),
 		array('label' => 'Create','url' => 'create')
 		,
 );
@@ -30,46 +26,108 @@ $('.search-form form').submit(function(){
 ");
 ?>
 
+
+
 <h1>Manage Adwords</h1>
+<?php 
 
-<p>
-You may optionally enter a comparison operator (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b>
-or <b>=</b>) at the beginning of each of your search values to specify how the comparison should be done.
-</p>
+$status = Yii::app()->request->getParam('status', false);
+if(!$status)
+	$urlPart = 'admin/status/';	
+else 
+	$urlPart = '';
 
-<?php echo CHtml::link('Advanced Search','#',array('class'=>'search-button')); ?>
-<div class="search-form" style="display:none">
+$this->widget(
+		'booster.widgets.TbTabs', array (
+		'type' => 'tabs',
+		'tabs' => array (
+				array (
+						'label' => 'All',
+						'url' => 'all',
+						'active' => !$status? true : $status == 'all' ? true : false
+				),
+				array (
+						'label' => 'Active',
+						'url' => $urlPart.'active',
+						'active' => ($status == 'active' ? true : false) 
+				),
+				array (
+						'label' => 'Upcomming',
+						'url' => $urlPart.'upcomming',
+						'active' => ($status == 'upcomming' ? true : false)
+				),
+				array (
+						'label' => 'Expired',
+						'url' => $urlPart.'expired' ,
+						'active' => ($status == 'expired' ? true : false)
+				),
+				array (
+						'label' => 'Disabled',
+						'url' => $urlPart.'inactive',
+						'active' => ($status == 'inactive' ? true : false)
+				), 
+		)
+)
+);
+?>
+
+
+<!-- <p> -->
+<!-- 	You may optionally enter a comparison operator (<b>&lt;</b>, <b>&lt;=</b>, -->
+<!-- 	<b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b> or <b>=</b>) at the -->
+<!-- 	beginning of each of your search values to specify how the comparison -->
+<!-- 	should be done. -->
+<!-- </p> -->
+
+
+
+<?php // echo CHtml::link('Advanced Search','#',array('class'=>'search-button')); ?>
+<div class="search-form" style="display: none">
 <?php $this->renderPartial('_search',array(
 	'model'=>$model,
 )); ?>
-</div><!-- search-form -->
+</div>
+<!-- search-form -->
 
 <?php $this->widget('booster.widgets.TbExtendedGridView', array(
 	'id'=>'adwords-grid',
 		'type' => 'striped',
 	'dataProvider'=>$model->search(),
-	'filter'=>$model,
+// 	'filter'=>$model,
 	'columns'=>array(
 // 		'id',
 		'title',
-// 			array(
-// 					'name' => 'image',
-// 					'type' => 'raw',
-// 					'value' => '(!empty($data->image))? CHtml::image(thumbPath("post") . $data->image, "") : " "',
-// 					'filter' => false
-// 			),
+// 		'adType',
+			
+		array(
+					'name'=>' Type ',
+					'value'=>'$data->adType0->name', // link version
+					'type'  => 'raw',
+					'filter' => false
+			),
 		'entityId',
-		'actionButtonText',
-		'description',
-		'startDate',
-		'expiry',
+// 		'description',
+// 		'startDate',
+		array(
+				'name'=>'startDate',
+				'value' => 'date_format(date_create($data->startDate),"jS M Y")',
+				'type'  => 'raw',
+				'filter' => false
+		),
+			array(
+					'name'=>'startDate',
+					'value' => 'date_format(date_create($data->expiry),"jS M Y")',
+					'type'  => 'raw',
+					'filter' => false
+			),
+// 		'expiry',
 		'cap',
-		'latitude',
-		'longitude',
+// 		'latitude',
+// 		'longitude',
 		'priority',
 		'position',
-		'metaData',
-		'isDisabled',
+// 		'metaData',
+// 		'isDisabled',
 		/*
 		'updateDate',
 		'createId',
@@ -77,6 +135,7 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 		*/
 		array(
 			'class'=>'booster.widgets.TbButtonColumn',
+			'template' => '{update} {delete}',	
 		),
 	),
 )); ?>

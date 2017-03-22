@@ -2,45 +2,80 @@
 /* @var $this AdwordsController */
 /* @var $model Adwords */
 
-$this->breadcrumbs=array(
-	'Adwords'=>array('index'),
-	$model->title,
+$this->breadcrumbs = array (
+		
+		'links' => array (
+				'Adwords' => 'admin',
+				'create' 
+		) 
 );
 
-$this->menu=array(
-// 	array('label'=>'List Adwords', 'url'=>array('index')),
-	array('label'=>'Create Adwords', 'url'=>array('create')),
-	array('label'=>'Update Adwords', 'url'=>array('update', 'id'=>$model->id)),
-	array('label'=>'Disable Adwords', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->id),'confirm'=>'Are you sure you want to delete this item?')),
-	array('label'=>'Manage Adwords', 'url'=>array('admin')),
+$this->menu = array (
+
+		array (
+				'label' => 'Manage',
+				'url' => 'admin' 
+		),
+		array (
+				'label' => 'Create',
+				'url' => 'create',
+		),
+		array (
+				'label' => 'Edit',
+				'url' => 'update/'.$model->id,
+		),
+		array (
+				'label' => 'View',
+				'itemOptions' => array (
+						'class' => 'active'
+				)
+		),
 );
+
 ?>
 
 <h1>View Adwords #<?php echo $model->id; ?></h1>
 
-<?php $this->widget('zii.widgets.CDetailView', array(
+<?php $this->widget('booster.widgets.TbDetailView', array(
 	'data'=>$model,
 	'attributes'=>array(
 		'id',
-		'entityId',
 		'title',
-		array(
-			'name' => 'image',
-			'type' => 'raw',
-			'value' => (!empty($model->image)) ? '<img alt="AddImage" src="'.imagePath('post').$model->image.'">': '',
-			'filter' => false
-		),
-		'points',
-		'paymentUrl',
+		'adType',
+			
+// 		array(
+// 					'name'=>'adType',
+// 					'value'=>'$data->adType0->name', // link version
+// 					'type'  => 'raw',
+// 					'filter' => false
+// 			),
+		'entityId',
+		'actionButtonText',	
 		'description',
-		'totalSlots',
-		'bookedSlots',
-		'description2',
+		'startDate',
+// 		array(
+// 				'name'=>'startDate',
+// 				'value' => 'date_format(date_create($data->startDate),"jS M Y")',
+// 				'type'  => 'raw',
+// 				'filter' => false
+// 		),
+// 			array(
+// 					'name'=>'startDate',
+// 					'value' => 'date_format(date_create($data->expiry),"jS M Y")',
+// 					'type'  => 'raw',
+// 					'filter' => false
+// 			),
 		'expiry',
-		'type',
+		'cap',
+		'latitude',
+		'longitude',
+		'priority',
+		'position',
+		'metaData',
 		'isDisabled',
-		'disableReason',
-		'createDate',
-		'updateDate'
+		'updateDate',
+		'createId',
+		'updateId',
+			
 	),
 )); ?>

@@ -6,8 +6,9 @@
 
 <div class="form">
 
-<?php $form=$this->beginWidget('CActiveForm', array(
+<?php $form=$this->beginWidget('booster.widgets.TbActiveForm', array(
 	'id'=>'app-version-form',
+		'type' => 'horizontal',
 	// Please note: When you enable ajax validation, make sure the corresponding
 	// controller action is handling ajax validation correctly.
 	// There is a call to performAjaxValidation() commented in generated controller code.
@@ -15,36 +16,28 @@
 	'enableAjaxValidation'=>false,
 )); ?>
 
-	<p class="note">Fields with <span class="required">*</span> are required.</p>
-
-	<?php echo $form->errorSummary($model); ?>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'platform'); ?>
-		<?php echo $form->textField($model,'platform',array('size'=>7,'maxlength'=>7, 'disabled'=>true)); ?>
-		<?php echo $form->error($model,'platform'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'version'); ?>
-		<?php echo $form->textField($model,'version',array('size'=>20,'maxlength'=>20)); ?>
-		<?php echo $form->error($model,'version'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'message'); ?>
-		<?php echo $form->textField($model,'message',array('size'=>60,'maxlength'=>200)); ?>
-		<?php echo $form->error($model,'message'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'isCritical'); ?>
-		<?php echo $form->dropDownList($model, 'isCritical', array('No', 'Yes') )
+		<?php echo $form->textFieldGroup($model, 'platform',array('wrapperHtmlOptions' => array('class' => 'col-sm-3'), 'widgetOptions' => array('htmlOptions' => array('disabled' => true)) ) ); ?>
+		<?php echo $form->textFieldGroup($model, 'version',array('wrapperHtmlOptions' => array('class' => 'col-sm-3'), 'widgetOptions' => array('htmlOptions' => array('size'=>20,'maxlength'=>20)) ) ); ?>
+		<?php echo $form->textFieldGroup($model, 'message',array('wrapperHtmlOptions' => array('class' => 'col-sm-3'), 'widgetOptions' => array('htmlOptions' => array('size'=>60,'maxlength'=>200)) ) ); ?>
 		
-// 		textField($model,'isCritical'); ?>
-		<?php echo $form->error($model,'isCritical'); ?>
-	</div>
-
+				<?php
+		echo $form->switchGroup($model, 'isCritical',
+			array(
+				'widgetOptions' => array(
+					
+						'options' => array(
+														'labelText' => 'YES', //null, 'mini', 'small', 'normal', 'large
+														'onText' => '&nbsp;', // 'primary', 'info', 'success', 'warning', 'danger', 'default'
+														'onColor'=> 'info',
+														'onText'=> '&nbsp',
+														'offText' => 'No',  // 'primary', 'info', 'success', 'warning', 'danger', 'default'
+														'offColor'=> '',
+												),
+// 					'onText' => 'enabled', // 'primary', 'info', 'success', 'warning', 'danger', 'default'
+// 					'offText' => 'disabled',
+				)
+			)
+		); ?>
 	<div class="row buttons">
 		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
 	</div>
