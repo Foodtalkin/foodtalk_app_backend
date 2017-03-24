@@ -136,6 +136,17 @@ class News extends CActiveRecord
 		return $sql;
 	}
 	
+	
+	public static function getThisNews($id, $status = 'upcomming', $options=array()){
+		
+		$sql = self::getQuery();
+		$sql .= ' WHERE isDisabled = 0 ';
+		$sql .= ' and id = '.$id;
+		$result = Yii::app()->db->createCommand($sql)->queryRow(true);
+		return $result;
+		
+	}
+	
 	public static function getnews($page=1, $status = 'upcomming', $options=array(), $recordCount=25 ){
 	
 		$pagestart = ($page-1) * $recordCount;

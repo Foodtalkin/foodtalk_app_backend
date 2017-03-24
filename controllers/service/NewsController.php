@@ -142,4 +142,59 @@ class NewsController extends ServiceBaseController
     
     }
     
+    public function actionGet()
+    {
+    	$apiName = 'news/Get';
+    	$sessionId = null;
+    
+    	$_JSON = $this->getJsonInput();
+    	 
+    	try
+    	{
+    		if(!isset($_JSON) || empty($_JSON))
+    			$result = $this->error($apiName, WS_ERR_POST_PARAM_MISSED, 'No input received.');
+    		else if(!isset($_JSON['sessionId']) || empty($_JSON['sessionId']))
+    			$result = $this->error($apiName, WS_ERR_POST_PARAM_MISSED, 'Please enter session id.');
+    		else
+    		{
+    			//             	$user = true;
+    			$userId = $this->isAuthentic($_JSON['sessionId']);
+    			$user = User::model()->findByPk($userId);
+    			 
+    			if (is_null($user))
+    				$result = $this->error($apiName, WS_ERR_WONG_USER, 'Please login before using this service.');
+    			else
+    			{
+    
+    				$page = 1;
+    				$storeOffer = array();
+    				$options = array();
+    
+    				if(isset($_JSON['id']) && $_JSON['id'])
+    					$id = filter_var($_JSON['id'], FILTER_SANITIZE_NUMBER_INT);
+    
+    				$status = 'active';
+    
+    				if(isset($_JSON['status']) && $_JSON['status'] )
+    					$status = filter_var($_JSON['status'], FILTER_SANITIZE_STRING);
+    
+    				$news = News::getThisNews($page, $status, $options);
+    
+    				$result = array(
+    						'api' => $apiName,
+    						'apiMessage' => 'Records fetched successfully',
+    						'status' => 'OK',
+    						'news' => $news
+    				);
+    
+    			}
+    		}
+    	}
+    	catch (Exception $e)
+    	{
+    		$result = $this->error($apiName, $e->getCode(), Yii::t('app', $e->getMessage()));
+    	}
+    	$this->sendResponse(json_encode($result, JSON_UNESCAPED_UNICODE));
+    }
+    
 }
