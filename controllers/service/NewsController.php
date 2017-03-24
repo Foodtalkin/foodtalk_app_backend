@@ -178,7 +178,7 @@ class NewsController extends ServiceBaseController
     				if(isset($_JSON['status']) && $_JSON['status'] )
     					$status = filter_var($_JSON['status'], FILTER_SANITIZE_STRING);
     
-    				$news = News::getThisNews($page, $status, $options);
+    				$news = News::getThisNews($id, $status, $options);
     
     				$result = array(
     						'api' => $apiName,
