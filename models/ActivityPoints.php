@@ -128,6 +128,11 @@ class ActivityPoints extends FoodTalkActiveRecord
 		$criteria->compare('createId',$this->createId,true);
 		$criteria->compare('updateId',$this->updateId,true);
 
+		if(Yii::app()->controller->action->id=='disabled')
+			$criteria->addCondition("t.isDisabled = 1");
+		else 
+			$criteria->addCondition("t.isDisabled = 0");
+		
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));

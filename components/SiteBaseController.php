@@ -176,7 +176,7 @@ class SiteBaseController extends Controller
         		'activityPoints.view',
         		'activityPoints.admin',
         		'activityPoints.update',
-//         		'activityPoints.notified',
+        		'activityPoints.disabled',
         		'activityPoints.delete',
         		
         		'activityScore.view',
