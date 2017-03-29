@@ -221,7 +221,7 @@ class Ads extends FoodTalkActiveRecord
 		
 		$sql .= 'WHERE '. implode(' AND ', $andWhere);
 		
-		echo $sql;
+// 		echo $sql;
 		
 // 		die("     :  DEAD");
 		$users = Yii::app()->db->createCommand($sql)->queryAll(true);
