@@ -1,15 +1,26 @@
-<script src="/themes/abound/js/selectize.js"></script>
-<script src="/foodtalk/themes/abound/js/selectize.js"></script>
-<h3>Create New Notification</h3>
+<script
+	src="<?php echo Yii::app()->request->baseUrl; ?>/themes/abound/js/selectize.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="http://brianreavis.github.io/selectize.js/css/selectize.bootstrap3.css" />
+
 <?php
 /* @var $this NotificationController */
 /* @var $model Post */
 /* @var $form CActiveForm */
+
+$this->widget(
+		'booster.widgets.TbNavbar',
+		array(	'fixed' => false,'fluid' => true,
+				'brand' => 'Create New Notification',
+		)
+);
 ?>
 <div class="form">
 
-<?php $form=$this->beginWidget('CActiveForm', array(
+<?php $form=$this->beginWidget('booster.widgets.TbActiveForm', array(
 	'id'=>'post-form',
+	'type' => 'horizontal',
+		
 	// Please note: When you enable ajax validation, make sure the corresponding
 	// controller action is handling ajax validation correctly.
 	// There is a call to performAjaxValidation() commented in generated controller code.
@@ -17,19 +28,21 @@
 	'enableAjaxValidation'=>false,
 )); ?>
 
-	<p class="note">Fields with <span class="required">*</span> are required.</p>
-	
-	<div class="row">
-		<?php echo $form->labelEx($model,'Target Screen *'); ?>
-		<?php echo $form->dropDownList($model, 'eventType', CHtml::listData(
-				EventClass::model()->findAll(
+			<?php echo $form->dropDownListGroup($model, 'eventType', array(
+				'wrapperHtmlOptions' => array(
+					'class' => 'col-sm-3',
+				),
+				'widgetOptions' => array(
+					'data' => CHtml::listData(EventClass::model()->findAll(
 						array("condition"=>"eventGroup = 3 and isDisabled = 0 ", "select"=>"id, title" )
-						)
-				, 'id', 'title'
-				),  array('empty'=>'Select a Target Screen','required'=>true)); ?>
-		<?php echo $form->error($model,'eventType'); ?>
-	</div>
-<div>
+						), 'id', 'title'),
+					'htmlOptions' => array('empty'=>'Select a Target Screen','required'=>true ),
+				),
+				'labelOptions' => array(
+							'label' => 'Target Screen :',
+				)
+			)); ?>
+<div class="form-group"><label class="col-sm-3 control-label required" for="Event_eventType"></label><div class="col-sm-3 col-sm-9">
 <select style="display:none" id="Event_elementId">
 </select>
 
@@ -49,63 +62,103 @@ echo CHtml::dropDownList( '', '',
 		array(
 				'empty'=>'Select a news',
 				'id'=>'news_elementId',
-				'style'=>'display:none'
+				'style'=>'display:none',
+				'class'=>"form-control"
 				
 )
 );
-// echo CHtml::dropDownList(
-// 		'Event[elementId]',
-// 		'',
-// 		CHtml::listData(
-// 				Restaurant::model()->findAll(
-// 						array("condition"=>"isActivated = 1 and isDisabled = 0 and suggested = 1 ",'order'=>'restaurantName', "select"=>"id, CONCAT(restaurantName, ' (', IFNULL(area, IFNULL(address, '') )  , ')', IF(isDisabled = 1, '-DISABLE RESTAURANT', IF(isActivated = 0, '-INACTIVE RESTAURANT', ''))) as restaurantName")
-// 						),
-// 				'id',
-// 				'restaurantName'
-// 		),
-// 		array(
-// 				'empty'=>array('Select a Restaurant'),
-// 				'style'=>'display:none'
-				
-// )
-// 		);
 ?>
-</div>
-	<div class="row">
-		<?php
-// 		$model->region = isset($_SESSION['region'])? $_SESSION['region'] : '';
-		echo $form->labelEx($model,'region'); ?>
-		<?php echo $form->dropDownList($model, 'region', CHtml::listData(Region::model()->findAll(), 'name', 'name'), array('empty'=>'Select a Region'));
-		echo $form->error($model,'region'); ?>
-	</div>
+</div></div><div>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'Notify Message *'); ?>
-		<?php echo $form->textArea($model,'message',array('required'=>true, 'size'=>80,'maxlength'=>200, 'style'=>'width: 400px;')); ?>
-		<?php echo $form->error($model,'message'); ?>
-	</div>
+			<?php echo $form->dropDownListGroup($model, 'cityId', array(
+				'wrapperHtmlOptions' => array(
+					'class' => 'col-sm-3',
+				),
+				'widgetOptions' => array(
+					'data' => CHtml::listData(City::model()->findAll(
+						array("condition"=>" isDisabled = 0 ", "select"=>"id, cityName" )
+						), 'id', 'cityName'),
+					'htmlOptions' => array('empty'=>'Select a City'),
+				)
+			)); ?>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'Notify Channel *'); ?>
-		<?php echo $form->radioButtonList($model,'channel',array( 'Tester'=>'Tester', 'FoodTalk'=>'FoodTalk')); ?>
-		<?php echo $form->error($model,'channel'); ?>
-	</div>
+			<?php echo $form->dropDownListGroup($model, 'regionId', array(
+				'wrapperHtmlOptions' => array(
+					'class' => 'col-sm-3',
+				),
+				'widgetOptions' => array(
+					'data' => CHtml::listData(Region::model()->findAll(
+						array( "select"=>"id, name" )
+						), 'id', 'name'),
+					'htmlOptions' => array('empty'=>'Select a Region'),
+				)
+			)); ?>
 
-	<div id="datetimepicker2" class="row input-append date">
 
-		<?php echo $form->labelEx($model,'Notify Time *'); ?>
-		<?php echo $form->textField($model,'eventDate', array('value'=>date("Y-m-d H:i:s") ,'required'=>true, 'readonly'=>true)); ?>
-		<?php echo $form->error($model,'eventDate'); ?>
-	<span class="add-on">
-    	  <i data-time-icon="icon-time" data-date-icon="icon-calendar">
-     	 </i>
-    </span>
+<?php echo $form->textAreaGroup(
+			$model,
+			'message',
+			array(
+				'wrapperHtmlOptions' => array(
+					'class' => 'col-sm-3',
+				),
+				'widgetOptions' => array(
+					'htmlOptions' => array('rows' => 5,'required'=>true),
+				),
+// 				'htmlOptions' => array('required'=>true ),
+				'labelOptions' => array(
+						'label' => 'Notify Message *',
+				)
+			)
+		); ?>
+
+<?php echo $form->radioButtonListGroup(
+			$model,
+			'channel',
+			array(
+					'wrapperHtmlOptions' => array(
+							'class' => 'col-sm-3',
+					),
+				'widgetOptions' => array(
+					'data' => array(
+						'Tester'=>'Tester channel', 'FoodTalk'=>'Food Talk channel'
+					)
+				),
+				'inline'=>'checkbox-horizontal'	
+			)
+		); ?>
 		
-	</div>
+		<?php echo $form->dateTimePickerGroup($model,'eventDate',
+				array(
+				'widgetOptions' => array(
+					'options' => array(
+						'language' => 'en',
+						'startDate' => '-0d',
+						'format'=>'yyyy-mm-dd H:i:s'	
+// 						'endDate'=> '+0d',
+					),
+				),
+				'wrapperHtmlOptions' => array(
+					'class' => 'col-sm-3',
+				),
+				'prepend' => '<i class="glyphicon glyphicon-calendar"></i>'
+			)
+		); ?>
 
-	<div class="row buttons">
-		<?php echo CHtml::submitButton($model->isNewRecord ? 'Post' : 'Save'); ?>
-	</div>
+<div class="form-group"><label class="col-sm-3 control-label required" for="Event_eventType"></label><div class="col-sm-3 col-sm-9">
+		<?php 
+		
+		$this->widget(
+				'booster.widgets.TbButton',
+				array(
+						'context' => 'primary',
+						'label' => $model->isNewRecord ? 'Post' : 'Save',
+						//                 'url' => '#',
+						'htmlOptions' => array('type'=>'Submit', "value"=>"Submit"),
+				));
+		
+// 		echo CHtml::submitButton($model->isNewRecord ? 'Post' : 'Save'); ?>
+	</div></div>
 
 <?php $this->endWidget(); ?>
 
@@ -285,17 +338,11 @@ $( document ).ready(function() {
 		        
 	    });
 	});
-
-  $(function() {
-    $('#datetimepicker2').datetimepicker({
-      language: 'en',
-      pickSeconds: false,
-      pick12HourFormat: true,
-      startDate: '2015-11-11',
-      format: 'yyyy-MM-dd hh:mm:ss',
-    });
-  });
-
+	
+	$( document ).ready(function() {
+		$("#Event_eventDate").val("<?php echo date("Y-m-d H:i:s") ?>");
+		$("#Event_eventDate").attr('readonly', true);
+	});
 </script>
 
 

@@ -2,16 +2,57 @@
 /* @var $this PostController */
 /* @var $model Post */
 
-$this->breadcrumbs=array(
-	'Posts'=>array('admin'),
-	'Manage',
+// $this->breadcrumbs=array(
+// 	'Posts'=>array('admin'),
+// 	'Manage',
+// );
+
+$this->breadcrumbs = array (
+		'links' => array (
+				'Posts'
+		)
 );
 
-$this->menu=array(
-	array('label'=>'New Post', 'url'=>array('post/create')),
-	array('label'=>'Active Post', 'url'=>array('post/admin')),
-	array('label'=>'Disabled Post', 'url'=>array('post/disabled')),
+$this->menu = array (
+		array (
+				'label' => 'Manage',
+				'itemOptions' => array (
+						'class' => 'active'
+				)
+				
+		),
+		array (
+				'label' => 'Create',
+				'url' => 'create',
+		)
 );
+
+// echo Yii::app()->controller->action->id=='disabled'
+
+$this->widget(
+		'booster.widgets.TbNavbar',
+		array(
+				'brand' => 'Manage Posts',
+				'fixed' => false,
+				'fluid' => true,
+				'items' => array(
+						array(
+								'class' => 'booster.widgets.TbMenu',
+								'type' => 'navbar',
+								'items' => array(
+										array('label' => 'Active', 'url' => 'admin', 'active' => Yii::app()->controller->action->id!='disabled'?true:false),
+										array('label' => 'Disabled', 'url' => 'disabled', 'active' => Yii::app()->controller->action->id=='disabled'?true:false),
+								)
+						)
+				)
+		)
+);
+
+// $this->menu=array(
+// 	array('label'=>'New Post', 'url'=>array('post/create')),
+// 	array('label'=>'Active Post', 'url'=>array('post/admin')),
+// 	array('label'=>'Disabled Post', 'url'=>array('post/disabled')),
+// );
 
 Yii::app()->clientScript->registerScript('search', "
 $('.search-button').click(function(){
@@ -30,8 +71,6 @@ $action = Yii::app()->controller->action->id;
 $type = Yii::app()->request->getParam('type',false);
 
 ?>
-
-<h1>Manage Posts</h1>
 <!-- <p> -->
 <!-- You may optionally enter a comparison operator (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b> -->
 <!-- or <b>=</b>) at the beginning of each of your search values to specify how the comparison should be done. -->
@@ -64,10 +103,11 @@ $status = Yii::app()->request->getParam('status',false);
 
 
 
-	$this->widget('zii.widgets.grid.CGridView', array(
+	$this->widget('booster.widgets.TbExtendedGridView', array(
 	'id'=>'post-grid',
+			'type' => 'striped bordered condensed',
 	'dataProvider'=>$model->search($type, true),
-	'filter'=>$model,
+// 	'filter'=>$model,
 	'columns'=>array(
 		array(
 				'name'=>'reportedCount',
@@ -110,7 +150,9 @@ $status = Yii::app()->request->getParam('status',false);
 // 		'checkedInRestaurant.city.cityName',	
 		'tip',
 		array(
-                    'class'=>'CButtonColumn',
+				'class'=>'booster.widgets.TbButtonColumn',
+				
+//                     'class'=>'CButtonColumn',
 //                     'template' => '{view} {delete} {restore} {approve}',
 					'template' => '{view} {delete} {approve}',
                     'buttons'=>array(

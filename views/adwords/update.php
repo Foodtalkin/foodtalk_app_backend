@@ -23,8 +23,12 @@ $this->menu=array(
 // 	array('label'=>'View Adwords', 'url'=>array('view', 'id'=>$model->id)),
 // 	array('label'=>'Manage Adwords', 'url'=>array('admin')),
 // );
-?>
 
-<h1>Update Adwords <?php echo $model->id; ?></h1>
+$this->widget(
+		'booster.widgets.TbNavbar',
+		array(	'fixed' => false,'fluid' => true,
+				'brand' => 'Update Ad : '.$model->id,
+		)
+);
 
-<?php $this->renderPartial('_form', array('model'=>$model)); ?>
+$this->renderPartial('_form', array('model'=>$model)); ?>

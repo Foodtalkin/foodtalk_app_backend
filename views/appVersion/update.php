@@ -37,8 +37,14 @@ $this->menu = array (
 		)
 );
 
+
+$this->widget(
+		'booster.widgets.TbNavbar',
+		array(	'fixed' => false,'fluid' => true,
+				'brand' => 'Update  #'.$model->platform,
+		)
+);
+
+
 ?>
-
-<h1>Update AppVersion <?php echo $model->id; ?></h1>
-
 <?php $this->renderPartial('_form', array('model'=>$model)); ?>

@@ -184,7 +184,7 @@ class Ads extends FoodTalkActiveRecord
 		$sql .= ',IFNULL(a.description, "") as description';
 
 		$sql .= ',IFNULL(a.startDate, "") as startDate';
-		$sql .= ',IFNULL(a.expiry, "") as expiry';
+		$sql .= ',IFNULL(a.expiry, "N/A") as expiry';
 		$sql .= ',IFNULL(a.cap, "") as cap';
 		$sql .= ',IFNULL(a.priority, "") as priority';
 		$sql .= ',IFNULL(a.position, "") as position';
@@ -218,6 +218,8 @@ class Ads extends FoodTalkActiveRecord
 			$sql .= ' LEFT JOIN adFilters as '.$fil->name.' on '.$fil->name.'.adId = a.id AND '.$fil->name.'.name = "'.$fil->name.'" ';
 			$andWhere[] = '( '.$fil->name.'.value '.$fil->operator.' "'.$user[$fil->userTableField].'" or '.$fil->name.'.value is null )';
 		}
+		
+		$andWhere[] = ' a.isDisabled = 0 ';
 		
 		$sql .= 'WHERE '. implode(' AND ', $andWhere);
 		

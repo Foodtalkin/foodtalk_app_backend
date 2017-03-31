@@ -24,12 +24,12 @@ $('.search-form form').submit(function(){
 	return false;
 });
 ");
-?>
-
-
-
-<h1>Manage Adwords</h1>
-<?php 
+$this->widget(
+		'booster.widgets.TbNavbar',
+		array(	'fixed' => false,'fluid' => true,
+				'brand' => 'Manage Adwords',
+		)
+);
 
 $status = Yii::app()->request->getParam('status', false);
 if(!$status)
@@ -115,8 +115,8 @@ $this->widget(
 				'filter' => false
 		),
 			array(
-					'name'=>'startDate',
-					'value' => 'date_format(date_create($data->expiry),"jS M Y")',
+					'name'=>'expiry',
+					'value' => '$data->expiry?date_format(date_create($data->expiry),"jS M Y"):"N/A"',
 					'type'  => 'raw',
 					'filter' => false
 			),
@@ -135,7 +135,8 @@ $this->widget(
 		*/
 		array(
 			'class'=>'booster.widgets.TbButtonColumn',
-			'template' => '{update} {delete}',	
+			'template' => '{view} {update} {delete}',	
 		),
 	),
 )); ?>
+<br><br>

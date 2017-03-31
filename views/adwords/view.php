@@ -32,9 +32,15 @@ $this->menu = array (
 		),
 );
 
+$this->widget(
+		'booster.widgets.TbNavbar',
+		array(	'fixed' => false,'fluid' => true,
+				'brand' => 'View Ad #'.$model->id,
+		)
+);
+
 ?>
 
-<h1>View Adwords #<?php echo $model->id; ?></h1>
 
 <?php $this->widget('booster.widgets.TbDetailView', array(
 	'data'=>$model,

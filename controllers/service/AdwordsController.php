@@ -38,6 +38,37 @@ class AdwordsController extends ServiceBaseController
                 		$option['longitude'] = filter_var($_JSON['longitude'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
                 	
                     $addList = Ads::getAds($userId,$option);
+                    
+                    foreach ($addList as $key => $ad){
+                    	
+                    	switch ($ad['type']){
+                    		case 'post':
+                    			$res = self::post(self::POST_GET, array('postId'=>$ad['entityId']));
+                    			
+								if(isset($res['post']))
+	                    			$addList[$key]['content'] = $res['post']; 
+								else
+									$addList[$key]['content'] = 'no such Post';
+                    		break;
+                    		case 'storeItem':
+                    			$res = self::post(self::STOREITEM_GET, array('storeItemId'=>$ad['entityId']));
+                    			 
+                    			if(isset($res['storeItem']))
+                    				$addList[$key]['content'] = $res['storeItem'];
+                    			else
+                    				$addList[$key]['content'] = 'no such storeItem';
+                    		break;
+                    		case 'news':
+                    			$res = self::post(self::NEWS_GET, array('id'=>$ad['entityId']));
+                    			 
+                    			if(isset($res['news']))
+                    				$addList[$key]['content'] = $res['news'];
+                    			else
+                    				$addList[$key]['content'] = 'no such news';
+                    		break;
+                    	}
+                    }
+                    
                     $result = array(
                         'api' => $apiName,
                         'apiMessage' => 'adwords fetched successfully.',

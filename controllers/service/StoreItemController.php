@@ -122,6 +122,58 @@ class StoreItemController extends ServiceBaseController
     }
     
     
+    public function actionGet()
+    {
+    	$apiName = 'storeItem/get';
+    	$sessionId = null;
+    
+    	$_JSON = $this->getJsonInput();
+    
+    	try
+    	{
+    		if(!isset($_JSON) || empty($_JSON))
+    			$result = $this->error($apiName, WS_ERR_POST_PARAM_MISSED, 'No input received.');
+    		else if(!isset($_JSON['sessionId']) || empty($_JSON['sessionId']))
+    			$result = $this->error($apiName, WS_ERR_POST_PARAM_MISSED, 'Please enter session id.');
+    		else
+    		{
+    			//             	$user = true;
+    			$userId = $this->isAuthentic($_JSON['sessionId']);
+    			$user = User::model()->findByPk($userId);
+    
+    			if (is_null($user))
+    				$result = $this->error($apiName, WS_ERR_WONG_USER, 'Please login before using this service.');
+    			else
+    			{
+    
+    				$page = 1;
+    				$type = false;
+    				$storePurchase = array();
+    
+    				if(!isset($_JSON['storeItemId']))
+    					throw new Exception(print_r('no storeItemId recived', true), WS_ERR_POST_PARAM_MISSED);    
+    
+    					$item = StoreItem::getThisItem($_JSON['storeItemId'], $userId);
+    					
+    					$result = array(
+    							'api' => $apiName,
+    							'apiMessage' => 'Records fetched successfully',
+    							'status' => 'OK',
+    							'storeItem' => $item
+    					);
+    
+    			}
+    		}
+    	}
+    	catch (Exception $e)
+    	{
+    		$result = $this->error($apiName, $e->getCode(), Yii::t('app', $e->getMessage()));
+    	}
+    	$this->sendResponse(json_encode($result, JSON_UNESCAPED_UNICODE));
+    
+    }
+    
+    
     public function actionPurchase()
 	{
     	$apiName = 'storeItem/purchase';

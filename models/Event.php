@@ -9,6 +9,10 @@
  * @property string $raiserId
  * @property string $relatedUserId
  * @property string $elementId
+ * @property string $message
+ * @property string $channel
+ * @property string $cityId
+ * @property integer $regionId
  * @property string $eventDate
  * @property integer $isNotified
  * @property string $createDate
@@ -19,6 +23,8 @@
  * The followings are the available model relations:
  * @property User $raiser
  * @property User $relatedUser
+ * @property City $city
+ * @property Region $region
  * @property Notification[] $notifications
  */
 class Event extends FoodTalkActiveRecord
@@ -101,6 +107,8 @@ class Event extends FoodTalkActiveRecord
             'raiser' => array(self::BELONGS_TO, 'User', 'raiserId'),
         	'appClass' => array(self::BELONGS_TO, 'eventClass', 'eventType'),
             'relatedUser' => array(self::BELONGS_TO, 'User', 'relatedUserId'),
+        	'city' => array(self::BELONGS_TO, 'City', 'cityId'),
+        	'region' => array(self::BELONGS_TO, 'Region', 'regionId'),
             'notifications' => array(self::HAS_MANY, 'Notification', 'eventId'),
         );
     }
@@ -116,6 +124,10 @@ class Event extends FoodTalkActiveRecord
             'raiserId' => 'Raiser',
             'relatedUserId' => 'Related User',
             'elementId' => 'Element',
+       		'message' => 'Message',
+       		'channel' => 'Channel',
+       		'cityId' => 'City',
+       		'regionId' => 'Region',
             'eventDate' => 'Event Date',
             'isNotified' => 'Is Notified',
             'createDate' => 'Create Date',
@@ -148,6 +160,10 @@ class Event extends FoodTalkActiveRecord
         $criteria->compare('raiserId',$this->raiserId,true);
         $criteria->compare('relatedUserId',$this->relatedUserId,true);
         $criteria->compare('elementId',$this->elementId,true);
+        $criteria->compare('message',$this->message,true);
+        $criteria->compare('channel',$this->channel,true);
+        $criteria->compare('cityId',$this->cityId,true);
+        $criteria->compare('regionId',$this->regionId);
         $criteria->compare('eventDate',$this->eventDate,true);
         $criteria->compare('isNotified',$this->isNotified);
         $criteria->compare('createDate',$this->createDate,true);
@@ -209,7 +225,7 @@ class Event extends FoodTalkActiveRecord
         $sql .= ',e.eventDate';
         $sql .= ',e.isNotified';
         $sql .= ',e.channel';
-        $sql .= ',e.region';
+//         $sql .= ',e.region';
         
         $sql .= ',c.eventGroup';
         $sql .= ',c.defaultMessage';

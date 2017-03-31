@@ -73,8 +73,11 @@ class NotificationController extends SiteBaseController
 	        
 // 	        $model->raiserId = $raiserId;
 
-	        $model->region= $_POST['Event']['region'];
+// 	        $model->region= $_POST['Event']['region'];
 	         
+	        $model->cityId = $_POST['Event']['cityId'];
+	        $model->regionId = $_POST['Event']['regionId'];
+	        
 	        $model->message = $_POST['Event']['message'];
 	        $model->eventDate = $_POST['Event']['eventDate'];
 	        $model->channel = $_POST['Event']['channel'];

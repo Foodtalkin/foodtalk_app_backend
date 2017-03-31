@@ -32,6 +32,76 @@ class ServiceBaseController extends Controller
         }
     }
     
+
+    const  USER_PROFILE = 'user/getProfile';
+    const  USER_POST = 'user/getImagePosts';
+    const  USER_FOLLOW = 'follower/follow';
+    const  USER_UNFOLLOW = 'follower/unfollow';
+    const  USER_HOME_FEEDS = 'post/list';
+    
+    const  RESTAURANT_PROFILE = 'restaurant/getProfile';
+    const  RESTAURANT_POST = 'restaurant/getImagePosts';
+    const  RESTAURANT_REPORT = 'restaurantReport/add';
+    
+    const  POST_LIKE = 'like/add';
+    const  POST_UNLIKE = 'like/delete';
+    
+    const  POST_BOOKMARK = 'bookmark/add';
+    const  POST_UNBOOKMARK = 'bookmark/delete';
+    const  POST_REPORT = 'flag/add';
+    
+    const  COMMENT_ADD = 'comment/add';
+    
+    const  DISH_POST = 'post/getImageCheckInPosts';
+    // 	const  DISCOVER_POST = 'post/getImageCheckInPosts';
+    
+    const  RESTAURANT_SEARCH ='restaurant/list';
+    const  DISH_SEARCH = 'dish/search';
+    const  USER_SEARCH = 'user/listNames';
+    const  LIST_REGIONS = 'region/list';
+    
+    const  STORE_ITEMS = 'storeItem/listItems';
+    const  STORE_OFFER = 'storeOffer/get';
+    const  STORE_PURCHASE = 'storeItem/purchase';
+    const  STORE_ALLPURCHASES = 'storeItem/listPurchase';
+    
+    const  POST_GET = 'post/get';
+    const  NEWS_GET = 'news/get';
+    const  STOREITEM_GET = 'storeItem/get';
+    
+	protected static final  function post($api , array $postData, $tojson = true) {
+
+		$requestData = self::getJsonInput();
+		
+		$postData['sessionId'] = $requestData['sessionId'];
+		
+		$data_string = json_encode($postData, true);		
+		$url = 'http://localhost'.Yii::app()->urlManager->baseUrl.'/service/'.$api;
+		
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_USERAGENT, 'FoodTalk service 1.0');
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+				'Content-Type: application/json',
+				'Content-Length: ' . strlen($data_string))
+		);
+		 
+		$response = curl_exec($ch);
+		$err = curl_error($ch);		
+		curl_close($ch);
+		
+		if ($err) {
+			error_log("cURL Error # : " . $err);
+			return array();
+		} else {
+			return  json_decode($response, true);
+		}
+		
+	}
+    
+    
     /**
      * Check query authorization
      * @return int User ID

@@ -31,9 +31,15 @@ $('.search-form form').submit(function(){
 	return false;
 });
 ");
+
+$this->widget(
+		'booster.widgets.TbNavbar',
+		array(	'fixed' => false,'fluid' => true,
+				'brand' => 'Manage App Versions  ',
+		)
+);
 ?>
 
-<h1>Manage App Versions</h1>
 
 <p>
 You may optionally enter a comparison operator (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b>

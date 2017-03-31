@@ -17,6 +17,18 @@ class PostController extends SiteBaseController
 
 		if(isset($_POST['action']) && $_POST['action']=='update'){
 
+			
+			print_r($_POST);
+			
+// 			echo '  isDisabled : '.$_POST['isDisabled'];
+			
+			if(!isset($_POST['isDisabled']))
+				$_POST['isDisabled'] = 0;
+			else
+				$_POST['isDisabled'] = 1;
+			
+// 			die('DEAD');
+			
 			$checkinAction = false;
 			
 			$post = $this->loadModel($id);

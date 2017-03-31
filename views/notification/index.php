@@ -1,14 +1,24 @@
 <?php
 /* @var $this NotificationController */
 
+
 $this->breadcrumbs=array(
-	'Notification',
+		'links' => array('Notification'),
 );
 
+
+// $this->menu=array(
+// 		array('label'=>'Create', 'url'=>'create'),
+// 		array('label'=>'list', 'url'=>'admin'),
+// // 		array('label'=>'Disabled Post', 'url'=>array('notification')),
+// );
+
+$action = Yii::app()->controller->action->id;
+
 $this->menu=array(
-		array('label'=>'Create', 'url'=>array('notification/create')),
-		array('label'=>'list', 'url'=>array('notification/admin')),
-// 		array('label'=>'Disabled Post', 'url'=>array('notification')),
+		array('label' => 'Manage','url' => 'admin','itemOptions' => $action=='create'?array():array('class' => 'active' )),
+		array('label' => 'Create New','url' => 'create','itemOptions' => $action=='create'?array('class' => 'active'):array())
+		,
 );
 
 $eventTypes = Event::getEventsType();

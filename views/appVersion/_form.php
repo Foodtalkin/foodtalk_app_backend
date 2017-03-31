@@ -26,12 +26,12 @@
 				'widgetOptions' => array(
 					
 						'options' => array(
-														'labelText' => 'YES', //null, 'mini', 'small', 'normal', 'large
-														'onText' => '&nbsp;', // 'primary', 'info', 'success', 'warning', 'danger', 'default'
-														'onColor'=> 'info',
-														'onText'=> '&nbsp',
-														'offText' => 'No',  // 'primary', 'info', 'success', 'warning', 'danger', 'default'
-														'offColor'=> '',
+// 														'labelText' => 'YES', //null, 'mini', 'small', 'normal', 'large
+// 														'onText' => '&nbsp;', // 'primary', 'info', 'success', 'warning', 'danger', 'default'
+// 														'onColor'=> 'info',
+// 														'onText'=> '&nbsp',
+// 														'offText' => 'No',  // 'primary', 'info', 'success', 'warning', 'danger', 'default'
+// 														'offColor'=> '',
 												),
 // 					'onText' => 'enabled', // 'primary', 'info', 'success', 'warning', 'danger', 'default'
 // 					'offText' => 'disabled',

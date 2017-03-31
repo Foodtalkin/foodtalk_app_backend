@@ -67,19 +67,18 @@ class AdwordsController extends SiteBaseController
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-// 		die('DAED');
-		
-		
 		if(isset($_POST['Ads']))
 		{
-// 			$_POST['Adwords']['image'] = uploadImagetoCloud($_POST['Adwords']['image']);
-			if(isset($_POST['Ads']['expiry']))
+			if(!boolval(trim($_POST['Ads']['startDate'])))
+				$_POST['Ads']['startDate'] = date("Y-m-d H:i:s");
+				
+			if(isset($_POST['Ads']['expiry']) && boolval(trim($_POST['Ads']['expiry'])) )
 				$_POST['Ads']['expiry'] = $_POST['Ads']['expiry'].' 23:59:59';
-			
-// 			var_dump($_POST['Adwords']['image']);
-// 			die('DAED');
+			else
+				unset($_POST['Ads']['expiry']);
 			
 			$model->attributes=$_POST['Ads'];
+			
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->id));
 		}
@@ -103,15 +102,17 @@ class AdwordsController extends SiteBaseController
 
 		if(isset($_POST['Ads']))
 		{
-// 			if(preg_match('/data:image/', $_POST['Adwords']['image']))
-// 				$_POST['Adwords']['image'] = uploadImagetoCloud($_POST['Adwords']['image']);
-// 			else 		
-			if(isset($_POST['Ads']['expiry']))
+			if(!boolval(trim($_POST['Ads']['startDate'])))
+				$_POST['Ads']['startDate'] = date("Y-m-d H:i:s");
+				
+			if(isset($_POST['Ads']['expiry']) && boolval(trim($_POST['Ads']['expiry'])) )
 				$_POST['Ads']['expiry'] = $_POST['Ads']['expiry'].' 23:59:59';
+			else
+				unset($_POST['Ads']['expiry']);
 			
 			$model->attributes=$_POST['Ads'];
+			
 			if($model->save())
-				
 				$this->redirect(array('view','id'=>$model->id));
 		}
 

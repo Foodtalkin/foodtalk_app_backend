@@ -1,34 +1,51 @@
-<h1>Manage Notification</h1>
 <!-- <p> -->
 <!-- You may optionally enter a comparison operator (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b> -->
 <!-- or <b>=</b>) at the beginning of each of your search values to specify how the comparison should be done. -->
 <!-- </p> -->
 
-<?php 
-$action = Yii::app()->controller->action->id;
-?>
-	<ul class="nav nav-tabs">
-	  <li<?php if($action=='admin') { ?> class="active"<?php } ?>><a href="<?php echo Yii::app()->createAbsoluteUrl("notification/admin"); ?>">All</a></li>
-	  <li<?php if($action=='pending') { ?> class="active"<?php } ?>><a href="<?php echo Yii::app()->createAbsoluteUrl("notification/pending"); ?>">Pending </a></li>
-	  <li<?php if($action=='notified') { ?> class="active"<?php } ?>><a href="<?php echo Yii::app()->createAbsoluteUrl("notification/notified"); ?>">Notified</a></li>
-
-	</ul>
-
-
-
 <?php
-// Yii::app()->createUrl("user/".$data->userId)
+$this->widget(
+		'booster.widgets.TbNavbar',
+		array(	'fixed' => false,'fluid' => true,
+				'brand' => 'Manage Notification',
+		)
+);
+
+$action = Yii::app()->controller->action->id;
+
+$this->widget(
+		'booster.widgets.TbTabs', array (
+				'type' => 'tabs',
+				'tabs' => array (
+						array (
+								'label' => 'All',
+								'url' => 'admin',
+								'active' => ($action == 'admin' ? true : false)
+						),
+						array (
+								'label' => 'Pending',
+								'url' => 'pending',
+								'active' => ($action == 'pending' ? true : false)
+						),
+						array (
+								'label' => 'Notified',
+								'url' => 'notified' ,
+								'active' => ($action == 'notified' ? true : false)
+						),
+				)
+		)
+);
 
 
-
-	$this->widget('zii.widgets.grid.CGridView', array(
+	$this->widget('booster.widgets.TbExtendedGridView', array(
 	'id'=>'post-grid',
+	'type' => 'striped condensed',
 	'dataProvider'=>$model->search('public'),
-	'filter'=>$model,
+// 	'filter'=>$model,
 	'columns'=>array(
 			'id','eventType','message','eventDate', 'createDate',			
 			array(
-                    'class'=>'CButtonColumn',
+					'class'=>'booster.widgets.TbButtonColumn',
                     'template' => '{view} {delete}',
                     'buttons'=>array(
                         'delete' => array( 'visible'=>'!$data->isNotified'),

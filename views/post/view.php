@@ -1,45 +1,92 @@
+<script
+	src="<?php echo Yii::app()->request->baseUrl; ?>/themes/abound/js/selectize.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="http://brianreavis.github.io/selectize.js/css/selectize.bootstrap3.css" />
 
-<script src="<?php echo Yii::app()->request->baseUrl; ?>/themes/abound/js/selectize.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="http://antenna.io/demo/jquery-bar-rating/dist/themes/css-stars.css" />
+<script
+	src="http://antenna.io/demo/jquery-bar-rating/jquery.barrating.js"></script>
+
 <?php
 $rating = array(1,2,3,4,5);
 // $rating = array(0.5,1,1.5,2,2.5,3,3.5,4,4.5,5);
 /* @var $this PostController */
 /* @var $model Post */
 
-$this->breadcrumbs=array(
-	'Posts'=>array('admin'),
-	$model->id,
+// $this->breadcrumbs=array(
+// 	'Posts'=>array('admin'),
+// 	$model->id,
+// );
+
+$this->breadcrumbs = array (
+		'links' => array (
+				'Posts' => 'admin',
+				$model->id
+		)
 );
 
-$this->menu=array(
-		array('label'=>'New Post', 'url'=>array('post/create')),
-// 	array('label'=>'Dashboard', 'url'=>array('site/dashboard')),
-// 	array('label'=>'Delete Post', 'url'=>'#', 'visible'=>$model->isDisabled==0, 'linkOptions'=>array('submit'=>array('delete','id'=>$model->id),'confirm'=>'Are you sure you want to delete this post?')),
-// 	array('label'=>'Restore Post', 'url'=>'#', 'visible'=>$model->isDisabled==1, 'linkOptions'=>array('submit'=>array('restore','id'=>$model->id),'confirm'=>'Are you sure you want to restore this post?')),
-	array('label'=>'Manage Post', 'url'=>array('admin')),
-// 	array('label'=>'Update Post', 'url'=>array('update', 'id'=>$model->id)),		
-		
+$this->menu = array (
+		array (
+				'label' => 'Manage',
+				'url' => 'admin'
+		),
+		array (
+				'label' => 'Create',
+				'url' => 'create',
+		),
+		array (
+				'label' => 'View',
+				'itemOptions' => array (
+						'class' => 'active'
+				)
+		),
 );
+
+
+
+
+// $this->menu=array(
+// 		array('label'=>'New Post', 'url'=>array('post/create')),
+// // 	array('label'=>'Dashboard', 'url'=>array('site/dashboard')),
+// // 	array('label'=>'Delete Post', 'url'=>'#', 'visible'=>$model->isDisabled==0, 'linkOptions'=>array('submit'=>array('delete','id'=>$model->id),'confirm'=>'Are you sure you want to delete this post?')),
+// // 	array('label'=>'Restore Post', 'url'=>'#', 'visible'=>$model->isDisabled==1, 'linkOptions'=>array('submit'=>array('restore','id'=>$model->id),'confirm'=>'Are you sure you want to restore this post?')),
+// 	array('label'=>'Manage Post', 'url'=>array('admin')),
+// // 	array('label'=>'Update Post', 'url'=>array('update', 'id'=>$model->id)),		
+		
+// );
 $dishTag = DishReview::model()->findByAttributes(array('postId'=>$model->id));
 
-$sql = "SELECT p.id, postId FROM post p inner join user u on p.userId = u.id LEFT join dishReview d on d.postId = p.id WHERE p.image IS NOT NULL and p.isDisabled =0 and d.postId is null and p.id != ".$model->id." ORDER BY p.id  DESC LIMIT 1";
+// $sql = "SELECT p.id, postId FROM post p inner join user u on p.userId = u.id LEFT join dishReview d on d.postId = p.id WHERE p.image IS NOT NULL and p.isDisabled =0 and d.postId is null and p.id != ".$model->id." ORDER BY p.id  DESC LIMIT 1";
 
-$nesxres = Yii::app()->db->createCommand($sql)->queryAll(true);
-foreach ($nesxres as $val){
-	$nextpost = $val['id'];
-}
-if(isset($nextpost)){
+// $nesxres = Yii::app()->db->createCommand($sql)->queryAll(true);
+// foreach ($nesxres as $val){
+// 	$nextpost = $val['id'];
+// }
+
+
+$this->widget(
+		'booster.widgets.TbNavbar',
+		array(	'fixed' => false,'fluid' => true,
+				'brand' => 'Post : '.$model->id,
+		)
+);
+
 ?>
-<div style="border:10px; padding-right:300px; float: right;"><a href="<?php echo Yii::app()->createUrl('post/'.$nextpost); ?>" class="likeabutton">NEXT > </a></div>
-<?php }?>
-<h1>Post Id: <?php echo $model->id; ?></h1>
-<form method="post">
-<table class="general" id="yw0"><tbody>
-<tr class="even"><th>User</th><td>
-<?php echo '<a href="'.Yii::app()->createUrl('user/'.$model->userId).'">'. $model->user->userName.'</a>';?>
-</td></tr>
-<tr class="odd"><th>Dish Name</th><td>
-<input  style="width: 250px;" maxlength="32" name="dishName" type="text" value="
+<div class="form">
+<form class="form-horizontal" id="post-form" method="post">
+
+<div class="form-group">
+		<label class="col-sm-3 control-label" >User</label>
+		<div class="col-sm-3 col-sm-9">
+			<?php echo '<a href="'.Yii::app()->createUrl('user/'.$model->userId).'">'. $model->user->userName.'</a>';?>
+		</div>
+	</div>
+
+<div class="form-group">
+		<label class="col-sm-3 control-label" >Dish Name</label>
+		<div class="col-sm-3 col-sm-9">
+		<input  style="width: 250px;margin-bottom: 1px" maxlength="32" name="dishName" type="text" value="
 <?php 
 $suggestion = false;
 if($dishTag){
@@ -52,13 +99,13 @@ if($dishTag){
 	}
 }
 ?>">
-<?php if($suggestion){?>
-&nbsp;&nbsp;<span class='errorMessage'>Suggested</span>
-<?php }?>
-</td></tr>
-<tr class="even"><th>Rating</th>
-<td>
-	<select id="rating" name="rating">
+		</div>
+</div>
+
+<div class="form-group">
+		<label class="col-sm-3 control-label" >Rating</label>
+		<div class="col-sm-3 col-sm-9">
+		<select id="rating" name="rating">
 <?php
 $rate =3;
 if($dishTag){
@@ -72,19 +119,22 @@ foreach ($rating as $value){
 }
 ?>
 	</select>
-</td></tr>
+		</div>
+	</div>	
 
-<tr>
-<tr class="odd"><th>Checkedin</th>
-<td>
-<input  id="checkedin" name="checkedin" type="checkbox" <?php 
+<div class="form-group">
+		<label class="col-sm-3 control-label" >Checkedin</label>
+		<div class="col-sm-3 col-sm-9">
+		<input  id="checkedin" name="checkedin" type="checkbox" <?php 
 if($model->checkedInRestaurantId > 0 )
 echo 'checked';
 ?> >
-</td>
-</tr>
-<tr id="restaurant" class="odd"><th>Checked InRestaurant</th><td>
-
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label class="col-sm-3 control-label" >Checked InRestaurant</label>
+		<div class="col-sm-3 col-sm-9">
 		<?php  
 // 		CHtml::dropDownList('post', $select, $data)
 // 		if($model->checkedInRestaurantId > 0)
@@ -100,18 +150,71 @@ echo 'checked';
 							'restaurantName'),
 					array('empty'=>'Select a Restaurant')
 					); 
+?><a target="_blank" href="#" >Open this Resturant</a>
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label class="col-sm-3 control-label" >Image</label>
+		<div class="col-sm-3 col-sm-9">
+		<img src="<?php echo imagePath('post') . $model->image; ?>" alt="">
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label class="col-sm-3 control-label" >Review</label>
+		<div class="col-sm-3 col-sm-9">
+		<textarea  name="tip" id="tip"><?php echo $model->tip; ?></textarea>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-3 control-label" >Create Date</label>
+		<div class="col-sm-3 col-sm-9">
+		<?php echo $model->createDate ?>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-3 control-label" >Is Disabled</label>
+		<div class="col-sm-3 col-sm-9">
+		<?php 
+$this->widget(
+		'booster.widgets.TbSwitch',
+		array(
+				'name' => 'isDisabled',
+				'options' => array(
+						'size' => 'large', //null, 'mini', 'small', 'normal', 'large
+						'onColor' => 'warning', // 'primary', 'info', 'success', 'warning', 'danger', 'default'
+						'offColor' => 'success',  // 'primary', 'info', 'success', 'warning', 'danger', 'default'
+						'onText'=>'Yes',
+						'offText'=>'No'
+						
+				),
+				'value'=>$model->isDisabled==1 ? true:false,
 
-
+		)
+);
 ?>
-<a target="_blank" href="#" >Open this Resturant</a>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-3 control-label" ></label>
+		<div class="col-sm-3 col-sm-9">
+		<button type="Submit" value="update" class="btn btn-primary" id="yw1" name="yt0">update</button>
+		</div>
+	</div>
 
 <script>
-// 	$('#checkedInRestaurantId').selectize({
-// 		allowEmptyOption: true
-// 	});
+$( document ).ready(function() {
+	  $('#rating').barrating({
+        theme: 'css-stars',
+        showSelectedRating: false
+    });
+    
+	  $( ".fadeout" ).fadeOut( "slow", function() {
+	  });
+});
 
-
-	$( document ).ready(function() {
+$( document ).ready(function() {
 		$('#checkedInRestaurantId').selectize({
 		    valueField: 'id',
 		    labelField: 'restaurantName',
@@ -143,17 +246,15 @@ echo 'checked';
 		    }
 		});
 		});
-
-	
 	
 	$('#Post_userId').selectize({
 		allowEmptyOption: false
 	});
 
-	$('#checkedInRestaurantId').width('300px');
+	$('#checkedInRestaurantId').width('250px');
 	
-	$('.selectize-control').width('300px');
-	$('.selectize-control').css( "float", "left" );
+// 	$('.selectize-control').width('300px');
+// 	$('.selectize-control').css( "float", "left" );
 
 	$('#checkedin').change( function() {
 
@@ -172,20 +273,7 @@ if(!$model->checkedInRestaurantId){
 	<?php
 }
 ?>
-	
-	
 </script>
-</td></tr>
-<tr class="even"><th>Image</th><td><img src="<?php echo imagePath('post') . $model->image; ?>" alt=""></td></tr>
-<tr class="odd"><th>Review</th><td><textarea size="80" maxlength="200" style="width: 450px; height:100px" name="tip" id="tip"><?php echo $model->tip; ?></textarea></td></tr>
-<tr class="even"><th>Create Date</th><td>2015-10-07 16:44:50</td></tr>
-<tr class="odd"><th>Active</th><td>
-<select name="isDisabled">
-<option <?php echo $model->isDisabled==1 ? '':'selected';?> value="0">Yes</option>
-<option <?php echo $model->isDisabled==1 ? 'selected':'';?> value="1">Disable</option>
-</select>
-</td></tr>
-<tr class="even"><th></th><td><input value="update" type="submit"></td></tr>
-</tbody></table>
 <input type="hidden" name="action" value="update">
 </form>
+</div>

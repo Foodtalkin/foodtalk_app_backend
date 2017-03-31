@@ -30,8 +30,12 @@ array(
 // 		'',
 // 		array('label' => 'Help', 'url' => '#'),
 );
-?>
 
-<h1>New Ad</h1>
+$this->widget(
+		'booster.widgets.TbNavbar',
+		array(	'fixed' => false,'fluid' => true,
+				'brand' => 'New Ad',
+		)
+);
 
-<?php $this->renderPartial('_form', array('model'=>$model)); ?>
+$this->renderPartial('_form', array('model'=>$model)); ?>
