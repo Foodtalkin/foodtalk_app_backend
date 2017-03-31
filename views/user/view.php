@@ -2,24 +2,32 @@
 /* @var $this UserController */
 /* @var $model User */
 
+// $this->breadcrumbs=array(
+// 	'Users'=>array('admin'),
+// 	$model->id,
+// );
 $this->breadcrumbs=array(
-	'Users'=>array('admin'),
-	$model->id,
+		'links' => array( 'Users'),
+		// 		'Users'
 );
 
 $this->menu=array(
 //	array('label'=>'List User', 'url'=>array('index')),
 //	array('label'=>'Create User', 'url'=>array('create')),
 //	array('label'=>'Update User', 'url'=>array('update', 'id'=>$model->id)),
+	array('label'=>'Manage User', 'url'=>'admin'),
+	array('label' => 'VIew','itemOptions' => array('class' => 'active' )),
 	array('label'=>'Delete User', 'url'=>'#', 'visible'=>$model->isDisabled==0, 'linkOptions'=>array('submit'=>array('delete','id'=>$model->id),'confirm'=>'Are you sure you want to delete this user?')),
 	array('label'=>'Restore User', 'url'=>'#', 'visible'=>$model->isDisabled==1, 'linkOptions'=>array('submit'=>array('restore','id'=>$model->id),'confirm'=>'Are you sure you want to restore this user?')),
-	array('label'=>'Manage User', 'url'=>array('admin')),
 );
-?>
 
-<h1>User: <?php echo $model->userName; ?></h1>
-
-<?php $this->widget('zii.widgets.CDetailView', array(
+$this->widget(
+		'booster.widgets.TbNavbar',
+		array(	'fixed' => false,'fluid' => true,
+				'brand' => 'User : '.$model->userName,
+		)
+);
+ $this->widget('booster.widgets.TbDetailView', array(
 	'data'=>$model,
 	'attributes'=>array(
 		'id',
@@ -58,7 +66,8 @@ $options = array();
 $options['user'] = $model->id;
 
 
-$this->widget('zii.widgets.grid.CGridView', array(
+$this->widget('booster.widgets.TbExtendedGridView', array(
+		'type' => 'striped condensed',
 		'id'=>'post-grid',
 		'dataProvider'=>$posts->search($type, true, $options ),
 		'filter'=>$posts,
@@ -102,7 +111,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
 		),
 		'tip',
 		array(
-				'class'=>'CButtonColumn',
+   			'class'=>'booster.widgets.TbButtonColumn',
 				'template' => '{view} {delete} {restore}',
 				'buttons'=>array(
 						'view' => array(
@@ -136,3 +145,4 @@ $this->widget('zii.widgets.grid.CGridView', array(
 ));
 
 ?>
+<br><br>

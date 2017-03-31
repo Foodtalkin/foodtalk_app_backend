@@ -105,7 +105,7 @@ $status = Yii::app()->request->getParam('status',false);
 
 	$this->widget('booster.widgets.TbExtendedGridView', array(
 	'id'=>'post-grid',
-			'type' => 'striped bordered condensed',
+			'type' => 'striped condensed',
 	'dataProvider'=>$model->search($type, true),
 // 	'filter'=>$model,
 	'columns'=>array(

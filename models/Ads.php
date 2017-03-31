@@ -187,7 +187,7 @@ class Ads extends FoodTalkActiveRecord
 		$sql .= ',IFNULL(a.expiry, "N/A") as expiry';
 		$sql .= ',IFNULL(a.cap, "") as cap';
 		$sql .= ',IFNULL(a.priority, "") as priority';
-		$sql .= ',IFNULL(a.position, "") as position';
+// 		$sql .= ',IFNULL(a.position, "") as position';
 		$sql .= ',IFNULL(a.metaData, "") as metaData';
 		
 		if(isset($options['latitude']) and isset($options['longitude']) ){

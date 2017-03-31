@@ -155,15 +155,12 @@ $form->widget(
 	</div>
 </div>
 
-<?php $this->endWidget(); ?>
+<?php  $this->endWidget(); ?>
 </div>
 <script type="text/javascript">
-
 $("#preview").click(function(){
 
-	
 	adType = $('#Ads_adType').val()
-// alert('TESTING : ' + adType );
 	
 	if(adType==1)
 		baseUri = 'iframe/post/'
@@ -174,11 +171,8 @@ $("#preview").click(function(){
 					
 	entityId = $('#Ads_entityId').val();
 
-	url = 'http://foodtalk.in/'+baseUri+entityId;
+	url = 'http://<?php echo isset($_SERVER['FT_DEFAULT'])?: 'foodtalk.in' ?>/'+baseUri+entityId;
 
 	$("#previewframe").attr('src',url); 
 });
-
 </script>
-
-<!-- form -->

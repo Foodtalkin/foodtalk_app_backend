@@ -1,7 +1,6 @@
 <?php
 /* @var $this AdwordsController */
 /* @var $data Adwords */
-?>
 $this->breadcrumbs = array (
 		
 		'links' => array (
@@ -9,6 +8,7 @@ $this->breadcrumbs = array (
 				'create' 
 		) 
 );
+?>
 
 
 <div class="view">

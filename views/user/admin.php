@@ -3,16 +3,29 @@ use Facebook\GraphAlbum;
 /* @var $this UserController */
 /* @var $model User */
 
+// $this->breadcrumbs=array(
+// 	'Users'=>array('admin'),
+// 	'Manage',
+// );
+
 $this->breadcrumbs=array(
-	'Users'=>array('admin'),
-	'Manage',
+		'links' => array( 'Users'),
+// 		'Users'
 );
 
+
 $this->menu=array(
-        array('label'=>'Dashboard', 'url'=>array('/dashboard')),
-		array('label'=>'Active users', 'url'=>array('user/admin')),
-		array('label'=>'Reported users', 'url'=>array('user/reported')),	
-		array('label'=>'Disabled users', 'url'=>array('user/disabled')),
+		array('label' => 'Manage','itemOptions' => array('class' => 'active' )),
+		array('label' => 'Create','url' => 'create')
+		,
+);
+
+$action = Yii::app()->controller->action->id;
+
+$this->menu=array(
+		array('label'=>'Active users', 'url'=>'admin','itemOptions' => array('class' => $action == 'admin' ? 'active' : '' )),
+		array('label'=>'Reported users', 'url'=>'reported','itemOptions' => array('class' => $action == 'reported' ? 'active' : '' )),	
+		array('label'=>'Disabled users', 'url'=>'disabled','itemOptions' => array('class' => $action == 'disabled' ? 'active' : '' )),
 		
 	//array('label'=>'List User', 'url'=>array('index')),
 	//array('label'=>'Create User', 'url'=>array('create')),
@@ -30,16 +43,16 @@ $('.search-form form').submit(function(){
 	return false;
 });
 ");
+$this->widget(
+		'booster.widgets.TbNavbar',
+		array(	'fixed' => false,'fluid' => true,
+				'brand' => 'Manage Users',
+		)
+);
 ?>
 
-<h1>Manage Users</h1>
-
-<p>
-You may optionally enter a comparison operator (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b>
-or <b>=</b>) at the beginning of each of your search values to specify how the comparison should be done.
-</p>
-
-<?php $this->widget('zii.widgets.grid.CGridView', array(
+<?php $this->widget('booster.widgets.TbExtendedGridView', array(
+		'type' => 'striped condensed',
     'id'=>'user-grid',
     'dataProvider'=>$model->search(),
     'filter'=>$model,
@@ -106,7 +119,7 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
         'updateId',
         */
         array(
-            'class'=>'CButtonColumn',
+   			'class'=>'booster.widgets.TbButtonColumn',
             'template' => '{view} {delete} {restore}',
             'buttons'=>array(
                 'delete' => array(
@@ -134,3 +147,4 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
         ),
     ),
 )); ?>
+<br><br>

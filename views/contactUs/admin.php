@@ -2,13 +2,18 @@
 /* @var $this CityController */
 /* @var $model City */
 
+// $this->breadcrumbs=array(
+// // 	'Cities'=>array('admin'),
+// 	'Contact Us',
+// );
+
 $this->breadcrumbs=array(
-// 	'Cities'=>array('admin'),
-	'Contact Us',
+		'links' => array( 'Contact Us'),
+		// 		'Users'
 );
 
 $this->menu=array(
-	array('label'=>'View', 'url'=>array('contactUs/admin'))
+	array('label'=>'Manage', 'url'=>'admin' ,'itemOptions' => array('class' => 'active' ))
 );
 
 Yii::app()->clientScript->registerScript('search', "
@@ -23,12 +28,13 @@ $('.search-form form').submit(function(){
 	return false;
 });
 ");
-?>
-
-<h1>Contact Us</h1>
-
-
-<?php $this->widget('zii.widgets.grid.CGridView', array(
+$this->widget(
+		'booster.widgets.TbNavbar',
+		array(	'fixed' => false,'fluid' => true,
+				'brand' => 'Contact Us',
+		)
+);
+$this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'city-grid',
 	'dataProvider'=>$model->search(),
 	'filter'=>$model,
@@ -81,3 +87,4 @@ $('.search-form form').submit(function(){
 //                 ),
 	),
 )); ?>
+<br><br>
