@@ -171,7 +171,7 @@ $("#preview").click(function(){
 					
 	entityId = $('#Ads_entityId').val();
 
-	url = 'http://<?php echo isset($_SERVER['FT_DEFAULT'])?: 'foodtalk.in' ?>/'+baseUri+entityId;
+	url = 'http://<?php echo isset($_SERVER['FT_DEFAULT'])? $_SERVER['FT_DEFAULT'] : 'foodtalk.in' ?>/'+baseUri+entityId;
 
 	$("#previewframe").attr('src',url); 
 });
