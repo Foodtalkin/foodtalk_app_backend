@@ -73,7 +73,7 @@ class AdwordsController extends ServiceBaseController
                         'api' => $apiName,
                         'apiMessage' => 'adwords fetched successfully.',
                         'status' => 'OK',
-                    	'position'=> '3',
+                    	'position'=> '6',
                         'result' => $addList 
                     );
                 }
