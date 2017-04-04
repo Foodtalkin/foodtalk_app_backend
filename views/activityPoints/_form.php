@@ -6,7 +6,11 @@
 
 <div class="form">
 
-<?php $form=$this->beginWidget('CActiveForm', array(
+<?php
+
+$form=$this->beginWidget('booster.widgets.TbActiveForm', array(
+		'type' => 'horizontal',
+// $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'activity-points-form',
 	// Please note: When you enable ajax validation, make sure the corresponding
 	// controller action is handling ajax validation correctly.
@@ -15,70 +19,48 @@
 	'enableAjaxValidation'=>false,
 )); ?>
 
-	<p class="note">Fields with <span class="required">*</span> are required.</p>
-
-	<?php echo $form->errorSummary($model); ?>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'activityTable'); ?>
-		<?php echo $form->textField($model,'activityTable',array('size'=>50,'maxlength'=>50)); ?>
-		<?php echo $form->error($model,'activityTable'); ?>
+	<div class="form-group">
+		<label class="col-sm-3 control-label required"
+			for="ActivityPoints_activityTable">Fields with <span class="required">*</span>
+			are required.
+		</label>
+		<div class="col-sm-3 col-sm-9"></div>
 	</div>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'activityTitle'); ?>
-		<?php echo $form->textField($model,'activityTitle',array('size'=>60,'maxlength'=>128)); ?>
-		<?php echo $form->error($model,'activityTitle'); ?>
-	</div>
+		<?php
+		
+		echo $form->textFieldGroup($model, 'activityTable',array('wrapperHtmlOptions' => array('class' => 'col-sm-3',)));
+		echo $form->textFieldGroup($model, 'activityTitle',array('wrapperHtmlOptions' => array('class' => 'col-sm-3',)));
+		echo $form->textFieldGroup($model, 'platform',array('wrapperHtmlOptions' => array('class' => 'col-sm-3',)));
+		echo $form->textAreaGroup($model, 'activityDesc',array('wrapperHtmlOptions' => array('class' => 'col-sm-3',)));
+		echo $form->textFieldGroup($model, 'points',array('wrapperHtmlOptions' => array('class' => 'col-sm-3',)));
+		echo $form->textFieldGroup($model, 'timefactor',array('wrapperHtmlOptions' => array('class' => 'col-sm-3',),'labelOptions' => array('label' => 'Timefactor In Minutes',) ));
+		echo $form->textFieldGroup($model, 'minimum',array('wrapperHtmlOptions' => array('class' => 'col-sm-3',),'labelOptions' => array('label' => 'Minimum Points',) ));
+		echo $form->textFieldGroup($model, 'maximum',array('wrapperHtmlOptions' => array('class' => 'col-sm-3',),'labelOptions' => array('label' => 'Maximum Points',)));
+		echo $form->textFieldGroup($model, 'penality',array('wrapperHtmlOptions' => array('class' => 'col-sm-3',),'labelOptions' => array('label' => 'Points For Penality',)));
+		
+		?>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'platform'); ?>
-		<?php echo $form->textField($model,'platform',array('size'=>8,'maxlength'=>8)); ?>
-		<?php echo $form->error($model,'platform'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'activityDesc'); ?>
-		<?php echo $form->textArea($model,'activityDesc',array('rows'=>6, 'cols'=>50)); ?>
-		<?php echo $form->error($model,'activityDesc'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'points'); ?>
-		<?php echo $form->textField($model,'points'); ?>
-		<?php echo $form->error($model,'points'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'timefactor In minutes'); ?>
-		<?php echo $form->textField($model,'timefactor'); ?>
-		<?php echo $form->error($model,'timefactor'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'minimum Points'); ?>
-		<?php echo $form->textField($model,'minimum'); ?>
-		<?php echo $form->error($model,'minimum'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'maximum Points'); ?>
-		<?php echo $form->textField($model,'maximum'); ?>
-		<?php echo $form->error($model,'maximum'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'Points for penality'); ?>
-		<?php echo $form->textField($model,'penality'); ?>
-		<?php echo $form->error($model,'penality'); ?>
-	</div>
-
-
-
-	<div class="row buttons">
-		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
+<div class="form-group">
+		<label class="col-sm-3 control-label required"
+			for="ActivityPoints_maximum"></label>
+		<div class="col-sm-3 col-sm-9">
+				<?php
+				$this->widget(
+						'booster.widgets.TbButton',
+						array(
+								'context' => 'primary',
+								'label' => $model->isNewRecord ? 'Create' : 'Save',
+								//                 'url' => '#',
+								'htmlOptions' => array('type'=>'Submit', "value"=>"Submit"),
+						));
+				
+				?>
+				
+		</div>
 	</div>
 
 <?php $this->endWidget(); ?>
-
-</div><!-- form -->
+</div>
+<br>
+<!-- form -->

@@ -2,20 +2,27 @@
 /* @var $this RestaurantController */
 /* @var $model Restaurant */
 
-$this->breadcrumbs=array(
-	'Restaurants'=>array('admin'),
-	$model->id=>array('view','id'=>$model->id),
-	'Update',
+$this->breadcrumbs = array (
+		'links' => array (
+				'Restaurant'
+		)
 );
 
 $this->menu=array(
-	array('label'=>'Dashboard', 'url'=>array('site/dashboard')),
-	array('label'=>'Create Restaurant', 'url'=>array('create')),
-	array('label'=>'View Restaurant', 'url'=>array('view', 'id'=>$model->id)),
-	array('label'=>'Manage Restaurant', 'url'=>array('admin')),
+// 	array('label'=>'Dashboard', 'url'=>array('site/dashboard')),
+	array('label'=>'Manage Restaurant', 'url'=>'admin'),
+	array('label'=>'Create Restaurant', 'url'=>'create'),
+	array('label'=>'update Restaurant', 'url'=>'update/'.$model->id,'itemOptions' => array ('class' => 'active') ),
+	array('label'=>'View Restaurant', 'url'=>'view/'.$model->id),
 );
-?>
 
-<h1>Update Restaurant: <?php echo $model->restaurantName; ?></h1>
+$this->widget(
+		'booster.widgets.TbNavbar',
+		array(
+				'brand' => 'update Restaurant : '.$model->restaurantName,
+				'fixed' => false,
+				'fluid' => true,
+		)
+);
 
-<?php $this->renderPartial('_form', array('model'=>$model)); ?>
+$this->renderPartial('_form', array('model'=>$model)); ?>

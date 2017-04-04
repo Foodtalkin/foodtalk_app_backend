@@ -2,18 +2,63 @@
 /* @var $this RestaurantController */
 /* @var $model Restaurant */
 
-$this->breadcrumbs=array(
-	'Restaurants'=>array('admin'),
-	'Manage',
+// $this->breadcrumbs=array(
+// 	'Restaurants'=>array('admin'),
+// 	'Manage',
+// );
+
+// $this->menu=array(
+// // 	array('label'=>'Dashboard', 'url'=>array('site')),
+// 	array('label'=>'Manage', 'url'=>array('restaurant/admin')),
+// 	array('label'=>'Create Restaurant', 'url'=>array('create')),
+// // 	array('label'=>'New Restaurant Suggestion', 'url'=>array('restaurant/suggestion')),
+// 	array('label'=>'Restaurant Reported', 'url'=>array('restaurant/reported')),
+// // 	array('label'=>'Disabled Restaurant', 'url'=>array('restaurant/disabled')),
+// );
+
+
+$this->breadcrumbs = array (
+		'links' => array (
+				'Restaurants'
+		)
 );
 
-$this->menu=array(
-// 	array('label'=>'Dashboard', 'url'=>array('site')),
-	array('label'=>'Manage', 'url'=>array('restaurant/admin')),
-	array('label'=>'Create Restaurant', 'url'=>array('create')),
-// 	array('label'=>'New Restaurant Suggestion', 'url'=>array('restaurant/suggestion')),
-	array('label'=>'Restaurant Reported', 'url'=>array('restaurant/reported')),
-// 	array('label'=>'Disabled Restaurant', 'url'=>array('restaurant/disabled')),
+$this->menu = array (
+		array (
+				'label' => 'Manage',
+				'url' => 'admin',
+				'itemOptions' => array (
+						'class' => 'active'
+				)
+
+		),
+		array (
+				'label' => 'Create',
+				'url' => 'create',
+		),
+// 		array (
+// 				'label' => 'Reported Restaurant',
+// 				'url' => 'reported',
+// 		)
+);
+
+$this->widget(
+		'booster.widgets.TbNavbar',
+		array(
+				'brand' => 'Manage Restaurants',
+				'fixed' => false,
+				'fluid' => true,
+				'items' => array(
+						array(
+								'class' => 'booster.widgets.TbMenu',
+								'type' => 'navbar',
+								'items' => array(
+										array('label' => 'All', 'url' => 'admin', 'active' => Yii::app()->controller->action->id!='reported'?true:false),
+										array('label' => 'Reported Restaurant', 'url' => 'reported', 'active' => Yii::app()->controller->action->id=='reported'?true:false),
+								)
+						)
+				)
+		)
 );
 
 Yii::app()->clientScript->registerScript('search', "
@@ -30,11 +75,6 @@ $('.search-form form').submit(function(){
 ");
 ?>
 
-<h1>Manage Restaurants</h1>
-<p>
-You may optionally enter a comparison operator (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b>
-or <b>=</b>) at the beginning of each of your search values to specify how the comparison should be done.
-</p>
 <?php
 $action = Yii::app()->controller->action->id;
 $columns = array('id', 'restaurantName', 'address');
@@ -117,7 +157,7 @@ $columns[] = array(
 
 
 $columns[] = array(
-                    'class'=>'CButtonColumn',
+					'class'=>'booster.widgets.TbButtonColumn',
                     'template' => '{view} {update} {delete} {restore}',
                     'buttons'=>array(
                         'delete' => array( 'visible'=>'!$data->isDisabled'),
@@ -180,12 +220,14 @@ $columns[] = array(
 // 	);
 
 
-	$this->widget('zii.widgets.grid.CGridView', array(
+	$this->widget('booster.widgets.TbExtendedGridView', array(
+			'type' => 'striped condensed',
 	'id'=>'restaurant-grid',
 	'dataProvider'=>$model->search($type),
 	'filter'=>$model,
 	'columns'=>$columns
 )); ?>
+<br><br>
 <script>
 function suggestedResturant(checkbox){
 

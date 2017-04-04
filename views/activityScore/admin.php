@@ -2,16 +2,40 @@
 /* @var $this ActivityScoreController */
 /* @var $model ActivityScore */
 
-$this->breadcrumbs=array(
-	'Activity Scores'=>array('index'),
-	'Manage',
+// $this->breadcrumbs=array(
+// 	'Activity Scores'=>array('index'),
+// 	'Manage',
+// );
+
+// $this->menu=array(
+// 	array('label'=>'Manage ActivityScore', 'url'=>array('admin')),
+		
+// // 	array('label'=>'List ActivityScore', 'url'=>array('index')),
+// // 	array('label'=>'Create ActivityScore', 'url'=>array('create')),
+// );
+
+$this->breadcrumbs = array (
+		'links' => array (
+				'Activity Scores'
+		)
 );
 
 $this->menu=array(
-	array('label'=>'Manage ActivityScore', 'url'=>array('admin')),
-		
-// 	array('label'=>'List ActivityScore', 'url'=>array('index')),
-// 	array('label'=>'Create ActivityScore', 'url'=>array('create')),
+// 	array('label'=>'Dashboard', 'url'=>array('site/dashboard')),
+		array('label'=>'Manage', 'url'=>'admin','itemOptions' => array ('class' => 'active')),
+		// 		array('label'=>'Create Restaurant', 'url'=>'create'),
+// 		array('label'=>'update Restaurant', 'url'=>'update/'.$model->id ),
+// 		array('label'=>'View Restaurant', 'url'=>'view/'.$model->id,'itemOptions' => array ('class' => 'active')),
+);
+
+
+$this->widget(
+		'booster.widgets.TbNavbar',
+		array(
+				'brand' => 'Manage Activity Scores',
+				'fixed' => false,
+				'fluid' => true,
+		)
 );
 
 Yii::app()->clientScript->registerScript('search', "
@@ -26,23 +50,9 @@ $('.search-form form').submit(function(){
 	return false;
 });
 ");
-?>
 
-<h1>Manage Activity Scores</h1>
-
-<p>
-You may optionally enter a comparison operator (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b>
-or <b>=</b>) at the beginning of each of your search values to specify how the comparison should be done.
-</p>
-
-<?php echo CHtml::link('Advanced Search','#',array('class'=>'search-button')); ?>
-<div class="search-form" style="display:none">
-<?php $this->renderPartial('_search',array(
-	'model'=>$model,
-)); ?>
-</div><!-- search-form -->
-
-<?php $this->widget('zii.widgets.grid.CGridView', array(
+$this->widget('booster.widgets.TbExtendedGridView', array(
+		'type' => 'striped condensed',
 	'id'=>'activity-score-grid',
 	'dataProvider'=>$model->search(),
 	'filter'=>$model,
@@ -58,7 +68,9 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 		'updateId',
 		*/
 		array(
-			'class'=>'CButtonColumn',
+                    'class'=>'booster.widgets.TbButtonColumn',
+                    'template' => '{view}',
+				
 		),
 	),
 )); ?>

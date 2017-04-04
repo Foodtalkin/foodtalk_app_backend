@@ -2,15 +2,30 @@
 /* @var $this CityController */
 /* @var $model City */
 
-$this->breadcrumbs=array(
-	'Cities'=>array('admin'),
-	'Manage',
+$this->breadcrumbs = array (
+		'links' => array (
+				'Cities'
+		)
 );
 
 $this->menu=array(
-	array('label'=>'Dashboard', 'url'=>array('site/dashboard')),
-// 	array('label'=>'Create City', 'url'=>array('create')),
+// 	array('label'=>'Dashboard', 'url'=>array('site/dashboard')),
+		array('label'=>'Manage', 'url'=>'admin','itemOptions' => array ('class' => 'active')),
+// 		array('label'=>'Create Restaurant', 'url'=>'create'),
+// 		array('label'=>'update Restaurant', 'url'=>'update/'.$model->id ),
+// 		array('label'=>'View Restaurant', 'url'=>'view/'.$model->id,'itemOptions' => array ('class' => 'active')),
 );
+
+
+$this->widget(
+		'booster.widgets.TbNavbar',
+		array(
+				'brand' => 'Add City',
+				'fixed' => false,
+				'fluid' => true,
+		)
+);
+
 
 Yii::app()->clientScript->registerScript('search', "
 $('.search-button').click(function(){
@@ -26,26 +41,28 @@ $('.search-form form').submit(function(){
 ");
 ?>
 
-<h1>Add City</h1>
-
 <form method="post">
 <input name="google_place_id" type="hidden" id='google_place_id'>
-<input type="submit" value="Add">
+<button type="Submit" value="Submit" class="btn btn-primary" id="yw12" name="yt0">Add</button>
 </form>
 
 <iframe height="400px" width="100%" frameBorder="0" scrolling="no"
         src="<?php echo Yii::app()->createAbsoluteUrl('city/map'); ?>">
     </iframe>
 
-
-<h1>Manage Cities</h1>
-
-<p>
-You may optionally enter a comparison operator (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b>
-or <b>=</b>) at the beginning of each of your search values to specify how the comparison should be done.
-</p>
-
-<?php $this->widget('zii.widgets.grid.CGridView', array(
+<br><br>
+<?php 
+$this->widget(
+		'booster.widgets.TbNavbar',
+		array(
+				'brand' => 'Cities',
+				'fixed' => false,
+				'fluid' => true,
+		)
+);
+?>
+<?php $this->widget('booster.widgets.TbExtendedGridView', array(
+	'type' => 'striped condensed',
 	'id'=>'city-grid',
 	'dataProvider'=>$model->search(),
 	'filter'=>$model,
@@ -58,7 +75,7 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 		array('name'=>'resturantCount', 'filter'=>false),	
 		array('name'=>'userCount','filter'=>false),			
 		array(
-                    'class'=>'CButtonColumn',
+                    'class'=>'booster.widgets.TbButtonColumn',
                     'template' => '{view} {update} {delete} {restore}',
                     'buttons'=>array(
                         'delete' => array(

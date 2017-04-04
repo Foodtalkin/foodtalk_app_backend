@@ -1,21 +1,51 @@
-<script src="<?php echo Yii::app()->request->baseUrl; ?>/themes/abound/js/selectize.js"></script>
-<?php
-/* @var $this RestaurantController */
-/* @var $model Restaurant */
+<script
+	src="<?php echo Yii::app()->request->baseUrl; ?>/themes/abound/js/selectize.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="http://brianreavis.github.io/selectize.js/css/selectize.bootstrap3.css" />
 
-$this->breadcrumbs=array(
-	'Restaurants'=>array('admin'),
-	$model->id,
+<?php
+
+$this->breadcrumbs = array (
+		'links' => array (
+				'Restaurant'
+		)
 );
 
 $this->menu=array(
-	array('label'=>'Dashboard', 'url'=>array('site/dashboard')),
-	array('label'=>'Create Restaurant', 'url'=>array('create')),
-	array('label'=>'Update Restaurant', 'url'=>array('update', 'id'=>$model->id)),
-	array('label'=>'Delete Restaurant', 'url'=>'#', 'visible'=>$model->isDisabled==0, 'linkOptions'=>array('submit'=>array('delete','id'=>$model->id),'confirm'=>'Are you sure you want to delete this restaurant?')),
-	array('label'=>'Restore Restaurant', 'url'=>'#', 'visible'=>$model->isDisabled==1, 'linkOptions'=>array('submit'=>array('restore','id'=>$model->id),'confirm'=>'Are you sure you want to restore this restaurant?')),
-	array('label'=>'Manage Restaurant', 'url'=>array('admin')),
+// 	array('label'=>'Dashboard', 'url'=>array('site/dashboard')),
+		array('label'=>'Manage Restaurant', 'url'=>'admin'),
+		array('label'=>'Create Restaurant', 'url'=>'create'),
+		array('label'=>'update Restaurant', 'url'=>'update/'.$model->id ),
+		array('label'=>'View Restaurant', 'url'=>'view/'.$model->id,'itemOptions' => array ('class' => 'active')),
 );
+
+
+$this->widget(
+		'booster.widgets.TbNavbar',
+		array(
+				'brand' => 'Restaurant : '.$model->restaurantName,
+				'fixed' => false,
+				'fluid' => true,
+		)
+);
+
+
+/* @var $this RestaurantController */
+/* @var $model Restaurant */
+
+// $this->breadcrumbs=array(
+// 	'Restaurants'=>array('admin'),
+// 	$model->id,
+// );
+
+// $this->menu=array(
+// 	array('label'=>'Dashboard', 'url'=>array('site/dashboard')),
+// 	array('label'=>'Create Restaurant', 'url'=>array('create')),
+// 	array('label'=>'Update Restaurant', 'url'=>array('update', 'id'=>$model->id)),
+// 	array('label'=>'Delete Restaurant', 'url'=>'#', 'visible'=>$model->isDisabled==0, 'linkOptions'=>array('submit'=>array('delete','id'=>$model->id),'confirm'=>'Are you sure you want to delete this restaurant?')),
+// 	array('label'=>'Restore Restaurant', 'url'=>'#', 'visible'=>$model->isDisabled==1, 'linkOptions'=>array('submit'=>array('restore','id'=>$model->id),'confirm'=>'Are you sure you want to restore this restaurant?')),
+// 	array('label'=>'Manage Restaurant', 'url'=>array('admin')),
+// );
 
 $status = array(
 		'active' => '',
@@ -48,14 +78,7 @@ else{
 		$status['unverified'] = 'checked';
 	}
 }
-
-
-
-// echo Yii::app()->request->baseUrl."<br/>" ;
 ?>
-
-<!-- 						<select id="select-repo" class="repositories" placeholder="Pick a repository..."> -->
-<!-- 						</select> -->
 
 <script>
 $( document ).ready(function() {
@@ -90,66 +113,43 @@ $('#duplicateId').selectize({
     }
 });
 });
-
-// $('#select-repo').selectize({
-//     valueField: 'url',
-//     labelField: 'name',
-//     searchField: 'name',
-//     create: false,
-//     render: {
-//         option: function(item, escape) {
-//         	console.log(item);
-            
-//             return '<div>' +
-//                 '<span class="title">' +
-//                     '<span class="name">' + item.name + '</span>' +
-// //                     '<span class="by">' + escape(item.username) + '</span>' +
-//                 '</span>' +
-// //                 '<span class="description">' + escape(item.description) + '</span>' +
-// //                 '<ul class="meta">' +
-// //                     (item.language ? '<li class="language">' + escape(item.language) + '</li>' : '') +
-// //                     '<li class="watchers"><span>' + escape(item.watchers) + '</span> watchers</li>' +
-// //                     '<li class="forks"><span>' + escape(item.forks) + '</span> forks</li>' +
-// //                 '</ul>' +
-//             '</div>';
-//         }
-//     },
-//     load: function(query, callback) {
-//         if (!query.length) return callback();
-//         $.ajax({
-// //         	url: 'http://localhost/foodtalk/index.php/service/restaurant/list?sessionId=GUEST&searchText=' + encodeURIComponent(query),
-//             url: 'https://api.github.com/legacy/repos/search/' + encodeURIComponent(query),
-//             type: 'GET',
-//             error: function() {
-//                 callback();
-//             },
-//             success: function(res) {
-//                 callback(res.repositories);
-//             }
-//         });
-//     }
-// });
 </script>
 
-<h1>Restaurant: <?php echo $model->restaurantName; ?>
-</h1>
+<form method="post" name="restutantStatus" onsubmit="return validate_frm(this)" class="form-horizontal">
 
-<form method="post" name="restutantStatus" onsubmit="return validate_frm(this)">
-<div>
-<div>
-<span style="padding-left: 20px"><input class="" type="radio" name="status" <?php echo $status['active']; ?> value="active"> Active </span>
-<span style="padding-left: 20px"><input type="radio" name="status" <?php echo $status['inactive']; ?> value="inactive"> Inactive  </span>
-<span style="padding-left: 20px"><input type="radio" name="status" <?php echo $status['disabled']; ?> value="disabled">Disabled  </span>
-<br>
-<span style="padding-left: 20px"><input disabled type="radio" name="verified" <?php echo $status['verified']; ?> value="verified"> Verified</span>
-<span style="padding-left: 20px"><input disabled type="radio" name="verified" <?php echo $status['unverified']; ?> value="unverified">Un-verified</span>
-<br>  
-<br>
-</div>
-<span style="padding-left: 20px">
-<input type="radio" name="status" <?php echo $status['duplicate']; ?> id="duplicate" value="duplicate"> Duplicate with
-<?php 
-echo CHtml::dropDownList(
+	<div class="form-group">
+		<label class="col-sm-1 control-label" for="TestForm_inlineCheckboxes">&nbsp;</label>
+		<div class="col-sm-9">
+				<span id="TestForm_inlineCheckboxes">
+					<label class="checkbox-inline">
+						<input class="" type="radio" name="status" <?php echo $status['active']; ?> value="active">Active &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					</label>
+					
+					<label class="checkbox-inline">
+<input type="radio" name="status" <?php echo $status['inactive']; ?> value="inactive">  Inactive 
+					</label>
+
+					<label class="checkbox-inline">
+<input type="radio" name="status" <?php echo $status['disabled']; ?> value="disabled">Disabled					</label>
+
+					
+				</span>
+		</div>
+	</div>
+		
+	<div class="form-group">
+			<label class="col-sm-1 control-label" for="TestForm_inlineCheckboxes">&nbsp;</label>
+		<div class="col-sm-9">
+			<span id="TestForm_inlineCheckboxes">
+			<label class="checkbox-inline">
+				<input type="radio" name="status" <?php echo $status['duplicate']; ?> id="duplicate" value="duplicate"> Duplicate with
+			</label>
+		</span>
+</div></div>
+	<div class="form-group">
+			<label class="col-sm-1 control-label" for="TestForm_inlineCheckboxes">&nbsp;</label>
+		<div class="col-sm-3 col-sm-9">
+<?php echo CHtml::dropDownList(
 						'duplicateId',
 						$model->duplicateId, 
 						CHtml::listData(
@@ -161,34 +161,33 @@ echo CHtml::dropDownList(
 // 						array('empty'=>array('Select a Restaurant'))
 					);
 ?>
-</span>
-<script>
-// 	$('#duplicateId').selectize({
-// 		allowEmptyOption: true
-// 	});
-
-	$('.selectize-control').width('300px');
-	$('#duplicateId').width('300px');
-// 	$('.selectize-control').style["padding-left"] = "60px";
-	
-</script>
-<?php 
+					<?php 
 if($model->duplicateId)
 	$display = '';
 else
 	$display = 'style="display: none;"';
 ?>
-<span style="padding-left: 10px">
 <a target="_blank" href="<?php echo $model->duplicateId; ?>"   id="duplaicateResturant" <?php echo $display;?> >Open Resturant</a>
-</span>
-<br>
-<span style="padding-left: 60px">
+				
+		</div>
+	</div>
+
+<script>
+// 	$('#duplicateId').selectize({
+// 		allowEmptyOption: true
+// 	});
+
+	$('.selectize-control').width('400px');
+	$('#duplicateId').width('400px');
+// 	$('.selectize-control').style["padding-left"] = "60px";
+	
+</script>
+
+<div class="form-group"><label class="col-sm-1 control-label" for="Ads_longitude"></label><div class="col-sm-2">
 <input type="hidden" name="action" value="update">
-<input type="submit" value="Update">
-&nbsp;&nbsp;
-<button><a href="update/<?php echo $model->id; ?>">Edit</a></button>
-</span>
-</div>
+<button type="Submit" value="Submit" class="btn btn-primary" id="yw12" name="yt0">Update</button>
+<a class="btn btn-primary" href="update/<?php echo $model->id; ?>">Edit</a>
+</div></div>
 
 </form>
 <script type="text/javascript">
@@ -225,9 +224,10 @@ function validate_frm(form){
 //-->
 </script>
 
-<?php $this->widget('zii.widgets.CDetailView', array(
-	'data'=>$model,
-	'attributes'=>array(
+<?php $this->widget('booster.widgets.TbDetailView', array(
+		'type' => 'striped condensed',
+		'data'=>$model,
+		'attributes'=>array(
 		'id',
 		'restaurantName',
 		'email',
@@ -335,12 +335,11 @@ $type = Yii::app()->request->getParam('type',false);
 </ul>
 <?php 
 
-
 $options = array();
 $options['restaurant'] = $model->id;
 
-
-$this->widget('zii.widgets.grid.CGridView', array(
+$this->widget('booster.widgets.TbExtendedGridView', array(
+	'type' => 'striped condensed',
 		'id'=>'post-grid',
 		'dataProvider'=>$posts->search($type, true, $options ),
 		'filter'=>$posts,
@@ -353,21 +352,9 @@ $this->widget('zii.widgets.grid.CGridView', array(
 				array(
 						'name'=>'userId',
 						'value'=>'(isset($data->user))? CHtml::link($data->user->userName,array("user/".$data->userId)):""', // link version
-
-						// 			'value' => 'CHtml::link($data->userId, Yii::app()->createUrl("user/".$data->userId))',
 						'type'  => 'raw',
 						'filter' => false
 				),
-				// 		'checkedInRestaurantId',
-// 				array(
-// 						'name'=>'checkedInRestaurantId',
-// 						'value'=>'(isset($data->checkedInRestaurant))? CHtml::link($data->checkedInRestaurant->restaurantName,array("restaurant/".$data->checkedInRestaurantId)):""', // link version
-// 						// 			'filter' => CHtml::listData(Restaurant::model()->findAll(), 'id', 'restaurantName'), // fields from country table
-// 						'type'  => 'raw',
-// 				'filter' => false
-// 		),
-		// 		'image',
-		// 			array('type'=>'image','value'=> imagePath('post') . $model->image, 'label'=>'Image'),
 		array(
 				'name' => 'image',
 				'type' => 'raw',
@@ -376,7 +363,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
 		),
 		'tip',
 		array(
-				'class'=>'CButtonColumn',
+				'class'=>'booster.widgets.TbButtonColumn',
 				'template' => '{view} {delete} {restore}',
 				'buttons'=>array(
 						'view' => array(
@@ -400,8 +387,6 @@ $this->widget('zii.widgets.grid.CGridView', array(
                                 })
                                 return false;
                             }",
-								//'imageUrl'=>'/path/to/copy.gif',  // image URL of the button. If not set or false, a text link is used
-								//'options' => array('class'=>'copy'), // HTML options for the button
 						),
 		),
 ),

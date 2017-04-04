@@ -1,13 +1,24 @@
-<script src="/themes/abound/js/selectize.js"></script>
-<script src="/foodtalk/themes/abound/js/selectize.js"></script>
+<script
+	src="<?php echo Yii::app()->request->baseUrl; ?>/themes/abound/js/selectize.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="http://brianreavis.github.io/selectize.js/css/selectize.bootstrap3.css" />
 <?php
 /* @var $this UserController */
 /* @var $model User */
 
-$this->breadcrumbs=array(
-	'dish'=>array('admin'),
-	$model->id,
+// $this->breadcrumbs=array(
+// 	'dish'=>array('admin'),
+// 	$model->id,
+// );
+
+$this->breadcrumbs = array (
+		'links' => array (
+				'Dishes'=>'admin',
+				$model->dishName
+				
+		)
 );
+
 
 $this->menu=array(
 //	array('label'=>'List User', 'url'=>array('index')),
@@ -15,19 +26,29 @@ $this->menu=array(
 //	array('label'=>'Update User', 'url'=>array('update', 'id'=>$model->id)),
 // 	array('label'=>'Delete Dish', 'url'=>'#', 'visible'=>$model->isDisabled==0, 'linkOptions'=>array('submit'=>array('delete','id'=>$model->id),'confirm'=>'Are you sure you want to delete this user?')),
 // 	array('label'=>'Restore Dish', 'url'=>'#', 'visible'=>$model->isDisabled==1, 'linkOptions'=>array('submit'=>array('restore','id'=>$model->id),'confirm'=>'Are you sure you want to restore this user?')),
-	array('label'=>'Manage Dish', 'url'=>array('admin')),
+	array('label'=>'Manage Dish', 'url'=>'admin', 
+			
+// 			'itemOptions' => array('class' => 'active' ) 
+			
+			
+),
+	array('label'=>'view', 'url'=>'admin','itemOptions' => array('class' => 'active' )),
 );
 $type = Yii::app()->request->getParam('type',false);
+
+$this->widget(
+		'booster.widgets.TbNavbar',
+		array(	'fixed' => false,'fluid' => true,
+				'brand' => 'Dish : '.$model->dishName,
+		)
+);
 ?>
 
-<h1>Dish Id: <?php echo $model->id; ?></h1>
 <form method="post">
 <table class="general" id="yw0"><tbody>
 
 <tr class="odd"><th>Dish Name</th><td>
 <input  style="width: 350px;" maxlength="32" name="dishName" type="text" value="<?php echo $model->dishName;?>">
-<tr class="even"><th>Create Date</th><td><?php echo $model->createDate;?></td></tr>
-<tr class="odd"><th>Active</th><td>
 <tr class="even"><th>Dish url</th><td> 
 <input readonly="readonly" style="width: 350px;" maxlength="32" name="url" type="text" value="<?php echo $model->url;?>">
 
@@ -73,11 +94,23 @@ $type = Yii::app()->request->getParam('type',false);
 $model->isDisabled==1 ? 'Disabled':'Yes';?>
 </td></tr>
 
-<tr class="even"><th></th><td><input value="update" type="submit">
+<tr class="even"><th></th><td>
+<?php 
+        
+        $this->widget(
+            'booster.widgets.TbButton',
+            array(
+                'context' => 'primary',
+                'label' => 'Update',
+//                 'url' => '#',
+                'htmlOptions' => array('type'=>'Submit', "value"=>"Submit"),
+            )
+        ); ?>
+&nbsp;&nbsp;
 <?php if($model->isDisabled){?>
-<button onclick="confrm('restore')" >Restore</button>
+<button class="btn btn-success" onclick="confrm('restore')" >Restore</button>
 <?php }else {?>
-<button onclick="confrm('disable')" >Disable</button>
+<button class="btn btn-warning" onclick="confrm('disable')" >Disable</button>
 <?php }?>
 </td></tr>
 </tbody></table>
@@ -101,7 +134,8 @@ $options = array();
 $options['dish'] = $model->id;
 
 
-$this->widget('zii.widgets.grid.CGridView', array(
+	$this->widget('booster.widgets.TbExtendedGridView', array(
+		'type' => 'striped condensed',
 		'id'=>'post-grid',
 		'dataProvider'=>$posts->search($type, true, $options ),
 		'filter'=>$posts,
@@ -146,7 +180,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
 		),
 		'tip',
 		array(
-				'class'=>'CButtonColumn',
+				'class'=>'booster.widgets.TbButtonColumn',
 				'template' => '{view} {delete} {restore}',
 				'buttons'=>array(
 						'view' => array(

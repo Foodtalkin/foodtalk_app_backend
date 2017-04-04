@@ -1,5 +1,8 @@
-<script src="/themes/abound/js/selectize.js"></script>
-<script src="/foodtalk/themes/abound/js/selectize.js"></script>
+<script
+	src="<?php echo Yii::app()->request->baseUrl; ?>/themes/abound/js/selectize.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="http://brianreavis.github.io/selectize.js/css/selectize.bootstrap3.css" />
+
 <?php
 /* @var $this CuisineController */
 /* @var $model Cuisine */
@@ -74,8 +77,8 @@ $( document ).ready(function() {
 			?>
 	</div>
 
-	<div class="row buttons">
-		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
+	<div class="row buttons pull-left">
+		<?php  echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
 	</div>
 
 <?php $this->endWidget(); ?>

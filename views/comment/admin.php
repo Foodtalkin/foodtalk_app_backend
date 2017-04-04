@@ -2,13 +2,19 @@
 /* @var $this CommentController */
 /* @var $model Comment */
 
-$this->breadcrumbs=array(
-	'Comments'=>array('admin'),
-	'Manage',
+// $this->breadcrumbs=array(
+// 	'Comments'=>array('admin'),
+// 	'Manage',
+// );
+
+$this->breadcrumbs = array (
+		'links' => array (
+				'Comments'
+		)
 );
 
 $this->menu=array(
-	array('label'=>'List Comment', 'url'=>array('admin')),
+	array('label'=>'List Comment', 'url'=>'admin','itemOptions' => array ('class' => 'active') ),
 // 	array('label'=>'Disabled Comment', 'url'=>array('disabled')),
 );
 
@@ -27,9 +33,18 @@ $('.search-form form').submit(function(){
 $action = Yii::app()->controller->action->id;
 $type = Yii::app()->request->getParam('type',false);
 // echo $action
+
+$this->widget(
+		'booster.widgets.TbNavbar',
+		array(
+				'brand' => 'Manage Comments',
+				'fixed' => false,
+				'fluid' => true,
+		)
+);
+
 ?>
 
-<h1>Manage Comments</h1>
 	<ul class="nav nav-tabs">
 	  <li<?php if($action=='admin') { ?> class="active"<?php } ?>><a href="<?php echo Yii::app()->createAbsoluteUrl("comment/admin"); ?>">All</a></li>
 	  <li<?php if($action=='reported') { ?> class="active"<?php } ?>><a href="<?php echo Yii::app()->createAbsoluteUrl("comment/reported"); ?>">Reported </a></li>
@@ -40,7 +55,7 @@ $type = Yii::app()->request->getParam('type',false);
 <?php if($action=='reported') { 
 $status = Yii::app()->request->getParam('status',false);
 ?>
-
+<br>
 	
 	<ul class="nav nav-tabs">
 	  <li<?php if(!$status) { ?> class="active"<?php } ?>><a href="<?php echo Yii::app()->createAbsoluteUrl("comment/reported"); ?>">Pending</a></li>
@@ -57,8 +72,10 @@ $status = Yii::app()->request->getParam('status',false);
 // $this->renderPartial('_search',array('model'=>$model,)); ?>
 </div><!-- search-form -->
 
-<?php $this->widget('zii.widgets.grid.CGridView', array(
-	'id'=>'comment-grid',
+<?php
+
+$this->widget('booster.widgets.TbExtendedGridView', array(
+	'type' => 'striped condensed',
 	'dataProvider'=>$model->search($type),
 	'filter'=>$model,
 	'columns'=>array(
@@ -115,7 +132,7 @@ $status = Yii::app()->request->getParam('status',false);
 		'updateId',
 		*/
 		array(
-			'class'=>'CButtonColumn',
+				'class'=>'booster.widgets.TbButtonColumn',
 				'template' => ' {delete} {approve}',
 				
 				

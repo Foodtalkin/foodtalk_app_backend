@@ -2,19 +2,19 @@
 /* @var $this CuisineController */
 /* @var $model Cuisine */
 
-$this->breadcrumbs=array(
-	'Cuisines'=>array('admin'),
-	$model->id,
-);
+// $this->breadcrumbs=array(
+// 	'Cuisines'=>array('admin'),
+// 	$model->id,
+// );
 
-$this->menu=array(
-	array('label'=>'Dashboard', 'url'=>array('site/dashboard')),
-	array('label'=>'Create Cuisine', 'url'=>array('create')),
-// 	array('label'=>'Update Cuisine', 'url'=>array('update', 'id'=>$model->id)),
-// 	array('label'=>'Delete Cuisine', 'url'=>'#', 'visible'=>$model->isDisabled==0, 'linkOptions'=>array('submit'=>array('delete','id'=>$model->id),'confirm'=>'Are you sure you want to delete this cuisine?')),
-	array('label'=>'Restore Cuisine', 'url'=>'#', 'visible'=>$model->isDisabled==1, 'linkOptions'=>array('submit'=>array('restore','id'=>$model->id),'confirm'=>'Are you sure you want to restore this cuisine?')),
-	array('label'=>'Manage Cuisine', 'url'=>array('admin')),
-);
+// $this->menu=array(
+// 	array('label'=>'Dashboard', 'url'=>array('site/dashboard')),
+// 	array('label'=>'Create Cuisine', 'url'=>array('create')),
+// // 	array('label'=>'Update Cuisine', 'url'=>array('update', 'id'=>$model->id)),
+// // 	array('label'=>'Delete Cuisine', 'url'=>'#', 'visible'=>$model->isDisabled==0, 'linkOptions'=>array('submit'=>array('delete','id'=>$model->id),'confirm'=>'Are you sure you want to delete this cuisine?')),
+// 	array('label'=>'Restore Cuisine', 'url'=>'#', 'visible'=>$model->isDisabled==1, 'linkOptions'=>array('submit'=>array('restore','id'=>$model->id),'confirm'=>'Are you sure you want to restore this cuisine?')),
+// 	array('label'=>'Manage Cuisine', 'url'=>array('admin')),
+// );
 ?>
 
 <h1>Cuisine: <?php echo $model->cuisineName; ?></h1>
@@ -42,7 +42,7 @@ $this->menu=array(
 </form>
 
 
-<?php $this->widget('zii.widgets.CDetailView', array(
+<?php $this->widget('booster.widgets.TbDetailView', array(
 	'data'=>$model,
 	'attributes'=>array(
 		'id',
@@ -57,7 +57,8 @@ $this->menu=array(
 
 		$model1 = new Dish('search');
 
-$this->widget('zii.widgets.grid.CGridView', array(
+$this->widget('booster.widgets.TbExtendedGridView', array(
+		'type' => 'striped',
 		'id'=>'cuisine-grid',
 		'dataProvider'=> $model1->search(),
 		'filter'=> $model1,
@@ -71,7 +72,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
 				'createDate',
 				'updateDate',
 				array(
-						'class'=>'CButtonColumn',
+					'class'=>'booster.widgets.TbButtonColumn',
 						'template' => '{delete}',
 						'buttons'=>array(
 // 								'delete' => array(

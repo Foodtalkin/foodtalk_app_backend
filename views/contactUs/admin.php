@@ -34,7 +34,8 @@ $this->widget(
 				'brand' => 'Contact Us',
 		)
 );
-$this->widget('zii.widgets.grid.CGridView', array(
+$this->widget('booster.widgets.TbExtendedGridView', array(
+		'type' => 'striped',
 	'id'=>'city-grid',
 	'dataProvider'=>$model->search(),
 	'filter'=>$model,

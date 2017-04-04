@@ -90,8 +90,8 @@ $this->widget(
 <!-- search-form -->
 
 <?php $this->widget('booster.widgets.TbExtendedGridView', array(
-	'id'=>'adwords-grid',
 		'type' => 'striped',
+	'id'=>'adwords-grid',
 	'dataProvider'=>$model->search(),
 // 	'filter'=>$model,
 	'columns'=>array(

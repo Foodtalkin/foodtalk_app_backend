@@ -81,7 +81,7 @@
 		<?php echo $form->textFieldGroup($model,'latitude',array('wrapperHtmlOptions' => array('class' => 'col-sm-3',))); ?>
 		<?php echo $form->textFieldGroup($model,'longitude',array('wrapperHtmlOptions' => array('class' => 'col-sm-3',))); ?>
 		<?php echo $form->textFieldGroup($model,'priority',array('wrapperHtmlOptions' => array('class' => 'col-sm-3',))); ?>
-		<?php echo $form->textFieldGroup($model,'position',array('wrapperHtmlOptions' => array('class' => 'col-sm-3',))); ?>
+		<?php echo $form->textFieldGroup($model,'cap',array('wrapperHtmlOptions' => array('class' => 'col-sm-3',))); ?>
 				
 				
 				

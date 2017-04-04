@@ -2,13 +2,17 @@
 /* @var $this CuisineController */
 /* @var $model Cuisine */
 
-$this->breadcrumbs=array(
-	'Manage',
+
+$this->breadcrumbs = array (
+		'links' => array (
+				'Dishes'
+		)
 );
+
 
 $this->menu=array(
 // 	array('label'=>'Create Dish', 'url'=>array('create')),
-	array('label'=>'Manage', 'url'=>array('dish/admin')),
+	array('label'=>'Manage', 'url'=>'admin', 'itemOptions' => array ('class' => 'active')),
 );
 
 Yii::app()->clientScript->registerScript('search', "
@@ -25,9 +29,17 @@ $('.search-form form').submit(function(){
 ");
 
 $type = Yii::app()->request->getParam('type',false);
-?>
 
-<h1>Manage Dishes</h1>
+$this->widget(
+		'booster.widgets.TbNavbar',
+		array(
+				'brand' => 'Manage Dishes',
+				'fixed' => false,
+				'fluid' => true,
+		)
+);
+
+?>
 
 <br>
 <ul class="nav nav-tabs">
@@ -38,7 +50,9 @@ $type = Yii::app()->request->getParam('type',false);
   
 </ul>
 
-<?php $this->widget('zii.widgets.grid.CGridView', array(
+<?php 
+	$this->widget('booster.widgets.TbExtendedGridView', array(
+	'type' => 'striped condensed',
 	'id'=>'cuisine-grid',
 	'dataProvider'=>$model->search($type),
 	'filter'=>$model,
@@ -51,7 +65,7 @@ $type = Yii::app()->request->getParam('type',false);
 		'createDate',
 		'updateDate',
                 array(
-                    'class'=>'CButtonColumn',
+				'class'=>'booster.widgets.TbButtonColumn',
                     'template' => '{view} {delete}',
                     'buttons'=>array(
                         'delete' => array(

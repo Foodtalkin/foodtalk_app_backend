@@ -2,15 +2,25 @@
 /* @var $this CuisineController */
 /* @var $model Cuisine */
 
+// $this->breadcrumbs=array(
+// 	'Cuisines'=>array('admin'),
+// 	'Manage',
+// );
+
+// $this->menu=array(
+// 	array('label'=>'Dashboard', 'url'=>array('site/dashboard')),
+// // 	array('label'=>'Create Cuisine', 'url'=>array('create')),
+// );
+
 $this->breadcrumbs=array(
-	'Cuisines'=>array('admin'),
-	'Manage',
+		'links' => array( 'Cuisines'),
+		// 		'Users'
 );
 
 $this->menu=array(
-	array('label'=>'Dashboard', 'url'=>array('site/dashboard')),
-// 	array('label'=>'Create Cuisine', 'url'=>array('create')),
+		array('label'=>'Manage', 'url'=>'admin' ,'itemOptions' => array('class' => 'active' ))
 );
+
 
 Yii::app()->clientScript->registerScript('search', "
 $('.search-button').click(function(){
@@ -24,18 +34,28 @@ $('.search-form form').submit(function(){
 	return false;
 });
 ");
+
+$this->widget(
+		'booster.widgets.TbNavbar',
+		array(	'fixed' => false,'fluid' => true,
+				'brand' => 'Create New',
+		)
+);
 ?>
 
-<h1>Create New</h1>
 <?php $this->renderPartial('_form', array('model'=>$model)); ?>
+<br><br>
+<?php
+$this->widget(
+		'booster.widgets.TbNavbar',
+		array(	'fixed' => false,'fluid' => true,
+				'brand' => 'Cuisines',
+		)
+);
+?>
 
-<h1>Manage Cuisines</h1>
-<p>
-You may optionally enter a comparison operator (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b>
-or <b>=</b>) at the beginning of each of your search values to specify how the comparison should be done.
-</p>
-
-<?php $this->widget('zii.widgets.grid.CGridView', array(
+<?php $this->widget('booster.widgets.TbExtendedGridView', array(
+		'type' => 'striped',
 	'id'=>'cuisine-grid',
 	'dataProvider'=>$model->search(),
 	'filter'=>$model,
@@ -49,7 +69,7 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
                     'filter' => false
                 ),
                 array(
-                    'class'=>'CButtonColumn',
+					'class'=>'booster.widgets.TbButtonColumn',
                     'template' => '{view} {update} {delete}',
                     'buttons'=>array(
                         'delete' => array(
