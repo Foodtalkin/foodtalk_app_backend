@@ -210,7 +210,7 @@ class ParseCommand extends CConsoleCommand
 				$notifyData = array();
 				
 				
-				$notifyData['region'] = $event['region'];
+// 				$notifyData['region'] = $event['region'];
 				
 				if($notificationType == Notification::NOTIFICATION_GROUP_YOU){
 					
