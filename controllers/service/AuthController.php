@@ -125,8 +125,10 @@ class AuthController extends ServiceBaseController
     					$result['app_version'] = $version;
     				}    				
     				$result['cloud_name'] = 'digital-food-talk-pvt-ltd';
-    				$result['api_key'] = '849964931992422';
-    				$result['api_secret'] = '_xG26XxqmqCVcpl0l9-5TJs77Qc';
+//     				$result['api_key'] = '849964931992422';
+    				$result['api_key'] = '849964931992422false';
+//     				$result['api_secret'] = '_xG26XxqmqCVcpl0l9-5TJs77Qc';
+    				$result['api_secret'] = 'false';
     				$result['environment_variable'] = 'CLOUDINARY_URL=cloudinary://849964931992422:_xG26XxqmqCVcpl0l9-5TJs77Qc@digital-food-talk-pvt-ltd';
     				$result['base_delivery_url'] = 'http://res.cloudinary.com/digital-food-talk-pvt-ltd';
     				$result['secure_delivery_url'] = 'https://res.cloudinary.com/digital-food-talk-pvt-ltd';

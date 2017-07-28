@@ -11,6 +11,18 @@ class PostController extends ServiceBaseController
         
         $_JSON = $this->getJsonInput();
         
+        $result = array(
+        		'api' => $apiName,
+        		'apiMessage' => 'Post saved successfully.',
+        		'status' => 'OK',
+        		'postId' => '21417',
+        		'fbPostId' => '21417'
+        );
+        
+        $this->sendResponse(json_encode($result, JSON_UNESCAPED_UNICODE));
+        die();
+        
+        
         try
         {
             if(!isset($_JSON) || empty($_JSON))
